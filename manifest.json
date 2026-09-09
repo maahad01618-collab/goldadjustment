@@ -1,0 +1,13 @@
+{
+  "background_color": "#ffffff",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "GoldAdjustment",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "GoldAdjust",
+  "start_url": "/",
+  "theme_color": "#b8860b",
+  "description": "Gold&amp;Karat Measurement",
+  "id": "GoldAdjustment"
+}
