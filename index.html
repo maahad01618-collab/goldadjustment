@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GoldAdjustment – ড্যাশবোর্ড</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+        body {
+            background: #f5f3f0;
+            padding: 12px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ===== LOGIN SCREEN ===== */
+        #loginScreen {
+            max-width: 400px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 40px 24px 20px 24px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        #loginScreen .logo {
+            font-size: 48px;
+            margin-bottom: 8px;
+        }
+        #loginScreen h1 {
+            font-size: 24px;
+            color: #b8860b;
+            margin-bottom: 4px;
+        }
+        #loginScreen .sub {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 24px;
+        }
+        #loginScreen input {
+            width: 80%;
+            padding: 14px;
+            font-size: 24px;
+            text-align: center;
+            letter-spacing: 8px;
+            border: 2px solid #d6cdc0;
+            border-radius: 12px;
+            outline: none;
+            background: #faf8f6;
+            margin-bottom: 16px;
+        }
+        #loginScreen input:focus {
+            border-color: #b8860b;
+        }
+        #loginScreen .btn-login {
+            background: #b8860b;
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 80%;
+        }
+        #loginScreen .btn-login:active {
+            transform: scale(0.96);
+        }
+        #loginScreen .error {
+            color: #d32f2f;
+            font-size: 14px;
+            margin-top: 8px;
+            min-height: 24px;
+        }
+        .login-numpad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            max-width: 280px;
+            margin: 12px auto;
+        }
+        .login-numpad button {
+            padding: 16px;
+            font-size: 22px;
+            border: 1px solid #d6cdc0;
+            border-radius: 12px;
+            background: #f5f3f0;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .login-numpad button:active {
+            background: #e0d6c8;
+        }
+        .login-numpad .clear-btn {
+            background: #ffcdd2;
+            color: #c62828;
+        }
+        .login-numpad .clear-btn:active {
+            background: #ef9a9a;
+        }
+
+        /* ===== NEW: Footer number in login page ===== */
+        .login-footer {
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid #e0d6c8;
+            font-size: 13px;
+            color: #888;
+            letter-spacing: 1px;
+        }
+        .login-footer .number {
+            color: #b8860b;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        /* ===== MAIN APP (hidden by default) ===== */
+        #appContainer {
+            display: none;
+            max-width: 420px;
+            width: 100%;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 18px 14px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+        #appContainer.show {
+            display: block;
+        }
+
+        .title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #b8860b;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .dash-btn {
+            background: #f0ede8;
+            border: 1px solid #d6cdc0;
+            border-radius: 14px;
+            padding: 14px 6px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 14px;
+            color: #3e362e;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+        .dash-btn:active {
+            transform: scale(0.96);
+            background: #e6dccf;
+        }
+        .dash-btn .icon {
+            font-size: 28px;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .dash-btn.active {
+            background: #b8860b;
+            color: white;
+            border-color: #b8860b;
+        }
+        .feature-box {
+            background: #faf8f6;
+            border-radius: 16px;
+            padding: 14px;
+            border: 1px solid #e0d6c8;
+            display: none;
+        }
+        .feature-box.active {
+            display: block;
+        }
+        .feature-title {
+            font-weight: 600;
+            font-size: 16px;
+            color: #4a3f35;
+            margin-bottom: 10px;
+        }
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 6px;
+            margin-bottom: 4px;
+            align-items: center;
+        }
+        .row label {
+            font-size: 13px;
+            width: 48px;
+            color: #3e362e;
+        }
+        .row input {
+            flex: 1;
+            min-width: 50px;
+            padding: 6px 4px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            text-align: center;
+        }
+        .karat-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .karat-row .field {
+            flex: 1;
+            min-width: 100px;
+        }
+        .karat-row label {
+            font-size: 13px;
+            display: block;
+            margin-bottom: 2px;
+        }
+        .btn {
+            background: #b8860b;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: bold;
+            width: 100%;
+            margin: 4px 0 2px 0;
+            cursor: pointer;
+        }
+        .btn-secondary {
+            background: #4a6fa5;
+        }
+        .result-box {
+            background: #f0ede8;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 13px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            margin-top: 6px;
+            border: 1px solid #d6cdc0;
+            min-height: 40px;
+        }
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #888;
+            margin-top: 12px;
+        }
+        .inline-group {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .inline-group .field {
+            flex: 1;
+            min-width: 60px;
+        }
+        .inline-group label {
+            font-size: 12px;
+            display: block;
+        }
+
+        /* Logout button */
+        .logout-btn {
+            background: #d32f2f;
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            float: right;
+            margin-top: -6px;
+        }
+        .logout-btn:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- LOGIN SCREEN -->
+<!-- ============================================================ -->
+<div id="loginScreen">
+    <div class="logo">🔐</div>
+    <h1>GoldAdjustment</h1>
+    <div class="sub">সুরক্ষিত অ্যাক্সেস · PIN দিন</div>
+
+    <input type="password" id="pinInput" maxlength="4" value="" readonly placeholder="— — — —" />
+
+    <div class="login-numpad">
+        <button onclick="pressNum('1')">1</button>
+        <button onclick="pressNum('2')">2</button>
+        <button onclick="pressNum('3')">3</button>
+        <button onclick="pressNum('4')">4</button>
+        <button onclick="pressNum('5')">5</button>
+        <button onclick="pressNum('6')">6</button>
+        <button onclick="pressNum('7')">7</button>
+        <button onclick="pressNum('8')">8</button>
+        <button onclick="pressNum('9')">9</button>
+        <button onclick="pressNum('clear')" class="clear-btn">⌫</button>
+        <button onclick="pressNum('0')">0</button>
+        <button onclick="verifyPin()" style="background:#b8860b;color:white;">✓</button>
+    </div>
+
+    <div class="error" id="loginError"></div>
+
+    <!-- ===== NEW: Footer number added here ===== -->
+    <div class="login-footer">
+        <span class="number">📞 1628255672</span>
+    </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- MAIN APP (hidden until login) -->
+<!-- ============================================================ -->
+<div id="appContainer">
+    <div class="title">
+        ✨ GoldAdjustment
+        <button class="logout-btn" onclick="logout()">🚪 প্রস্থান</button>
+    </div>
+
+    <!-- ===== DASHBOARD BUTTONS ===== -->
+    <div class="dashboard-grid">
+        <div class="dash-btn active" data-target="main" onclick="showFeature('main')">
+            <span class="icon">📦</span> অ্যাডজাস্ট
+        </div>
+        <div class="dash-btn" data-target="pure" onclick="showFeature('pure')">
+            <span class="icon">✨</span> পাকা→টার্গেট
+        </div>
+        <div class="dash-btn" data-target="any" onclick="showFeature('any')">
+            <span class="icon">🔄</span> যেকোনো→টার্গেট
+        </div>
+        <div class="dash-btn" data-target="gram" onclick="showFeature('gram')">
+            <span class="icon">⚖️</span> গ্রাম↔ভরি
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- FEATURE 1: MAIN ADJUSTMENT -->
+    <!-- ============================================================ -->
+    <div id="feature-main" class="feature-box active">
+        <div class="feature-title">📦 মূল অ্যাডজাস্টমেন্ট</div>
+        <div style="font-size:13px; color:#555; margin-bottom:4px;">মোট ওজন (Total Weight)</div>
+        <div class="row"><label>ভরি</label><input id="tvori" type="number" value="1" step="any" /></div>
+        <div class="row"><label>আনা</label><input id="tana" type="number" value="0" step="any" /></div>
+        <div class="row"><label>রতি</label><input id="troti" type="number" value="0" step="any" /></div>
+        <div class="row"><label>পয়েন্ট</label><input id="tpoint" type="number" value="0" step="any" /></div>
+
+        <div style="font-size:13px; color:#555; margin:6px 0 4px 0;">পেইন্ট/জয়েন্ট ওজন (Joint Weight)</div>
+        <div class="row"><label>ভরি</label><input id="jvori" type="number" value="0" step="any" /></div>
+        <div class="row"><label>আনা</label><input id="jana" type="number" value="4" step="any" /></div>
+        <div class="row"><label>রতি</label><input id="jroti" type="number" value="0" step="any" /></div>
+        <div class="row"><label>পয়েন্ট</label><input id="jpoint" type="number" value="0" step="any" /></div>
+
+        <div class="karat-row" style="margin-top:6px;">
+            <div class="field"><label>Body Karat</label><input id="bodyKarat" type="number" value="20.00" step="any" /></div>
+            <div class="field"><label>Joint Karat</label><input id="jointKarat" type="number" value="15.50" step="any" /></div>
+        </div>
+        <button class="btn" onclick="calculateMain()">📊 গণনা করুন</button>
+        <div class="result-box" id="mainResult">ফলাফল দেখাবে...</div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- FEATURE 2: PURE → TARGET -->
+    <!-- ============================================================ -->
+    <div id="feature-pure" class="feature-box">
+        <div class="feature-title">✨ পাকা (২৪K) → টার্গেট ক্যারেট</div>
+        <div class="row"><label>ভরি</label><input id="pVori" type="number" value="0" step="any" /></div>
+        <div class="row"><label>আনা</label><input id="pAna" type="number" value="10" step="any" /></div>
+        <div class="row"><label>রতি</label><input id="pRoti" type="number" value="0" step="any" /></div>
+        <div class="row"><label>পয়েন্ট</label><input id="pPoint" type="number" value="0" step="any" /></div>
+        <div class="row"><label>টার্গেট</label><input id="pureTarget" type="number" value="21" step="any" /></div>
+        <button class="btn btn-secondary" onclick="calculatePureToTarget()">🧪 হিসাব করুন</button>
+        <div class="result-box" id="pureResult">ফলাফল দেখাবে...</div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- FEATURE 3: ANY → TARGET -->
+    <!-- ============================================================ -->
+    <div id="feature-any" class="feature-box">
+        <div class="feature-title">🔄 যেকোনো ক্যারেট → টার্গেট</div>
+        <div class="row"><label>বর্তমান K</label><input id="currentKarat" type="number" value="20" step="any" /></div>
+        <div class="row"><label>ভরি</label><input id="cVori" type="number" value="1" step="any" /></div>
+        <div class="row"><label>আনা</label><input id="cAna" type="number" value="0" step="any" /></div>
+        <div class="row"><label>রতি</label><input id="cRoti" type="number" value="0" step="any" /></div>
+        <div class="row"><label>পয়েন্ট</label><input id="cPoint" type="number" value="0" step="any" /></div>
+        <div class="row"><label>টার্গেট K</label><input id="targetKaratAny" type="number" value="21" step="any" /></div>
+        <button class="btn btn-secondary" onclick="calculateAnyToTarget()">🔄 হিসাব করুন</button>
+        <div class="result-box" id="anyResult">ফলাফল দেখাবে...</div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- FEATURE 4: GRAM ↔ VORI -->
+    <!-- ============================================================ -->
+    <div id="feature-gram" class="feature-box">
+        <div class="feature-title">⚖️ গ্রাম ↔ ভরি-আনা-রতি-পয়েন্ট</div>
+        <div class="row"><label>গ্রাম</label><input id="gramInput" type="number" value="1.46" step="any" oninput="convertGramToVori()" /></div>
+        <div class="row"><label>ভরি</label><input id="voriOutput" type="text" value="0-2-0-0" oninput="convertVoriToGram()" /></div>
+    </div>
+
+    <div class="footer">📱 GoldAdjustment – ড্যাশবোর্ড ভার্সন</div>
+</div>
+
+<script>
+    // ============================================================
+    // LOGIN SYSTEM (PIN: 7272)
+    // ============================================================
+    const CORRECT_PIN = "7272";
+    let pin = "";
+
+    function pressNum(val) {
+        if (val === 'clear') {
+            pin = pin.slice(0, -1);
+        } else {
+            if (pin.length < 4) pin += val;
+        }
+        document.getElementById('pinInput').value = pin.padEnd(4, '—');
+        document.getElementById('loginError').textContent = '';
+    }
+
+    function verifyPin() {
+        if (pin === CORRECT_PIN) {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('appContainer').classList.add('show');
+            // Auto-calculate on load
+            calculateMain();
+            calculatePureToTarget();
+            calculateAnyToTarget();
+            convertGramToVori();
+        } else {
+            document.getElementById('loginError').textContent = '❌ ভুল PIN! আবার চেষ্টা করুন।';
+            pin = '';
+            document.getElementById('pinInput').value = '— — — —';
+        }
+    }
+
+    // Enter key support
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') {
+            verifyPin();
+        }
+    });
+
+    function logout() {
+        pin = '';
+        document.getElementById('pinInput').value = '— — — —';
+        document.getElementById('loginError').textContent = '';
+        document.getElementById('appContainer').classList.remove('show');
+        document.getElementById('loginScreen').style.display = 'block';
+    }
+
+    // ============================================================
+    // DASHBOARD NAVIGATION
+    // ============================================================
+    function showFeature(id) {
+        document.querySelectorAll('.dash-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector(`.dash-btn[data-target="${id}"]`).classList.add('active');
+        document.querySelectorAll('.feature-box').forEach(f => f.classList.remove('active'));
+        document.getElementById('feature-' + id).classList.add('active');
+    }
+
+    // ============================================================
+    // 1. MAIN ADJUSTMENT
+    // ============================================================
+    function calculateMain() {
+        const tv = parseFloat(document.getElementById('tvori').value) || 0;
+        const ta = parseFloat(document.getElementById('tana').value) || 0;
+        const tr = parseFloat(document.getElementById('troti').value) || 0;
+        const tp = parseFloat(document.getElementById('tpoint').value) || 0;
+        const jv = parseFloat(document.getElementById('jvori').value) || 0;
+        const ja = parseFloat(document.getElementById('jana').value) || 0;
+        const jr = parseFloat(document.getElementById('jroti').value) || 0;
+        const jp = parseFloat(document.getElementById('jpoint').value) || 0;
+        const bk = parseFloat(document.getElementById('bodyKarat').value) || 0;
+        const jk = parseFloat(document.getElementById('jointKarat').value) || 0;
+
+        const totalPoints = tv * 960 + ta * 60 + tr * 10 + tp;
+        const jointPoints = jv * 960 + ja * 60 + jr * 10 + jp;
+        const mainBody = totalPoints - jointPoints;
+        const multiplier = jointPoints > 0 ? mainBody / jointPoints : 0;
+        const totalPart = Math.round(multiplier) + 1;
+        const weightedKarat = ((bk * Math.round(multiplier)) + jk) / totalPart;
+        const purity = (weightedKarat / 24) * 100;
+
+        document.getElementById('mainResult').textContent =
+            `Per Vori Deposit  : ${toVoriAnaRoti((weightedKarat / 24) * 960)}\nWeight Base Deposit: ${toVoriAnaRoti(totalPoints * (weightedKarat / 24))}\nPurity %          : ${purity.toFixed(2)}%\nWeighted Karat     : ${weightedKarat.toFixed(2)}K`;
+    }
+
+    // ============================================================
+    // 2. PURE → TARGET
+    // ============================================================
+    function calculatePureToTarget() {
+        const v = parseFloat(document.getElementById('pVori').value) || 0;
+        const a = parseFloat(document.getElementById('pAna').value) || 0;
+        const r = parseFloat(document.getElementById('pRoti').value) || 0;
+        const p = parseFloat(document.getElementById('pPoint').value) || 0;
+        const target = parseFloat(document.getElementById('pureTarget').value) || 21;
+
+        const purePoints = v * 960 + a * 60 + r * 10 + p;
+        const alloy = (purePoints * 24) / target - purePoints;
+        const total = purePoints + alloy;
+
+        document.getElementById('pureResult').textContent =
+            `খাদের ওজন  : ${toVoriAnaRoti(alloy)}\nমোট ওজন    : ${toVoriAnaRoti(total)}`;
+    }
+
+    // ============================================================
+    // 3. ANY → TARGET
+    // ============================================================
+    function calculateAnyToTarget() {
+        const ck = parseFloat(document.getElementById('currentKarat').value) || 20;
+        const v = parseFloat(document.getElementById('cVori').value) || 0;
+        const a = parseFloat(document.getElementById('cAna').value) || 0;
+        const r = parseFloat(document.getElementById('cRoti').value) || 0;
+        const p = parseFloat(document.getElementById('cPoint').value) || 0;
+        const tk = parseFloat(document.getElementById('targetKaratAny').value) || 21;
+
+        const points = v * 960 + a * 60 + r * 10 + p;
+        let add, total;
+
+        if (tk > ck) {
+            add = points * (tk - ck) / (24 - tk);
+            total = points + add;
+            document.getElementById('anyResult').textContent =
+                `পাকা যোগ করুন : ${toVoriAnaRoti(add)}\nনতুন ওজন     : ${toVoriAnaRoti(total)}`;
+        } else if (tk < ck) {
+            add = points * (ck - tk) / tk;
+            total = points + add;
+            document.getElementById('anyResult').textContent =
+                `খাদ মিশান    : ${toVoriAnaRoti(add)}\nনতুন ওজন     : ${toVoriAnaRoti(total)}`;
+        } else {
+            document.getElementById('anyResult').textContent = `ক্যারেট সমান, কিছু পরিবর্তন নেই।`;
+        }
+    }
+
+    // ============================================================
+    // 4. GRAM ↔ VORI
+    // ============================================================
+    function convertGramToVori() {
+        const gram = parseFloat(document.getElementById('gramInput').value) || 0;
+        const points = (gram / 11.664) * 960;
+        document.getElementById('voriOutput').value = toVoriAnaRoti(points);
+    }
+
+    function convertVoriToGram() {
+        const parts = document.getElementById('voriOutput').value.split('-');
+        if (parts.length !== 4) return;
+        const v = parseInt(parts[0]) || 0;
+        const a = parseInt(parts[1]) || 0;
+        const r = parseInt(parts[2]) || 0;
+        const p = parseInt(parts[3]) || 0;
+        const points = v * 960 + a * 60 + r * 10 + p;
+        const gram = (points / 960) * 11.664;
+        document.getElementById('gramInput').value = gram.toFixed(4);
+    }
+
+    // ============================================================
+    // COMMON: points → Vori-Ana-Roti-Point
+    // ============================================================
+    function toVoriAnaRoti(points) {
+        const v = Math.floor(points / 960);
+        let rem = points % 960;
+        const a = Math.floor(rem / 60);
+        rem = rem % 60;
+        const r = Math.floor(rem / 10);
+        const p = Math.round(rem % 10);
+        return `${v}-${a}-${r}-${p}`;
+    }
+</script>
+
+</body>
+</html>
