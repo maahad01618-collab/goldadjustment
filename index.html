@@ -125,7 +125,6 @@
             background: #ef9a9a;
         }
 
-        /* ===== NEW: Footer number in login page ===== */
         .login-footer {
             margin-top: 16px;
             padding-top: 12px;
@@ -140,7 +139,7 @@
             font-size: 15px;
         }
 
-        /* ===== MAIN APP (hidden by default) ===== */
+        /* ===== MAIN APP ===== */
         #appContainer {
             display: none;
             max-width: 420px;
@@ -150,6 +149,8 @@
             border-radius: 24px;
             padding: 18px 14px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            min-height: 520px;
+            position: relative;
         }
         #appContainer.show {
             display: block;
@@ -162,17 +163,22 @@
             text-align: center;
             margin-bottom: 16px;
         }
+
+        /* ===== DASHBOARD SCREEN ===== */
+        #dashboardScreen {
+            display: block;
+        }
         .dashboard-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 12px;
             margin-bottom: 16px;
         }
         .dash-btn {
             background: #f0ede8;
             border: 1px solid #d6cdc0;
-            border-radius: 14px;
-            padding: 14px 6px;
+            border-radius: 16px;
+            padding: 22px 8px;
             text-align: center;
             font-weight: 600;
             font-size: 14px;
@@ -180,21 +186,95 @@
             cursor: pointer;
             transition: 0.2s;
             box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+            user-select: none;
         }
         .dash-btn:active {
-            transform: scale(0.96);
+            transform: scale(0.95);
             background: #e6dccf;
         }
         .dash-btn .icon {
-            font-size: 28px;
+            font-size: 34px;
             display: block;
-            margin-bottom: 4px;
+            margin-bottom: 8px;
         }
-        .dash-btn.active {
-            background: #b8860b;
+        .dash-btn.full-width {
+            grid-column: span 2;
+        }
+
+        /* ===== Footer with Exit button ===== */
+        .dashboard-footer {
+            text-align: center;
+            margin-top: 8px;
+            padding-top: 12px;
+            border-top: 1px solid #f0ede8;
+        }
+        .dashboard-footer .footer-text {
+            font-size: 13px;
+            color: #b8860b;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .exit-btn-bottom {
+            background: #d32f2f;
             color: white;
-            border-color: #b8860b;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 2px 6px rgba(211,47,47,0.3);
+            transition: 0.15s;
+            letter-spacing: 1px;
         }
+        .exit-btn-bottom:active {
+            transform: scale(0.97);
+            background: #b71c1c;
+        }
+
+        /* ===== FEATURE SCREEN ===== */
+        #featureScreen {
+            display: none;
+        }
+        #featureScreen.show {
+            display: block;
+        }
+
+        .feature-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0ede8;
+        }
+
+        /* Back Button (স্পষ্ট লাল রঙ) */
+        .back-btn {
+            background: #d32f2f;
+            color: #ffffff;
+            border: 2px solid #b71c1c;
+            border-radius: 10px;
+            padding: 8px 16px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 6px rgba(211,47,47,0.3);
+            transition: 0.15s;
+        }
+        .back-btn:active {
+            transform: scale(0.95);
+            background: #b71c1c;
+        }
+
+        .feature-header .feature-name {
+            font-size: 17px;
+            font-weight: bold;
+            color: #b8860b;
+        }
+
         .feature-box {
             background: #faf8f6;
             border-radius: 16px;
@@ -233,20 +313,39 @@
             background: white;
             text-align: center;
         }
+
+        /* ===== FIXED: Karat row (ছোট ও সমান ইনপুট) ===== */
         .karat-row {
             display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
+            gap: 8px;
+            flex-wrap: nowrap;
+            margin-top: 6px;
         }
         .karat-row .field {
             flex: 1;
-            min-width: 100px;
+            min-width: 0;
         }
         .karat-row label {
-            font-size: 13px;
+            font-size: 12px;
             display: block;
-            margin-bottom: 2px;
+            margin-bottom: 3px;
+            color: #3e362e;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
+        .karat-row input {
+            width: 100%;
+            padding: 8px 4px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
         .btn {
             background: #b8860b;
             color: white;
@@ -258,6 +357,9 @@
             width: 100%;
             margin: 4px 0 2px 0;
             cursor: pointer;
+        }
+        .btn:active {
+            transform: scale(0.98);
         }
         .btn-secondary {
             background: #4a6fa5;
@@ -273,43 +375,8 @@
             border: 1px solid #d6cdc0;
             min-height: 40px;
         }
-        .footer {
-            text-align: center;
-            font-size: 12px;
-            color: #888;
-            margin-top: 12px;
-        }
-        .inline-group {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-        .inline-group .field {
-            flex: 1;
-            min-width: 60px;
-        }
-        .inline-group label {
-            font-size: 12px;
-            display: block;
-        }
 
-        /* Logout button */
-        .logout-btn {
-            background: #d32f2f;
-            color: white;
-            border: none;
-            padding: 6px 16px;
-            border-radius: 8px;
-            font-size: 12px;
-            cursor: pointer;
-            float: right;
-            margin-top: -6px;
-        }
-        .logout-btn:active {
-            transform: scale(0.95);
-        }
-
-        /* ===== NEW: Price result highlight ===== */
+        /* ===== PRICE RESULT ===== */
         .price-result {
             background: linear-gradient(135deg, #fff8e1, #ffe9b0);
             border: 2px solid #b8860b;
@@ -365,137 +432,140 @@
 
     <div class="error" id="loginError"></div>
 
-    <!-- ===== NEW: Footer number added here ===== -->
     <div class="login-footer">
         <span class="number">📞 1628255672</span>
     </div>
 </div>
 
 <!-- ============================================================ -->
-<!-- MAIN APP (hidden until login) -->
+<!-- MAIN APP -->
 <!-- ============================================================ -->
 <div id="appContainer">
-    <div class="title">
-        ✨ GoldAdjustment
-        <button class="logout-btn" onclick="logout()">🚪 প্রস্থান</button>
-    </div>
+    <div class="title">✨ GoldAdjustment</div>
 
-    <!-- ===== DASHBOARD BUTTONS ===== -->
-    <div class="dashboard-grid">
-        <div class="dash-btn active" data-target="main" onclick="showFeature('main')">
-            <span class="icon">📦</span> অ্যাডজাস্ট
-        </div>
-        <div class="dash-btn" data-target="pure" onclick="showFeature('pure')">
-            <span class="icon">✨</span> পাকা→টার্গেট
-        </div>
-        <div class="dash-btn" data-target="any" onclick="showFeature('any')">
-            <span class="icon">🔄</span> যেকোনো→টার্গেট
-        </div>
-        <div class="dash-btn" data-target="gram" onclick="showFeature('gram')">
-            <span class="icon">⚖️</span> গ্রাম↔ভরি
-        </div>
-        <!-- ===== NEW BUTTON: দাম হিসাব ===== -->
-        <div class="dash-btn" data-target="price" onclick="showFeature('price')" style="grid-column: span 2;">
-            <span class="icon">💰</span> দাম / মূল্য হিসাব
-        </div>
-    </div>
-
-    <!-- ============================================================ -->
-    <!-- FEATURE 1: MAIN ADJUSTMENT -->
-    <!-- ============================================================ -->
-    <div id="feature-main" class="feature-box active">
-        <div class="feature-title">📦 মূল অ্যাডজাস্টমেন্ট</div>
-        <div style="font-size:13px; color:#555; margin-bottom:4px;">মোট ওজন (Total Weight)</div>
-        <div class="row"><label>ভরি</label><input id="tvori" type="number" value="1" step="any" /></div>
-        <div class="row"><label>আনা</label><input id="tana" type="number" value="0" step="any" /></div>
-        <div class="row"><label>রতি</label><input id="troti" type="number" value="0" step="any" /></div>
-        <div class="row"><label>পয়েন্ট</label><input id="tpoint" type="number" value="0" step="any" /></div>
-
-        <div style="font-size:13px; color:#555; margin:6px 0 4px 0;">পেইন্ট/জয়েন্ট ওজন (Joint Weight)</div>
-        <div class="row"><label>ভরি</label><input id="jvori" type="number" value="0" step="any" /></div>
-        <div class="row"><label>আনা</label><input id="jana" type="number" value="4" step="any" /></div>
-        <div class="row"><label>রতি</label><input id="jroti" type="number" value="0" step="any" /></div>
-        <div class="row"><label>পয়েন্ট</label><input id="jpoint" type="number" value="0" step="any" /></div>
-
-        <div class="karat-row" style="margin-top:6px;">
-            <div class="field"><label>Body Karat</label><input id="bodyKarat" type="number" value="20.00" step="any" /></div>
-            <div class="field"><label>Joint Karat</label><input id="jointKarat" type="number" value="15.50" step="any" /></div>
-        </div>
-        <button class="btn" onclick="calculateMain()">📊 গণনা করুন</button>
-        <div class="result-box" id="mainResult">ফলাফল দেখাবে...</div>
-    </div>
-
-    <!-- ============================================================ -->
-    <!-- FEATURE 2: PURE → TARGET -->
-    <!-- ============================================================ -->
-    <div id="feature-pure" class="feature-box">
-        <div class="feature-title">✨ পাকা (২৪K) → টার্গেট ক্যারেট</div>
-        <div class="row"><label>ভরি</label><input id="pVori" type="number" value="0" step="any" /></div>
-        <div class="row"><label>আনা</label><input id="pAna" type="number" value="10" step="any" /></div>
-        <div class="row"><label>রতি</label><input id="pRoti" type="number" value="0" step="any" /></div>
-        <div class="row"><label>পয়েন্ট</label><input id="pPoint" type="number" value="0" step="any" /></div>
-        <div class="row"><label>টার্গেট</label><input id="pureTarget" type="number" value="21" step="any" /></div>
-        <button class="btn btn-secondary" onclick="calculatePureToTarget()">🧪 হিসাব করুন</button>
-        <div class="result-box" id="pureResult">ফলাফল দেখাবে...</div>
-    </div>
-
-    <!-- ============================================================ -->
-    <!-- FEATURE 3: ANY → TARGET -->
-    <!-- ============================================================ -->
-    <div id="feature-any" class="feature-box">
-        <div class="feature-title">🔄 যেকোনো ক্যারেট → টার্গেট</div>
-        <div class="row"><label>বর্তমান K</label><input id="currentKarat" type="number" value="20" step="any" /></div>
-        <div class="row"><label>ভরি</label><input id="cVori" type="number" value="1" step="any" /></div>
-        <div class="row"><label>আনা</label><input id="cAna" type="number" value="0" step="any" /></div>
-        <div class="row"><label>রতি</label><input id="cRoti" type="number" value="0" step="any" /></div>
-        <div class="row"><label>পয়েন্ট</label><input id="cPoint" type="number" value="0" step="any" /></div>
-        <div class="row"><label>টার্গেট K</label><input id="targetKaratAny" type="number" value="21" step="any" /></div>
-        <button class="btn btn-secondary" onclick="calculateAnyToTarget()">🔄 হিসাব করুন</button>
-        <div class="result-box" id="anyResult">ফলাফল দেখাবে...</div>
-    </div>
-
-    <!-- ============================================================ -->
-    <!-- FEATURE 4: GRAM ↔ VORI -->
-    <!-- ============================================================ -->
-    <div id="feature-gram" class="feature-box">
-        <div class="feature-title">⚖️ গ্রাম ↔ ভরি-আনা-রতি-পয়েন্ট</div>
-        <div class="row"><label>গ্রাম</label><input id="gramInput" type="number" value="1.46" step="any" oninput="convertGramToVori()" /></div>
-        <div class="row"><label>ভরি</label><input id="voriOutput" type="text" value="0-2-0-0" oninput="convertVoriToGram()" /></div>
-    </div>
-
-    <!-- ============================================================ -->
-    <!-- NEW FEATURE 5: PRICE / দাম হিসাব -->
-    <!-- ============================================================ -->
-    <div id="feature-price" class="feature-box">
-        <div class="feature-title">💰 দাম / মূল্য হিসাব</div>
-
-        <div style="font-size:13px; color:#555; margin-bottom:4px;">প্রতি ভরির দাম (৳)</div>
-        <div class="row">
-            <label>৳</label>
-            <input id="pricePerVori" type="number" value="210000" step="any" oninput="calculatePrice()" />
+    <!-- ============================================== -->
+    <!-- SCREEN 1: DASHBOARD -->
+    <!-- ============================================== -->
+    <div id="dashboardScreen">
+        <div class="dashboard-grid">
+            <div class="dash-btn" onclick="openFeature('main')">
+                <span class="icon">🪙</span> পাকা/জমা অ্যাডজাস্ট
+            </div>
+            <div class="dash-btn" onclick="openFeature('pure')">
+                <span class="icon">✨</span> পাকা→টার্গেট
+            </div>
+            <div class="dash-btn" onclick="openFeature('any')">
+                <span class="icon">🔄</span> যেকোনো→টার্গেট
+            </div>
+            <div class="dash-btn" onclick="openFeature('gram')">
+                <span class="icon">⚖️</span> গ্রাম↔ভরি
+            </div>
+            <div class="dash-btn full-width" onclick="openFeature('price')">
+                <span class="icon">💰</span> দাম / মূল্য হিসাব
+            </div>
         </div>
 
-        <div style="font-size:13px; color:#555; margin:8px 0 4px 0;">ওজন (Weight)</div>
-        <div class="row"><label>ভরি</label><input id="prVori" type="number" value="0" step="any" oninput="calculatePrice()" /></div>
-        <div class="row"><label>আনা</label><input id="prAna" type="number" value="0" step="any" oninput="calculatePrice()" /></div>
-        <div class="row"><label>রতি</label><input id="prRoti" type="number" value="0" step="any" oninput="calculatePrice()" /></div>
-        <div class="row"><label>পয়েন্ট</label><input id="prPoint" type="number" value="0" step="any" oninput="calculatePrice()" /></div>
-
-        <button class="btn" onclick="calculatePrice()">💰 দাম দেখুন</button>
-
-        <div class="price-result">
-            <div class="label">মোট মূল্য</div>
-            <div class="amount" id="priceAmount">৳ 0</div>
-            <div class="sub-line" id="priceSubLine">০ ভরি ০ আনা ০ রতি ০ পয়েন্ট</div>
+        <!-- ===== Footer with Exit Button ===== -->
+        <div class="dashboard-footer">
+            <div class="footer-text">Dev: M.A.Ahad</div>
+            <button class="exit-btn-bottom" onclick="logout()">Exit</button>
         </div>
     </div>
 
-    <div class="footer">📱 GoldAdjustment – ড্যাশবোর্ড ভার্সন</div>
+    <!-- ============================================== -->
+    <!-- SCREEN 2: FEATURE -->
+    <!-- ============================================== -->
+    <div id="featureScreen">
+        <div class="feature-header">
+            <button class="back-btn" onclick="goBack()">⬅ Back</button>
+            <span class="feature-name" id="currentFeatureName">ফিচার</span>
+        </div>
+
+        <!-- FEATURE 1: MAIN ADJUSTMENT -->
+        <div id="feature-main" class="feature-box">
+            <div class="feature-title">🪙 পাকা/জমা অ্যাডজাস্ট</div>
+            <div style="font-size:13px; color:#555; margin-bottom:4px;">মোট ওজন (Total Weight)</div>
+            <div class="row"><label>ভরি</label><input id="tvori" type="number" value="1" step="any" /></div>
+            <div class="row"><label>আনা</label><input id="tana" type="number" value="0" step="any" /></div>
+            <div class="row"><label>রতি</label><input id="troti" type="number" value="0" step="any" /></div>
+            <div class="row"><label>পয়েন্ট</label><input id="tpoint" type="number" value="0" step="any" /></div>
+
+            <div style="font-size:13px; color:#555; margin:6px 0 4px 0;">পেইন্ট/জয়েন্ট ওজন (Joint Weight)</div>
+            <div class="row"><label>ভরি</label><input id="jvori" type="number" value="0" step="any" /></div>
+            <div class="row"><label>আনা</label><input id="jana" type="number" value="4" step="any" /></div>
+            <div class="row"><label>রতি</label><input id="jroti" type="number" value="0" step="any" /></div>
+            <div class="row"><label>পয়েন্ট</label><input id="jpoint" type="number" value="0" step="any" /></div>
+
+            <div class="karat-row" style="margin-top:6px;">
+                <div class="field"><label>Body Karat</label><input id="bodyKarat" type="number" value="20.00" step="any" /></div>
+                <div class="field"><label>Joint Karat</label><input id="jointKarat" type="number" value="15.50" step="any" /></div>
+            </div>
+            <button class="btn" onclick="calculateMain()">📊 গণনা করুন</button>
+            <div class="result-box" id="mainResult">ফলাফল দেখাবে...</div>
+        </div>
+
+        <!-- FEATURE 2: PURE → TARGET -->
+        <div id="feature-pure" class="feature-box">
+            <div class="feature-title">✨ পাকা (২৪K) → টার্গেট ক্যারেট</div>
+            <div class="row"><label>ভরি</label><input id="pVori" type="number" value="0" step="any" /></div>
+            <div class="row"><label>আনা</label><input id="pAna" type="number" value="10" step="any" /></div>
+            <div class="row"><label>রতি</label><input id="pRoti" type="number" value="0" step="any" /></div>
+            <div class="row"><label>পয়েন্ট</label><input id="pPoint" type="number" value="0" step="any" /></div>
+            <div class="row"><label>টার্গেট</label><input id="pureTarget" type="number" value="21" step="any" /></div>
+            <button class="btn btn-secondary" onclick="calculatePureToTarget()">🧪 হিসাব করুন</button>
+            <div class="result-box" id="pureResult">ফলাফল দেখাবে...</div>
+        </div>
+
+        <!-- FEATURE 3: ANY → TARGET -->
+        <div id="feature-any" class="feature-box">
+            <div class="feature-title">🔄 যেকোনো ক্যারেট → টার্গেট</div>
+            <div class="row"><label>বর্তমান K</label><input id="currentKarat" type="number" value="20" step="any" /></div>
+            <div class="row"><label>ভরি</label><input id="cVori" type="number" value="1" step="any" /></div>
+            <div class="row"><label>আনা</label><input id="cAna" type="number" value="0" step="any" /></div>
+            <div class="row"><label>রতি</label><input id="cRoti" type="number" value="0" step="any" /></div>
+            <div class="row"><label>পয়েন্ট</label><input id="cPoint" type="number" value="0" step="any" /></div>
+            <div class="row"><label>টার্গেট K</label><input id="targetKaratAny" type="number" value="21" step="any" /></div>
+            <button class="btn btn-secondary" onclick="calculateAnyToTarget()">🔄 হিসাব করুন</button>
+            <div class="result-box" id="anyResult">ফলাফল দেখাবে...</div>
+        </div>
+
+        <!-- FEATURE 4: GRAM ↔ VORI -->
+        <div id="feature-gram" class="feature-box">
+            <div class="feature-title">⚖️ গ্রাম ↔ ভরি-আনা-রতি-পয়েন্ট</div>
+            <div class="row"><label>গ্রাম</label><input id="gramInput" type="number" value="1.46" step="any" oninput="convertGramToVori()" /></div>
+            <div class="row"><label>ভরি</label><input id="voriOutput" type="text" value="0-2-0-0" oninput="convertVoriToGram()" /></div>
+        </div>
+
+        <!-- FEATURE 5: PRICE -->
+        <div id="feature-price" class="feature-box">
+            <div class="feature-title">💰 দাম / মূল্য হিসাব</div>
+
+            <div style="font-size:13px; color:#555; margin-bottom:4px;">প্রতি ভরির দাম (৳)</div>
+            <div class="row">
+                <label>৳</label>
+                <input id="pricePerVori" type="number" value="210000" step="any" oninput="calculatePrice()" />
+            </div>
+
+            <div style="font-size:13px; color:#555; margin:8px 0 4px 0;">ওজন (Weight)</div>
+            <div class="row"><label>ভরি</label><input id="prVori" type="number" value="0" step="any" oninput="calculatePrice()" /></div>
+            <div class="row"><label>আনা</label><input id="prAna" type="number" value="0" step="any" oninput="calculatePrice()" /></div>
+            <div class="row"><label>রতি</label><input id="prRoti" type="number" value="0" step="any" oninput="calculatePrice()" /></div>
+            <div class="row"><label>পয়েন্ট</label><input id="prPoint" type="number" value="0" step="any" oninput="calculatePrice()" /></div>
+
+            <button class="btn" onclick="calculatePrice()">💰 দাম দেখুন</button>
+
+            <div class="price-result">
+                <div class="label">মোট মূল্য</div>
+                <div class="amount" id="priceAmount">৳ 0</div>
+                <div class="sub-line" id="priceSubLine">০ ভরি ০ আনা ০ রতি ০ পয়েন্ট</div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
     // ============================================================
-    // LOGIN SYSTEM (PIN: 7272) — Fixed
+    // LOGIN SYSTEM (PIN: 7272)
     // ============================================================
     const CORRECT_PIN = "7272";
     let pin = "";
@@ -522,7 +592,6 @@
         updatePinDisplay();
         document.getElementById('loginError').textContent = '';
 
-        // ৪ ডিজিট পূর্ণ হলে অটো ভেরিফাই
         if (pin.length === 4) {
             setTimeout(verifyPin, 150);
         }
@@ -534,7 +603,7 @@
             document.getElementById('appContainer').classList.add('show');
             pin = '';
             updatePinDisplay();
-            // Auto-calculate on load
+            showDashboard();
             calculateMain();
             calculatePureToTarget();
             calculateAnyToTarget();
@@ -543,7 +612,6 @@
         } else {
             const err = document.getElementById('loginError');
             err.textContent = '❌ ভুল PIN! আবার চেষ্টা করুন।';
-            // shake animation
             const input = document.getElementById('pinInput');
             input.style.transition = '0.1s';
             input.style.transform = 'translateX(-8px)';
@@ -555,7 +623,6 @@
         }
     }
 
-    // Enter key + keyboard number support
     document.addEventListener('keydown', function(e) {
         if (document.getElementById('loginScreen').style.display === 'none') return;
 
@@ -574,19 +641,45 @@
         document.getElementById('loginError').textContent = '';
         document.getElementById('appContainer').classList.remove('show');
         document.getElementById('loginScreen').style.display = 'block';
+        showDashboard();
     }
 
-    // প্রাথমিক অবস্থায় ডিসপ্লে সেট
     updatePinDisplay();
 
     // ============================================================
-    // DASHBOARD NAVIGATION
+    // SCREEN NAVIGATION
     // ============================================================
-    function showFeature(id) {
-        document.querySelectorAll('.dash-btn').forEach(b => b.classList.remove('active'));
-        document.querySelector(`.dash-btn[data-target="${id}"]`).classList.add('active');
+    const featureNames = {
+        main: '🪙 পাকা/জমা অ্যাডজাস্ট',
+        pure: '✨ পাকা → টার্গেট',
+        any: '🔄 যেকোনো → টার্গেট',
+        gram: '⚖️ গ্রাম ↔ ভরি',
+        price: '💰 দাম / মূল্য হিসাব'
+    };
+
+    function showDashboard() {
+        document.getElementById('dashboardScreen').style.display = 'block';
+        document.getElementById('featureScreen').classList.remove('show');
+    }
+
+    function openFeature(id) {
+        document.getElementById('dashboardScreen').style.display = 'none';
+        document.getElementById('featureScreen').classList.add('show');
+
         document.querySelectorAll('.feature-box').forEach(f => f.classList.remove('active'));
         document.getElementById('feature-' + id).classList.add('active');
+
+        document.getElementById('currentFeatureName').textContent = featureNames[id] || 'ফিচার';
+
+        if (id === 'main') calculateMain();
+        if (id === 'pure') calculatePureToTarget();
+        if (id === 'any') calculateAnyToTarget();
+        if (id === 'gram') convertGramToVori();
+        if (id === 'price') calculatePrice();
+    }
+
+    function goBack() {
+        showDashboard();
     }
 
     // ============================================================
@@ -685,7 +778,7 @@
     }
 
     // ============================================================
-    // 5. PRICE / দাম হিসাব  — NEW
+    // 5. PRICE
     // ============================================================
     function calculatePrice() {
         const pricePerVori = parseFloat(document.getElementById('pricePerVori').value) || 0;
@@ -694,21 +787,17 @@
         const r = parseFloat(document.getElementById('prRoti').value) || 0;
         const p = parseFloat(document.getElementById('prPoint').value) || 0;
 
-        // প্রতি ভরির দামকে ৯৬০ দিয়ে ভাগ করে প্রতি পয়েন্টের দাম
         const pricePerPoint = pricePerVori / 960;
         const totalPoints = v * 960 + a * 60 + r * 10 + p;
         const totalPrice = totalPoints * pricePerPoint;
 
-        // বাংলা সংখ্যায় ফরম্যাট
         const formatted = formatBDT(totalPrice);
         document.getElementById('priceAmount').textContent = '৳ ' + formatted;
 
-        // সাব-লাইন: কত ভরি-আনা-রতি-পয়েন্ট
         const weightText = toVoriAnaRotiBangla(totalPoints);
         document.getElementById('priceSubLine').textContent = weightText;
     }
 
-    // সংখ্যাকে বাংলা কমা ফরম্যাটে দেখাবে (১,২৩,৪৫৬)
     function formatBDT(num) {
         const fixed = Math.round(num * 100) / 100;
         const parts = fixed.toFixed(2).split('.');
@@ -722,7 +811,6 @@
         return formattedInt + '.' + parts[1];
     }
 
-    // বাংলা ভাষায় ভরি-আনা-রতি-পয়েন্ট
     function toVoriAnaRotiBangla(points) {
         const v = Math.floor(points / 960);
         let rem = points % 960;
@@ -734,7 +822,7 @@
     }
 
     // ============================================================
-    // COMMON: points → Vori-Ana-Roti-Point
+    // COMMON
     // ============================================================
     function toVoriAnaRoti(points) {
         const v = Math.floor(points / 960);
