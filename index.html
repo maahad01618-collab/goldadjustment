@@ -8,8 +8,6 @@
   }
 </script>
 
-
-
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GoldAdjustment</title>
@@ -536,7 +534,7 @@
             <div class="row"><label>ভরি</label><input id="voriOutput" type="text" value="0-0-0-0" oninput="convertVoriToGram()" /></div>
         </div>
 
-        <!-- FEATURE 5: PRICE -->
+        <!-- FEATURE 5: PRICE (with Labor Cost: Per Vori default) -->
         <div id="feature-price" class="feature-box">
             <div class="feature-title">💰 দাম / মূল্য হিসাব</div>
 
@@ -552,12 +550,28 @@
             <div class="row"><label>রতি</label><input id="prRoti" type="number" value="0" step="any" oninput="calculatePrice()" /></div>
             <div class="row"><label>পয়েন্ট</label><input id="prPoint" type="number" value="0" step="any" oninput="calculatePrice()" /></div>
 
+            <!-- ===== মজুরি (Labor Cost) — ডিফল্ট: প্রতি ভরি ===== -->
+            <div style="font-size:13px; color:#555; margin:8px 0 4px 0;">মজুরি (Labor / Making Charge)</div>
+            <div class="row">
+                <label>৳</label>
+                <input id="laborCost" type="number" value="0" step="any" oninput="calculatePrice()" />
+            </div>
+            <div class="row" style="margin-bottom:6px;">
+                <label style="width:auto; font-size:12px;">টাইপ</label>
+                <select id="laborType" onchange="calculatePrice()"
+                        style="flex:1; padding:6px 4px; border:1px solid #ccc; border-radius:8px; font-size:14px; background:white; text-align:center;">
+                    <option value="perVori" selected>প্রতি ভরি (৳)</option>
+                    <option value="fixed">ফিক্সড (৳)</option>
+                </select>
+            </div>
+
             <button class="btn" onclick="calculatePrice()">💰 দাম দেখুন</button>
 
             <div class="price-result">
                 <div class="label">মোট মূল্য</div>
                 <div class="amount" id="priceAmount">৳ 0</div>
                 <div class="sub-line" id="priceSubLine">০ ভরি ০ আনা ০ রতি ০ পয়েন্ট</div>
+                <div class="sub-line" id="laborSubLine" style="border-top:1px dashed #c9a227; margin-top:6px; padding-top:6px;"></div>
             </div>
         </div>
     </div>
@@ -778,7 +792,7 @@
     }
 
     // ============================================================
-    // 5. PRICE
+    // 5. PRICE (with Labor Cost: Per Vori default + Fixed)
     // ============================================================
     function calculatePrice() {
         const pricePerVori = parseFloat(document.getElementById('pricePerVori').value) || 0;
@@ -787,15 +801,32 @@
         const r = parseFloat(document.getElementById('prRoti').value) || 0;
         const p = parseFloat(document.getElementById('prPoint').value) || 0;
 
+        const laborCost = parseFloat(document.getElementById('laborCost').value) || 0;
+        const laborType = document.getElementById('laborType').value;
+
         const pricePerPoint = pricePerVori / 960;
         const totalPoints = v * 960 + a * 60 + r * 10 + p;
-        const totalPrice = totalPoints * pricePerPoint;
+        const goldPrice = totalPoints * pricePerPoint;
+
+        // ===== মজুরি হিসাব =====
+        let laborTotal = 0;
+        if (laborType === 'fixed') {
+            laborTotal = laborCost;
+        } else if (laborType === 'perVori') {
+            laborTotal = (totalPoints / 960) * laborCost;
+        }
+
+        const totalPrice = goldPrice + laborTotal;
 
         const formatted = formatBDT(totalPrice);
         document.getElementById('priceAmount').textContent = '৳ ' + formatted;
 
         const weightText = toVoriAnaRotiBangla(totalPoints);
         document.getElementById('priceSubLine').textContent = weightText;
+
+        // ===== মজুরি সাব-লাইন =====
+        document.getElementById('laborSubLine').textContent =
+            `মজুরি: ৳ ${formatBDT(laborTotal)}  |  সোনার দাম: ৳ ${formatBDT(goldPrice)}`;
     }
 
     function formatBDT(num) {
