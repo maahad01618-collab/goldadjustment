@@ -51,6 +51,41 @@
             color: #888;
             margin-bottom: 24px;
         }
+
+        /* 🖐️ Fingerprint Login Button */
+        #fingerprintBtn {
+            display: none;
+            width: 80%;
+            padding: 16px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #2e7d32, #1b5e20);
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            margin: 0 auto 12px auto;
+            box-shadow: 0 4px 12px rgba(46,125,50,0.35);
+            transition: 0.15s;
+            letter-spacing: 0.5px;
+        }
+        #fingerprintBtn:active {
+            transform: scale(0.97);
+        }
+        #fingerprintBtn .fp-icon {
+            font-size: 24px;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+
+        .or-divider {
+            display: none;
+            color: #bbb;
+            font-size: 12px;
+            letter-spacing: 2px;
+            margin: 8px 0 4px 0;
+        }
+
         #loginScreen input {
             width: 80%;
             padding: 14px;
@@ -75,20 +110,6 @@
         #loginScreen input:focus {
             border-color: #b8860b;
             box-shadow: 0 0 0 3px rgba(184,134,11,0.15);
-        }
-        #loginScreen .btn-login {
-            background: #b8860b;
-            color: white;
-            border: none;
-            padding: 14px 40px;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 80%;
-        }
-        #loginScreen .btn-login:active {
-            transform: scale(0.96);
         }
         #loginScreen .error {
             color: #d32f2f;
@@ -199,7 +220,7 @@
             grid-column: span 2;
         }
 
-        /* ===== Footer with Exit button ===== */
+        /* ===== Footer with Exit + Fingerprint buttons ===== */
         .dashboard-footer {
             text-align: center;
             margin-top: 8px;
@@ -212,6 +233,10 @@
             font-weight: bold;
             margin-bottom: 10px;
         }
+        .footer-btn-row {
+            display: flex;
+            gap: 8px;
+        }
         .exit-btn-bottom {
             background: #d32f2f;
             color: white;
@@ -221,7 +246,7 @@
             font-size: 15px;
             font-weight: bold;
             cursor: pointer;
-            width: 100%;
+            flex: 1;
             box-shadow: 0 2px 6px rgba(211,47,47,0.3);
             transition: 0.15s;
             letter-spacing: 1px;
@@ -229,6 +254,30 @@
         .exit-btn-bottom:active {
             transform: scale(0.97);
             background: #b71c1c;
+        }
+
+        .fp-setup-btn {
+            background: #2e7d32;
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            flex: 1;
+            box-shadow: 0 2px 6px rgba(46,125,50,0.3);
+            transition: 0.15s;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        .fp-setup-btn:active {
+            transform: scale(0.97);
+            background: #1b5e20;
+        }
+        .fp-setup-btn.enabled {
+            background: #757575;
+            box-shadow: none;
         }
 
         /* ===== FEATURE SCREEN ===== */
@@ -248,7 +297,6 @@
             border-bottom: 2px solid #f0ede8;
         }
 
-        /* Back Button (স্পষ্ট লাল রঙ) */
         .back-btn {
             background: #d32f2f;
             color: #ffffff;
@@ -312,7 +360,6 @@
             text-align: center;
         }
 
-        /* ===== FIXED: Karat row (ছোট ও সমান ইনপুট) ===== */
         .karat-row {
             display: flex;
             gap: 8px;
@@ -374,7 +421,6 @@
             min-height: 40px;
         }
 
-        /* ===== PRICE RESULT ===== */
         .price-result {
             background: linear-gradient(135deg, #fff8e1, #ffe9b0);
             border: 2px solid #b8860b;
@@ -399,9 +445,37 @@
             color: #8a6d1a;
             margin-top: 6px;
         }
+
+        /* ===== Status toast ===== */
+        #toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: #323232;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 9999;
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            max-width: 90%;
+            text-align: center;
+        }
+        #toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+        #toast.success { background: #2e7d32; }
+        #toast.error { background: #c62828; }
+        #toast.info { background: #1565c0; }
     </style>
 </head>
 <body>
+
+<!-- Toast notification -->
+<div id="toast"></div>
 
 <!-- ============================================================ -->
 <!-- LOGIN SCREEN -->
@@ -409,7 +483,13 @@
 <div id="loginScreen">
     <div class="logo">🔐</div>
     <h1>GoldAdjustment</h1>
-    <div class="sub">সুরক্ষিত অ্যাক্সেস · PIN দিন</div>
+    <div class="sub">সুরক্ষিত অ্যাক্সেস</div>
+
+    <!-- 🖐️ Fingerprint Button (only shows if enabled) -->
+    <button id="fingerprintBtn" onclick="loginWithFingerprint()">
+        <span class="fp-icon">🖐️</span> ফিঙ্গার দিয়ে লগইন
+    </button>
+    <div class="or-divider" id="orDivider">────── অথবা PIN ──────</div>
 
     <input type="password" id="pinInput" maxlength="4" value="" readonly placeholder="— — — —" />
 
@@ -441,9 +521,7 @@
 <div id="appContainer">
     <div class="title">✨ GoldAdjustment</div>
 
-    <!-- ============================================== -->
     <!-- SCREEN 1: DASHBOARD -->
-    <!-- ============================================== -->
     <div id="dashboardScreen">
         <div class="dashboard-grid">
             <div class="dash-btn" onclick="openFeature('main')">
@@ -463,23 +541,25 @@
             </div>
         </div>
 
-        <!-- ===== Footer with Exit Button ===== -->
         <div class="dashboard-footer">
             <div class="footer-text">Dev: M.A.Ahad</div>
-            <button class="exit-btn-bottom" onclick="logout()">Exit</button>
+            <div class="footer-btn-row">
+                <button id="fpSetupBtn" class="fp-setup-btn" onclick="toggleFingerprint()">
+                    🖐️ ফিঙ্গার এনাবল
+                </button>
+                <button class="exit-btn-bottom" onclick="logout()">Exit</button>
+            </div>
         </div>
     </div>
 
-    <!-- ============================================== -->
     <!-- SCREEN 2: FEATURE -->
-    <!-- ============================================== -->
     <div id="featureScreen">
         <div class="feature-header">
             <button class="back-btn" onclick="goBack()">⬅ Back</button>
             <span class="feature-name" id="currentFeatureName">ফিচার</span>
         </div>
 
-        <!-- FEATURE 1: MAIN ADJUSTMENT -->
+        <!-- FEATURE 1: MAIN -->
         <div id="feature-main" class="feature-box">
             <div class="feature-title">🪙 পাকা/জমা অ্যাডজাস্ট</div>
             <div style="font-size:13px; color:#555; margin-bottom:4px;">মোট ওজন (Total Weight)</div>
@@ -502,7 +582,7 @@
             <div class="result-box" id="mainResult">ফলাফল দেখাবে...</div>
         </div>
 
-        <!-- FEATURE 2: PURE → TARGET -->
+        <!-- FEATURE 2: PURE -->
         <div id="feature-pure" class="feature-box">
             <div class="feature-title">✨ পাকা (২৪K) → টার্গেট ক্যারেট</div>
             <div class="row"><label>ভরি</label><input id="pVori" type="number" value="0" step="any" /></div>
@@ -514,7 +594,7 @@
             <div class="result-box" id="pureResult">ফলাফল দেখাবে...</div>
         </div>
 
-        <!-- FEATURE 3: ANY → TARGET -->
+        <!-- FEATURE 3: ANY -->
         <div id="feature-any" class="feature-box">
             <div class="feature-title">🔄 যেকোনো ক্যারেট → টার্গেট</div>
             <div class="row"><label>বর্তমান K</label><input id="currentKarat" type="number" value="00" step="any" /></div>
@@ -527,14 +607,14 @@
             <div class="result-box" id="anyResult">ফলাফল দেখাবে...</div>
         </div>
 
-        <!-- FEATURE 4: GRAM ↔ VORI -->
+        <!-- FEATURE 4: GRAM -->
         <div id="feature-gram" class="feature-box">
             <div class="feature-title">⚖️ গ্রাম ↔ ভরি-আনা-রতি-পয়েন্ট</div>
             <div class="row"><label>গ্রাম</label><input id="gramInput" type="number" value="0.0" step="any" oninput="convertGramToVori()" /></div>
             <div class="row"><label>ভরি</label><input id="voriOutput" type="text" value="0-0-0-0" oninput="convertVoriToGram()" /></div>
         </div>
 
-        <!-- FEATURE 5: PRICE (with Labor Cost: Per Vori default) -->
+        <!-- FEATURE 5: PRICE -->
         <div id="feature-price" class="feature-box">
             <div class="feature-title">💰 দাম / মূল্য হিসাব</div>
 
@@ -550,7 +630,6 @@
             <div class="row"><label>রতি</label><input id="prRoti" type="number" value="0" step="any" oninput="calculatePrice()" /></div>
             <div class="row"><label>পয়েন্ট</label><input id="prPoint" type="number" value="0" step="any" oninput="calculatePrice()" /></div>
 
-            <!-- ===== মজুরি (Labor Cost) — ডিফল্ট: প্রতি ভরি ===== -->
             <div style="font-size:13px; color:#555; margin:8px 0 4px 0;">মজুরি (Labor / Making Charge)</div>
             <div class="row">
                 <label>৳</label>
@@ -579,11 +658,173 @@
 
 <script>
     // ============================================================
-    // LOGIN SYSTEM (PIN: 7272)
+    // 🖐️ FINGERPRINT (WebAuthn) + PIN LOGIN SYSTEM
     // ============================================================
     const CORRECT_PIN = "7272";
     let pin = "";
+    const LS_CRED_KEY = "goldAdjustment_credentialId";
 
+    // ===== Toast notification =====
+    function showToast(msg, type = 'info', duration = 2500) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.className = 'show ' + type;
+        clearTimeout(t._timer);
+        t._timer = setTimeout(() => { t.className = ''; }, duration);
+    }
+
+    // ===== WebAuthn helpers =====
+    function bufferToBase64(buf) {
+        return btoa(String.fromCharCode(...new Uint8Array(buf)))
+            .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    }
+    function base64ToBuffer(str) {
+        str = str.replace(/-/g, '+').replace(/_/g, '/');
+        while (str.length % 4) str += '=';
+        const bin = atob(str);
+        const buf = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i);
+        return buf.buffer;
+    }
+
+    function isFingerprintEnabled() {
+        return !!localStorage.getItem(LS_CRED_KEY);
+    }
+
+    function updateFingerprintUI() {
+        const fpBtn = document.getElementById('fingerprintBtn');
+        const divider = document.getElementById('orDivider');
+        const setupBtn = document.getElementById('fpSetupBtn');
+
+        if (isFingerprintEnabled()) {
+            fpBtn.style.display = 'block';
+            divider.style.display = 'block';
+            setupBtn.textContent = '🖐️ ফিঙ্গার এনাবলড ✓';
+            setupBtn.classList.add('enabled');
+        } else {
+            fpBtn.style.display = 'none';
+            divider.style.display = 'none';
+            setupBtn.textContent = '🖐️ ফিঙ্গার এনাবল';
+            setupBtn.classList.remove('enabled');
+        }
+    }
+
+    // ===== Fingerprint Registration =====
+    async function registerFingerprint() {
+        if (!window.PublicKeyCredential) {
+            showToast('❌ এই ব্রাউজারে ফিঙ্গার সাপোর্ট নেই', 'error');
+            return false;
+        }
+
+        try {
+            const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+            if (!available) {
+                showToast('❌ এই ডিভাইসে ফিঙ্গার/স्क্রিন লক নেই', 'error');
+                return false;
+            }
+        } catch (e) {
+            showToast('❌ ডিভাইস চেক করা যায়নি', 'error');
+            return false;
+        }
+
+        const challenge = new Uint8Array(32);
+        crypto.getRandomValues(challenge);
+        const userId = new Uint8Array(16);
+        crypto.getRandomValues(userId);
+
+        const publicKey = {
+            challenge: challenge,
+            rp: {
+                name: "GoldAdjustment",
+                id: window.location.hostname
+            },
+            user: {
+                id: userId,
+                name: "golduser",
+                displayName: "GoldAdjustment User"
+            },
+            pubKeyCredParams: [
+                { type: "public-key", alg: -7 },   // ES256
+                { type: "public-key", alg: -257 }  // RS256
+            ],
+            authenticatorSelection: {
+                authenticatorAttachment: "platform",
+                userVerification: "required",
+                residentKey: "preferred"
+            },
+            timeout: 60000,
+            attestation: "none"
+        };
+
+        try {
+            const credential = await navigator.credentials.create({ publicKey });
+            const credId = bufferToBase64(credential.rawId);
+            localStorage.setItem(LS_CRED_KEY, credId);
+            showToast('✅ ফিঙ্গার সফলভাবে এনাবল হয়েছে!', 'success');
+            updateFingerprintUI();
+            return true;
+        } catch (err) {
+            console.error(err);
+            if (err.name === 'NotAllowedError') {
+                showToast('❌ আপনি ফিঙ্গার সেটআপ বাতিল করেছেন', 'error');
+            } else {
+                showToast('❌ ফিঙ্গার সেটআপ ব্যর্থ: ' + err.message, 'error');
+            }
+            return false;
+        }
+    }
+
+    // ===== Fingerprint Login =====
+    async function loginWithFingerprint() {
+        const credIdBase64 = localStorage.getItem(LS_CRED_KEY);
+        if (!credIdBase64) {
+            showToast('❌ আগে ফিঙ্গার এনাবল করুন', 'error');
+            return;
+        }
+
+        const challenge = new Uint8Array(32);
+        crypto.getRandomValues(challenge);
+
+        const publicKey = {
+            challenge: challenge,
+            rpId: window.location.hostname,
+            allowCredentials: [{
+                id: base64ToBuffer(credIdBase64),
+                type: "public-key",
+                transports: ["internal"]
+            }],
+            userVerification: "required",
+            timeout: 60000
+        };
+
+        try {
+            await navigator.credentials.get({ publicKey });
+            showToast('✅ ফিঙ্গার মিলেছে!', 'success', 1000);
+            setTimeout(() => enterApp(), 300);
+        } catch (err) {
+            console.error(err);
+            if (err.name === 'NotAllowedError') {
+                showToast('❌ ফিঙ্গার মেলেনি বা বাতিল হয়েছে — PIN দিন', 'error');
+            } else {
+                showToast('❌ ফিঙ্গার লগইন ব্যর্থ — PIN দিন', 'error');
+            }
+        }
+    }
+
+    // ===== Toggle Fingerprint (setup / disable) =====
+    async function toggleFingerprint() {
+        if (isFingerprintEnabled()) {
+            if (confirm('ফিঙ্গার লগইন বন্ধ করতে চান?')) {
+                localStorage.removeItem(LS_CRED_KEY);
+                updateFingerprintUI();
+                showToast('🗑️ ফিঙ্গার বন্ধ করা হয়েছে', 'info');
+            }
+        } else {
+            await registerFingerprint();
+        }
+    }
+
+    // ===== PIN System =====
     function updatePinDisplay() {
         const input = document.getElementById('pinInput');
         if (pin.length === 0) {
@@ -613,16 +854,7 @@
 
     function verifyPin() {
         if (pin === CORRECT_PIN) {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('appContainer').classList.add('show');
-            pin = '';
-            updatePinDisplay();
-            showDashboard();
-            calculateMain();
-            calculatePureToTarget();
-            calculateAnyToTarget();
-            convertGramToVori();
-            calculatePrice();
+            enterApp();
         } else {
             const err = document.getElementById('loginError');
             err.textContent = '❌ ভুল PIN! আবার চেষ্টা করুন।';
@@ -637,6 +869,33 @@
         }
     }
 
+    // ===== Enter App =====
+    function enterApp() {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('appContainer').classList.add('show');
+        pin = '';
+        updatePinDisplay();
+        document.getElementById('loginError').textContent = '';
+        showDashboard();
+        calculateMain();
+        calculatePureToTarget();
+        calculateAnyToTarget();
+        convertGramToVori();
+        calculatePrice();
+        updateFingerprintUI();
+    }
+
+    function logout() {
+        pin = '';
+        updatePinDisplay();
+        document.getElementById('loginError').textContent = '';
+        document.getElementById('appContainer').classList.remove('show');
+        document.getElementById('loginScreen').style.display = 'block';
+        showDashboard();
+        updateFingerprintUI();
+    }
+
+    // ===== Keyboard support on login =====
     document.addEventListener('keydown', function(e) {
         if (document.getElementById('loginScreen').style.display === 'none') return;
 
@@ -649,16 +908,9 @@
         }
     });
 
-    function logout() {
-        pin = '';
-        updatePinDisplay();
-        document.getElementById('loginError').textContent = '';
-        document.getElementById('appContainer').classList.remove('show');
-        document.getElementById('loginScreen').style.display = 'block';
-        showDashboard();
-    }
-
+    // ===== Init =====
     updatePinDisplay();
+    updateFingerprintUI();
 
     // ============================================================
     // SCREEN NAVIGATION
@@ -697,7 +949,7 @@
     }
 
     // ============================================================
-    // 1. MAIN ADJUSTMENT
+    // CALCULATIONS (unchanged)
     // ============================================================
     function calculateMain() {
         const tv = parseFloat(document.getElementById('tvori').value) || 0;
@@ -723,9 +975,6 @@
             `Per Vori Deposit  : ${toVoriAnaRoti((weightedKarat / 24) * 960)}\nWeight Base Deposit: ${toVoriAnaRoti(totalPoints * (weightedKarat / 24))}\nPurity %          : ${purity.toFixed(2)}%\nWeighted Karat     : ${weightedKarat.toFixed(2)}K`;
     }
 
-    // ============================================================
-    // 2. PURE → TARGET
-    // ============================================================
     function calculatePureToTarget() {
         const v = parseFloat(document.getElementById('pVori').value) || 0;
         const a = parseFloat(document.getElementById('pAna').value) || 0;
@@ -741,9 +990,6 @@
             `খাদের ওজন  : ${toVoriAnaRoti(alloy)}\nমোট ওজন    : ${toVoriAnaRoti(total)}`;
     }
 
-    // ============================================================
-    // 3. ANY → TARGET
-    // ============================================================
     function calculateAnyToTarget() {
         const ck = parseFloat(document.getElementById('currentKarat').value) || 20;
         const v = parseFloat(document.getElementById('cVori').value) || 0;
@@ -770,9 +1016,6 @@
         }
     }
 
-    // ============================================================
-    // 4. GRAM ↔ VORI
-    // ============================================================
     function convertGramToVori() {
         const gram = parseFloat(document.getElementById('gramInput').value) || 0;
         const points = (gram / 11.664) * 960;
@@ -791,9 +1034,6 @@
         document.getElementById('gramInput').value = gram.toFixed(4);
     }
 
-    // ============================================================
-    // 5. PRICE (with Labor Cost: Per Vori default + Fixed)
-    // ============================================================
     function calculatePrice() {
         const pricePerVori = parseFloat(document.getElementById('pricePerVori').value) || 0;
         const v = parseFloat(document.getElementById('prVori').value) || 0;
@@ -808,7 +1048,6 @@
         const totalPoints = v * 960 + a * 60 + r * 10 + p;
         const goldPrice = totalPoints * pricePerPoint;
 
-        // ===== মজুরি হিসাব =====
         let laborTotal = 0;
         if (laborType === 'fixed') {
             laborTotal = laborCost;
@@ -818,13 +1057,8 @@
 
         const totalPrice = goldPrice + laborTotal;
 
-        const formatted = formatBDT(totalPrice);
-        document.getElementById('priceAmount').textContent = '৳ ' + formatted;
-
-        const weightText = toVoriAnaRotiBangla(totalPoints);
-        document.getElementById('priceSubLine').textContent = weightText;
-
-        // ===== মজুরি সাব-লাইন =====
+        document.getElementById('priceAmount').textContent = '৳ ' + formatBDT(totalPrice);
+        document.getElementById('priceSubLine').textContent = toVoriAnaRotiBangla(totalPoints);
         document.getElementById('laborSubLine').textContent =
             `মজুরি: ৳ ${formatBDT(laborTotal)}  |  সোনার দাম: ৳ ${formatBDT(goldPrice)}`;
     }
@@ -852,9 +1086,6 @@
         return `${v} ভরি ${a} আনা ${r} রতি ${p} পয়েন্ট`;
     }
 
-    // ============================================================
-    // COMMON
-    // ============================================================
     function toVoriAnaRoti(points) {
         const v = Math.floor(points / 960);
         let rem = points % 960;
