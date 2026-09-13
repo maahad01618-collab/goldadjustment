@@ -487,7 +487,7 @@
 
     <!-- 🖐️ Fingerprint Button (only shows if enabled) -->
     <button id="fingerprintBtn" onclick="loginWithFingerprint()">
-        <span class="fp-icon">🫆</span> 
+        <span class="fp-icon">🫆</span> লগইন 
     </button>
     <div class="or-divider" id="orDivider">────── অথবা PIN ──────</div>
 
@@ -699,12 +699,12 @@
         if (isFingerprintEnabled()) {
             fpBtn.style.display = 'block';
             divider.style.display = 'block';
-            setupBtn.textContent = '🖐️ ফিঙ্গার এনাবলড ✓';
+            setupBtn.textContent = '🫆 ফিঙ্গার এনাবলড ✓';
             setupBtn.classList.add('enabled');
         } else {
             fpBtn.style.display = 'none';
             divider.style.display = 'none';
-            setupBtn.textContent = '🖐️ ফিঙ্গার এনাবল';
+            setupBtn.textContent = '🫆 ফিঙ্গার এনাবল';
             setupBtn.classList.remove('enabled');
         }
     }
