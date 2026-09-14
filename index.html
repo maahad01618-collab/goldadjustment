@@ -27,134 +27,163 @@
             justify-content: center;
         }
 
-        /* ===== LOGIN SCREEN ===== */
-        #loginScreen {
+        /* ===== LOADING SCREEN ===== */
+        #loadingScreen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100vh;
+            background: #f5f3f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            transition: opacity 0.25s ease;
+        }
+        #loadingScreen .app-icon {
+            width: 100px; height: 100px;
+            background: linear-gradient(135deg, #b8860b, #8a6508);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 52px;
+            box-shadow: 0 8px 24px rgba(184,134,11,0.4);
+            animation: pulse 0.8s ease-in-out infinite alternate;
+        }
+        #loadingScreen h1 {
+            color: #b8860b;
+            font-size: 24px;
+            margin-top: 16px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        #loadingScreen .sub {
+            color: #888;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+        #loadingScreen .wait {
+            color: #b8860b;
+            font-size: 13px;
+            margin-top: 24px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        @keyframes pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.08); }
+        }
+
+        /* ===== REGISTER SCREEN ===== */
+        #registerScreen {
+            display: none;
             max-width: 400px;
             width: 100%;
             background: #ffffff;
             border-radius: 24px;
-            padding: 40px 24px 20px 24px;
+            padding: 36px 24px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.08);
             text-align: center;
         }
-        #loginScreen .logo {
+        #registerScreen .logo {
             font-size: 48px;
             margin-bottom: 8px;
         }
-        #loginScreen h1 {
-            font-size: 24px;
+        #registerScreen h1 {
+            font-size: 22px;
             color: #b8860b;
             margin-bottom: 4px;
         }
-        #loginScreen .sub {
+        #registerScreen .sub {
             font-size: 14px;
             color: #888;
             margin-bottom: 24px;
         }
-
-        #fingerprintBtn {
-            display: none;
-            width: 80%;
-            padding: 16px;
-            font-size: 18px;
-            font-weight: bold;
-            color: white;
-            background: linear-gradient(135deg, #2e7d32, #1b5e20);
-            border: none;
-            border-radius: 14px;
-            cursor: pointer;
-            margin: 0 auto 12px auto;
-            box-shadow: 0 4px 12px rgba(46,125,50,0.35);
-            transition: 0.15s;
-            letter-spacing: 0.5px;
-        }
-        #fingerprintBtn:active {
-            transform: scale(0.97);
-        }
-        #fingerprintBtn .fp-icon {
-            font-size: 24px;
-            margin-right: 6px;
-            vertical-align: middle;
-        }
-
-        .or-divider {
-            display: none;
-            color: #bbb;
-            font-size: 12px;
-            letter-spacing: 2px;
-            margin: 8px 0 4px 0;
-        }
-
-        #loginScreen input {
-            width: 80%;
+        #registerScreen input {
+            width: 100%;
             padding: 14px;
-            font-size: 32px;
+            font-size: 18px;
             text-align: center;
-            letter-spacing: 12px;
+            letter-spacing: 2px;
             border: 2px solid #d6cdc0;
             border-radius: 12px;
             outline: none;
             background: #faf8f6;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             font-weight: bold;
             color: #b8860b;
-            transition: border-color 0.2s, transform 0.1s;
-            caret-color: transparent;
+            transition: border-color 0.2s;
         }
-        #loginScreen input::placeholder {
-            color: #ccc;
-            letter-spacing: 8px;
-            font-size: 22px;
-        }
-        #loginScreen input:focus {
+        #registerScreen input:focus {
             border-color: #b8860b;
             box-shadow: 0 0 0 3px rgba(184,134,11,0.15);
         }
-        #loginScreen .error {
+        #registerScreen .reg-error {
             color: #d32f2f;
-            font-size: 14px;
-            margin-top: 8px;
-            min-height: 24px;
+            font-size: 13px;
+            min-height: 20px;
+            margin-bottom: 8px;
         }
-        .login-numpad {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            max-width: 280px;
-            margin: 12px auto;
-        }
-        .login-numpad button {
-            padding: 16px;
-            font-size: 22px;
-            border: 1px solid #d6cdc0;
-            border-radius: 12px;
-            background: #f5f3f0;
-            cursor: pointer;
+        #registerScreen .reg-btn {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
             font-weight: bold;
+            color: #fff;
+            background: linear-gradient(135deg, #b8860b, #8a6508);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(184,134,11,0.35);
+            transition: 0.15s;
         }
-        .login-numpad button:active {
-            background: #e0d6c8;
+        #registerScreen .reg-btn:active {
+            transform: scale(0.97);
         }
-        .login-numpad .clear-btn {
-            background: #ffcdd2;
-            color: #c62828;
-        }
-        .login-numpad .clear-btn:active {
-            background: #ef9a9a;
-        }
-
-        .login-footer {
+        #registerScreen .reg-footer {
             margin-top: 16px;
             padding-top: 12px;
             border-top: 1px solid #e0d6c8;
-            font-size: 13px;
+            font-size: 12px;
             color: #888;
-            letter-spacing: 1px;
         }
-        .login-footer .number {
+        #registerScreen .reg-footer .number {
             color: #b8860b;
             font-weight: bold;
-            font-size: 15px;
+        }
+
+        /* ===== BLOCKED SCREEN ===== */
+        #blockedScreen {
+            display: none;
+            max-width: 400px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 50px 24px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        #blockedScreen .block-icon {
+            font-size: 56px;
+            margin-bottom: 12px;
+        }
+        #blockedScreen h2 {
+            color: #d32f2f;
+            font-size: 22px;
+            margin-bottom: 8px;
+        }
+        #blockedScreen p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        #blockedScreen .contact {
+            color: #b8860b;
+            font-weight: bold;
+            margin-top: 20px;
+            font-size: 16px;
         }
 
         /* ===== MAIN APP ===== */
@@ -219,7 +248,7 @@
             grid-column: span 2;
         }
 
-        /* ===== Footer with Exit + Fingerprint buttons ===== */
+        /* ===== Footer ===== */
         .dashboard-footer {
             text-align: center;
             margin-top: 8px;
@@ -253,30 +282,6 @@
         .exit-btn-bottom:active {
             transform: scale(0.97);
             background: #b71c1c;
-        }
-
-        .fp-setup-btn {
-            background: #2e7d32;
-            color: white;
-            border: none;
-            padding: 12px 16px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            flex: 1;
-            box-shadow: 0 2px 6px rgba(46,125,50,0.3);
-            transition: 0.15s;
-            letter-spacing: 0.5px;
-            white-space: nowrap;
-        }
-        .fp-setup-btn:active {
-            transform: scale(0.97);
-            background: #1b5e20;
-        }
-        .fp-setup-btn.enabled {
-            background: #757575;
-            box-shadow: none;
         }
 
         /* ===== FEATURE SCREEN ===== */
@@ -482,7 +487,7 @@
             border-radius: 10px;
             font-size: 14px;
             font-weight: 600;
-            z-index: 9999;
+            z-index: 999999;
             transition: transform 0.3s ease;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             max-width: 90%;
@@ -499,8 +504,8 @@
            ===== প্রিন্ট স্টাইল (A5 LANDSCAPE + ১.১" টপ মার্জিন) =====
            ============================================================ */
         @page {
-            size: A5 landscape;   /* A5, ল্যান্ডস্কেপ */
-            margin: 0;            /* ব্রাউজারের ডিফল্ট মার্জিন বন্ধ */
+            size: A5 landscape;
+            margin: 0;
         }
 
         @media print {
@@ -515,9 +520,6 @@
                 left: 0;
                 top: 0;
                 width: 100%;
-                /* A5 landscape: 210mm × 148mm
-                   উপরে ১.১" = ২৭.৯৪mm খালি (লেটার হেডের জন্য)
-                   বাকি ৩ দিকে ১০mm মার্জিন */
                 padding: 27.94mm 10mm 10mm 10mm;
                 background: #fff;
                 box-sizing: border-box;
@@ -556,10 +558,20 @@
 </head>
 <body>
 
+<!-- ============================================================ -->
+<!-- লোডিং স্ক্রিন (অ্যাপ আইকন সহ) -->
+<!-- ============================================================ -->
+<div id="loadingScreen">
+    <div class="app-icon">✨</div>
+    <h1>GoldAdjustment</h1>
+    <p class="sub">স্বর্ণ হিসাব সহকারী</p>
+    <p class="wait">একটু অপেক্ষা করুন...</p>
+</div>
+
 <!-- Toast notification -->
 <div id="toast"></div>
 
-<!-- প্রিন্ট এরিয়া (প্রিন্টের সময় ব্যবহৃত হবে) -->
+<!-- প্রিন্ট এরিয়া -->
 <div id="printArea" style="display:none;">
     <div class="print-header">
         <h2>✨ GoldAdjustment</h2>
@@ -573,40 +585,34 @@
 </div>
 
 <!-- ============================================================ -->
-<!-- LOGIN SCREEN -->
+<!-- রেজিস্ট্রেশন স্ক্রিন (শুধু প্রথমবার) -->
 <!-- ============================================================ -->
-<div id="loginScreen">
-    <div class="logo">🔐</div>
-    <h1>GoldAdjustment</h1>
-    <div class="sub">সুরক্ষিত অ্যাক্সেস</div>
+<div id="registerScreen">
+    <div class="logo">👤</div>
+    <h1>স্বাগতম!</h1>
+    <div class="sub">প্রথমবার ব্যবহার করছেন — মোবাইল নম্বর দিন</div>
 
-    <button id="fingerprintBtn" onclick="loginWithFingerprint()">
-        <span class="fp-icon">🫆</span> লগইন 
+    <input id="regMobile" type="tel" placeholder="০১XXXXXXXXX" maxlength="11" />
+
+    <div class="reg-error" id="regError"></div>
+
+    <button class="reg-btn" onclick="submitRegistration()">
+        ✅ শুরু করুন
     </button>
-    <div class="or-divider" id="orDivider">────── অথবা PIN ──────</div>
 
-    <input type="password" id="pinInput" maxlength="4" value="" readonly placeholder="— — — —" />
-
-    <div class="login-numpad">
-        <button onclick="pressNum('1')">1</button>
-        <button onclick="pressNum('2')">2</button>
-        <button onclick="pressNum('3')">3</button>
-        <button onclick="pressNum('4')">4</button>
-        <button onclick="pressNum('5')">5</button>
-        <button onclick="pressNum('6')">6</button>
-        <button onclick="pressNum('7')">7</button>
-        <button onclick="pressNum('8')">8</button>
-        <button onclick="pressNum('9')">9</button>
-        <button onclick="pressNum('clear')" class="clear-btn">⌫</button>
-        <button onclick="pressNum('0')">0</button>
-        <button onclick="verifyPin()" style="background:#b8860b;color:white;">✓</button>
+    <div class="reg-footer">
+        📞 সহায়তা: <span class="number">01628255672</span>
     </div>
+</div>
 
-    <div class="error" id="loginError"></div>
-
-    <div class="login-footer">
-        <span class="number">📞 01628255672</span>
-    </div>
+<!-- ============================================================ -->
+<!-- ব্লক স্ক্রিন -->
+<!-- ============================================================ -->
+<div id="blockedScreen">
+    <div class="block-icon">🚫</div>
+    <h2>আপনি ব্লক করা হয়েছেন</h2>
+    <p>অ্যাপ ব্যবহার করতে যোগাযোগ করুন।</p>
+    <p class="contact">📞 01628255672</p>
 </div>
 
 <!-- ============================================================ -->
@@ -638,10 +644,7 @@
         <div class="dashboard-footer">
             <div class="footer-text">Dev: M.A.Ahad</div>
             <div class="footer-btn-row">
-                <button id="fpSetupBtn" class="fp-setup-btn" onclick="toggleFingerprint()">
-                    🫆এনাবল
-                </button>
-                <button class="exit-btn-bottom" onclick="logout()">Exit</button>
+                <button class="exit-btn-bottom" onclick="logout()" style="width:100%;">Exit</button>
             </div>
         </div>
     </div>
@@ -767,12 +770,11 @@
 
 <script>
     // ============================================================
-    // 🖐️ FINGERPRINT (WebAuthn) + PIN LOGIN SYSTEM
+    // 🔒 ইউজার ট্র্যাকিং + রেজিস্ট্রেশন + ব্লক/আনব্লক
     // ============================================================
-    const CORRECT_PIN = "7272";
-    let pin = "";
-    const LS_CRED_KEY = "goldAdjustment_credentialId";
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxjsO_RPISUEfzMgJbTEs0vIwesvTtezJ1Sl8JtwrBByFMOK4oCUu9L6bc9aexlw_tN_A/exec';
 
+    // ===== Toast notification =====
     function showToast(msg, type = 'info', duration = 2500) {
         const t = document.getElementById('toast');
         t.textContent = msg;
@@ -781,236 +783,183 @@
         t._timer = setTimeout(() => { t.className = ''; }, duration);
     }
 
-    function bufferToBase64(buf) {
-        return btoa(String.fromCharCode(...new Uint8Array(buf)))
-            .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-    }
-    function base64ToBuffer(str) {
-        str = str.replace(/-/g, '+').replace(/_/g, '/');
-        while (str.length % 4) str += '=';
-        const bin = atob(str);
-        const buf = new Uint8Array(bin.length);
-        for (let i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i);
-        return buf.buffer;
+    // ===== Device ID =====
+    function getDeviceId() {
+        let id = localStorage.getItem('goldApp_deviceId');
+        if (!id) {
+            id = 'dev_' + Date.now() + '_' + Math.random().toString(36).substring(2, 12);
+            localStorage.setItem('goldApp_deviceId', id);
+        }
+        return id;
     }
 
-    function isFingerprintEnabled() {
-        return !!localStorage.getItem(LS_CRED_KEY);
+    function getSavedMobile() {
+        return localStorage.getItem('goldApp_mobile') || '';
     }
 
-    function updateFingerprintUI() {
-        const fpBtn = document.getElementById('fingerprintBtn');
-        const divider = document.getElementById('orDivider');
-        const setupBtn = document.getElementById('fpSetupBtn');
+    function saveMobile(mobile) {
+        localStorage.setItem('goldApp_mobile', mobile);
+    }
 
-        if (isFingerprintEnabled()) {
-            fpBtn.style.display = 'block';
-            divider.style.display = 'block';
-            setupBtn.textContent = '🫆 ফিঙ্গার এনাবলড ✓';
-            setupBtn.classList.add('enabled');
-        } else {
-            fpBtn.style.display = 'none';
-            divider.style.display = 'none';
-            setupBtn.textContent = '🫆 ফিঙ্গার এনাবল';
-            setupBtn.classList.remove('enabled');
+    // ===== Apps Script কল =====
+    async function callAppsScript(payload) {
+        const res = await fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify(payload)
+        });
+        return await res.json();
+    }
+
+    // ===== লোডিং স্ক্রিন বন্ধ করার হেল্পার =====
+    function hideLoading() {
+        const ls = document.getElementById('loadingScreen');
+        if (ls) {
+            ls.style.opacity = '0';
+            setTimeout(() => {
+                ls.style.display = 'none';
+            }, 250);
         }
     }
 
-    async function registerFingerprint() {
-        if (!window.PublicKeyCredential) {
-            showToast('❌ এই ব্রাউজারে ফিঙ্গার সাপোর্ট নেই', 'error');
-            return false;
-        }
+    // ===== অ্যাপ শুরু =====
+    async function initApp() {
+        const savedMobile = getSavedMobile();
 
-        try {
-            const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
-            if (!available) {
-                showToast('❌ এই ডিভাইসে ফিঙ্গার/স্ক্রিন লক নেই', 'error');
-                return false;
+        // ----------------------------------------------------------
+        // পুরনো ইউজার → সাথে সাথে অ্যাপ খুলে দাও, background-এ fetch
+        // ----------------------------------------------------------
+        if (savedMobile) {
+            // ৩০০ms পর অ্যাপ দেখাও (আইকন ১ পলকের জন্য দেখা যাবে)
+            setTimeout(() => {
+                hideLoading();
+                enterApp();
+            }, 300);
+
+            // Background-এ ব্লক চেক
+            try {
+                const data = await callAppsScript({
+                    deviceId: getDeviceId(),
+                    mobile: savedMobile
+                });
+                if (data.blocked === true) {
+                    document.getElementById('appContainer').classList.remove('show');
+                    document.getElementById('blockedScreen').style.display = 'block';
+                }
+            } catch (err) {
+                // ignore — background চেক ব্যর্থ হলে অ্যাপ চলতে দাও
+                console.warn('Background ব্লক চেক ব্যর্থ:', err);
             }
-        } catch (e) {
-            showToast('❌ ডিভাইস চেক করা যায়নি', 'error');
-            return false;
-        }
-
-        const challenge = new Uint8Array(32);
-        crypto.getRandomValues(challenge);
-        const userId = new Uint8Array(16);
-        crypto.getRandomValues(userId);
-
-        const publicKey = {
-            challenge: challenge,
-            rp: {
-                name: "GoldAdjustment",
-                id: window.location.hostname
-            },
-            user: {
-                id: userId,
-                name: "golduser",
-                displayName: "GoldAdjustment User"
-            },
-            pubKeyCredParams: [
-                { type: "public-key", alg: -7 },
-                { type: "public-key", alg: -257 }
-            ],
-            authenticatorSelection: {
-                authenticatorAttachment: "platform",
-                userVerification: "required",
-                residentKey: "preferred"
-            },
-            timeout: 60000,
-            attestation: "none"
-        };
-
-        try {
-            const credential = await navigator.credentials.create({ publicKey });
-            const credId = bufferToBase64(credential.rawId);
-            localStorage.setItem(LS_CRED_KEY, credId);
-            showToast('✅ ফিঙ্গার সফলভাবে এনাবল হয়েছে!', 'success');
-            updateFingerprintUI();
-            return true;
-        } catch (err) {
-            console.error(err);
-            if (err.name === 'NotAllowedError') {
-                showToast('❌ আপনি ফিঙ্গার সেটআপ বাতিল করেছেন', 'error');
-            } else {
-                showToast('❌ ফিঙ্গার সেটআপ ব্যর্থ: ' + err.message, 'error');
-            }
-            return false;
-        }
-    }
-
-    async function loginWithFingerprint() {
-        const credIdBase64 = localStorage.getItem(LS_CRED_KEY);
-        if (!credIdBase64) {
-            showToast('❌ আগে ফিঙ্গার এনাবল করুন', 'error');
             return;
         }
 
-        const challenge = new Uint8Array(32);
-        crypto.getRandomValues(challenge);
+        // ----------------------------------------------------------
+        // নতুন ইউজার → লোডিং দেখাও ও Apps Script-এ জিজ্ঞেস করো
+        // ----------------------------------------------------------
+        const minWait = new Promise(resolve => setTimeout(resolve, 500));
 
-        const publicKey = {
-            challenge: challenge,
-            rpId: window.location.hostname,
-            allowCredentials: [{
-                id: base64ToBuffer(credIdBase64),
-                type: "public-key",
-                transports: ["internal"]
-            }],
-            userVerification: "required",
-            timeout: 60000
-        };
+        const deviceId = getDeviceId();
+
+        let data = null;
+        let fetchError = null;
 
         try {
-            await navigator.credentials.get({ publicKey });
-            showToast('✅ ফিঙ্গার মিলেছে!', 'success', 1000);
-            setTimeout(() => enterApp(), 300);
+            const fetchPromise = callAppsScript({
+                deviceId: deviceId,
+                mobile: ''
+            });
+            const results = await Promise.all([fetchPromise, minWait]);
+            data = results[0];
         } catch (err) {
-            console.error(err);
-            if (err.name === 'NotAllowedError') {
-                showToast('❌ ফিঙ্গার মেলেনি বা বাতিল হয়েছে — PIN দিন', 'error');
+            fetchError = err;
+            await minWait;
+        }
+
+        hideLoading();
+
+        // নেটওয়ার্ক সমস্যা
+        if (fetchError) {
+            console.warn('ট্র্যাকিং ব্যর্থ:', fetchError);
+            document.getElementById('registerScreen').style.display = 'block';
+            return;
+        }
+
+        // ব্লকড
+        if (data.blocked === true) {
+            document.getElementById('registerScreen').style.display = 'none';
+            document.getElementById('blockedScreen').style.display = 'block';
+            return;
+        }
+
+        // নতুন ইউজার — মোবাইল চাই
+        if (data.needRegister === true) {
+            document.getElementById('registerScreen').style.display = 'block';
+            return;
+        }
+
+        // সব ঠিক (উদাহরণস্বরূপ ইউজার আগেই রেজিস্টারড ছিল)
+        enterApp();
+    }
+
+    // ===== রেজিস্ট্রেশন =====
+    async function submitRegistration() {
+        const mobile = document.getElementById('regMobile').value.trim();
+        const errEl = document.getElementById('regError');
+
+        if (!/^01[3-9]\d{8}$/.test(mobile)) {
+            errEl.textContent = '❌ সঠিক ১১ ডিজিটের মোবাইল নম্বর লিখুন (01XXXXXXXXX)';
+            return;
+        }
+
+        errEl.textContent = '⏳ সেভ হচ্ছে...';
+
+        try {
+            const data = await callAppsScript({
+                deviceId: getDeviceId(),
+                mobile: mobile
+            });
+
+            if (data.blocked === true) {
+                document.getElementById('registerScreen').style.display = 'none';
+                document.getElementById('blockedScreen').style.display = 'block';
+                return;
+            }
+
+            if (data.ok) {
+                saveMobile(mobile);
+                document.getElementById('registerScreen').style.display = 'none';
+                enterApp();
             } else {
-                showToast('❌ ফিঙ্গার লগইন ব্যর্থ — PIN দিন', 'error');
+                errEl.textContent = '❌ সেভ হয়নি, আবার চেষ্টা করুন';
             }
+        } catch (err) {
+            errEl.textContent = '❌ নেটওয়ার্ক সমস্যা, আবার চেষ্টা করুন';
         }
     }
 
-    async function toggleFingerprint() {
-        if (isFingerprintEnabled()) {
-            if (confirm('ফিঙ্গার লগইন বন্ধ করতে চান?')) {
-                localStorage.removeItem(LS_CRED_KEY);
-                updateFingerprintUI();
-                showToast('🗑️ ফিঙ্গার বন্ধ করা হয়েছে', 'info');
-            }
-        } else {
-            await registerFingerprint();
-        }
-    }
-
-    function updatePinDisplay() {
-        const input = document.getElementById('pinInput');
-        if (pin.length === 0) {
-            input.value = '';
-            input.placeholder = '— — — —';
-        } else {
-            input.value = '•'.repeat(pin.length);
-            input.placeholder = '';
-        }
-    }
-
-    function pressNum(val) {
-        if (val === 'clear') {
-            pin = pin.slice(0, -1);
-        } else {
-            if (pin.length < 4) {
-                pin += val;
-            }
-        }
-        updatePinDisplay();
-        document.getElementById('loginError').textContent = '';
-
-        if (pin.length === 4) {
-            setTimeout(verifyPin, 150);
-        }
-    }
-
-    function verifyPin() {
-        if (pin === CORRECT_PIN) {
-            enterApp();
-        } else {
-            const err = document.getElementById('loginError');
-            err.textContent = '❌ ভুল PIN! আবার চেষ্টা করুন।';
-            const input = document.getElementById('pinInput');
-            input.style.transition = '0.1s';
-            input.style.transform = 'translateX(-8px)';
-            setTimeout(() => input.style.transform = 'translateX(8px)', 100);
-            setTimeout(() => input.style.transform = 'translateX(0)', 200);
-
-            pin = '';
-            updatePinDisplay();
-        }
-    }
-
+    // ===== অ্যাপে ঢোকা =====
     function enterApp() {
-        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('registerScreen').style.display = 'none';
+        document.getElementById('blockedScreen').style.display = 'none';
+
         document.getElementById('appContainer').classList.add('show');
-        pin = '';
-        updatePinDisplay();
-        document.getElementById('loginError').textContent = '';
         showDashboard();
         calculateMain();
         calculatePureToTarget();
         calculateAnyToTarget();
         convertGramToVori();
         calculatePrice();
-        updateFingerprintUI();
     }
 
+    // ===== Exit — সরাসরি পেজ বন্ধ =====
     function logout() {
-        pin = '';
-        updatePinDisplay();
-        document.getElementById('loginError').textContent = '';
-        document.getElementById('appContainer').classList.remove('show');
-        document.getElementById('loginScreen').style.display = 'block';
-        showDashboard();
-        updateFingerprintUI();
-    }
-
-    document.addEventListener('keydown', function(e) {
-        if (document.getElementById('loginScreen').style.display === 'none') return;
-
-        if (e.key >= '0' && e.key <= '9') {
-            pressNum(e.key);
-        } else if (e.key === 'Backspace') {
-            pressNum('clear');
-        } else if (e.key === 'Enter') {
-            verifyPin();
+        if (confirm('অ্যাপ বন্ধ করতে চান?')) {
+            window.close();
+            setTimeout(() => {
+                document.body.innerHTML = '<div style="background:#f5f3f0; width:100%; height:100vh;"></div>';
+            }, 100);
         }
-    });
-
-    updatePinDisplay();
-    updateFingerprintUI();
+    }
 
     // ============================================================
     // SCREEN NAVIGATION
@@ -1251,7 +1200,13 @@
         const p = Math.round(rem % 10);
         return `${v}-${a}-${r}-${p}`;
     }
+
+    // ============================================================
+    // 🚀 অ্যাপ শুরু
+    // ============================================================
+    initApp();
 </script>
 
 </body>
 </html>
+
