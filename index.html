@@ -52,7 +52,6 @@
             margin-bottom: 24px;
         }
 
-        /* 🫆 Fingerprint Login Button */
         #fingerprintBtn {
             display: none;
             width: 80%;
@@ -421,6 +420,31 @@
             min-height: 40px;
         }
 
+        /* ===== প্রিন্ট বাটন ===== */
+        .print-btn {
+            background: #37474f;
+            color: #fff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 6px;
+            width: 100%;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 6px rgba(55,71,79,0.3);
+            transition: 0.15s;
+        }
+        .print-btn:active {
+            transform: scale(0.97);
+            background: #263238;
+        }
+        .print-btn .p-icon {
+            font-size: 15px;
+            margin-right: 4px;
+        }
+
         .price-result {
             background: linear-gradient(135deg, #fff8e1, #ffe9b0);
             border: 2px solid #b8860b;
@@ -470,12 +494,83 @@
         #toast.success { background: #2e7d32; }
         #toast.error { background: #c62828; }
         #toast.info { background: #1565c0; }
+
+        /* ============================================================
+           ===== প্রিন্ট স্টাইল (A5 LANDSCAPE + ১.১" টপ মার্জিন) =====
+           ============================================================ */
+        @page {
+            size: A5 landscape;   /* A5, ল্যান্ডস্কেপ */
+            margin: 0;            /* ব্রাউজারের ডিফল্ট মার্জিন বন্ধ */
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printArea, #printArea * {
+                visibility: visible;
+            }
+            #printArea {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                /* A5 landscape: 210mm × 148mm
+                   উপরে ১.১" = ২৭.৯৪mm খালি (লেটার হেডের জন্য)
+                   বাকি ৩ দিকে ১০mm মার্জিন */
+                padding: 27.94mm 10mm 10mm 10mm;
+                background: #fff;
+                box-sizing: border-box;
+            }
+            .print-header {
+                text-align: center;
+                margin-bottom: 10px;
+                border-bottom: 2px solid #b8860b;
+                padding-bottom: 6px;
+            }
+            .print-header h2 {
+                color: #b8860b;
+                font-size: 20px;
+            }
+            .print-header .sub {
+                font-size: 11px;
+                color: #666;
+                margin-top: 3px;
+            }
+            .print-content {
+                font-size: 14px;
+                line-height: 1.9;
+                white-space: pre-wrap;
+                color: #222;
+            }
+            .print-footer {
+                margin-top: 18px;
+                padding-top: 8px;
+                border-top: 1px dashed #999;
+                font-size: 11px;
+                color: #666;
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body>
 
 <!-- Toast notification -->
 <div id="toast"></div>
+
+<!-- প্রিন্ট এরিয়া (প্রিন্টের সময় ব্যবহৃত হবে) -->
+<div id="printArea" style="display:none;">
+    <div class="print-header">
+        <h2>✨ GoldAdjustment</h2>
+        <div class="sub">স্বর্ণ অ্যাডজাস্টমেন্ট রিপোর্ট</div>
+        <div class="sub" id="printDateTime"></div>
+    </div>
+    <div class="print-content" id="printContent"></div>
+    <div class="print-footer">
+        Dev: M.A.Ahad &nbsp;|&nbsp; 📞 01628255672
+    </div>
+</div>
 
 <!-- ============================================================ -->
 <!-- LOGIN SCREEN -->
@@ -485,7 +580,6 @@
     <h1>GoldAdjustment</h1>
     <div class="sub">সুরক্ষিত অ্যাক্সেস</div>
 
-    <!-- 🖐️ Fingerprint Button (only shows if enabled) -->
     <button id="fingerprintBtn" onclick="loginWithFingerprint()">
         <span class="fp-icon">🫆</span> লগইন 
     </button>
@@ -580,6 +674,9 @@
             </div>
             <button class="btn" onclick="calculateMain()">📊 গণনা করুন</button>
             <div class="result-box" id="mainResult">ফলাফল দেখাবে...</div>
+            <button class="print-btn" onclick="printResult('main')">
+                <span class="p-icon">🖨️</span> ফলাফল প্রিন্ট করুন
+            </button>
         </div>
 
         <!-- FEATURE 2: PURE -->
@@ -592,6 +689,9 @@
             <div class="row"><label>টার্গেট</label><input id="pureTarget" type="number" value="21" step="any" /></div>
             <button class="btn btn-secondary" onclick="calculatePureToTarget()">🧪 হিসাব করুন</button>
             <div class="result-box" id="pureResult">ফলাফল দেখাবে...</div>
+            <button class="print-btn" onclick="printResult('pure')">
+                <span class="p-icon">🖨️</span> ফলাফল প্রিন্ট করুন
+            </button>
         </div>
 
         <!-- FEATURE 3: ANY -->
@@ -605,6 +705,9 @@
             <div class="row"><label>টার্গেট K</label><input id="targetKaratAny" type="number" value="21" step="any" /></div>
             <button class="btn btn-secondary" onclick="calculateAnyToTarget()">🔄 হিসাব করুন</button>
             <div class="result-box" id="anyResult">ফলাফল দেখাবে...</div>
+            <button class="print-btn" onclick="printResult('any')">
+                <span class="p-icon">🖨️</span> ফলাফল প্রিন্ট করুন
+            </button>
         </div>
 
         <!-- FEATURE 4: GRAM -->
@@ -612,6 +715,9 @@
             <div class="feature-title">⚖️ গ্রাম ↔ ভরি-আনা-রতি-পয়েন্ট</div>
             <div class="row"><label>গ্রাম</label><input id="gramInput" type="number" value="0.0" step="any" oninput="convertGramToVori()" /></div>
             <div class="row"><label>ভরি</label><input id="voriOutput" type="text" value="0-0-0-0" oninput="convertVoriToGram()" /></div>
+            <button class="print-btn" onclick="printResult('gram')">
+                <span class="p-icon">🖨️</span> ফলাফল প্রিন্ট করুন
+            </button>
         </div>
 
         <!-- FEATURE 5: PRICE -->
@@ -652,6 +758,9 @@
                 <div class="sub-line" id="priceSubLine">০ ভরি ০ আনা ০ রতি ০ পয়েন্ট</div>
                 <div class="sub-line" id="laborSubLine" style="border-top:1px dashed #c9a227; margin-top:6px; padding-top:6px;"></div>
             </div>
+            <button class="print-btn" onclick="printResult('price')">
+                <span class="p-icon">🖨️</span> ফলাফল প্রিন্ট করুন
+            </button>
         </div>
     </div>
 </div>
@@ -664,7 +773,6 @@
     let pin = "";
     const LS_CRED_KEY = "goldAdjustment_credentialId";
 
-    // ===== Toast notification =====
     function showToast(msg, type = 'info', duration = 2500) {
         const t = document.getElementById('toast');
         t.textContent = msg;
@@ -673,7 +781,6 @@
         t._timer = setTimeout(() => { t.className = ''; }, duration);
     }
 
-    // ===== WebAuthn helpers =====
     function bufferToBase64(buf) {
         return btoa(String.fromCharCode(...new Uint8Array(buf)))
             .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
@@ -709,7 +816,6 @@
         }
     }
 
-    // ===== Fingerprint Registration =====
     async function registerFingerprint() {
         if (!window.PublicKeyCredential) {
             showToast('❌ এই ব্রাউজারে ফিঙ্গার সাপোর্ট নেই', 'error');
@@ -719,7 +825,7 @@
         try {
             const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
             if (!available) {
-                showToast('❌ এই ডিভাইসে ফিঙ্গার/স्क্রিন লক নেই', 'error');
+                showToast('❌ এই ডিভাইসে ফিঙ্গার/স্ক্রিন লক নেই', 'error');
                 return false;
             }
         } catch (e) {
@@ -744,8 +850,8 @@
                 displayName: "GoldAdjustment User"
             },
             pubKeyCredParams: [
-                { type: "public-key", alg: -7 },   // ES256
-                { type: "public-key", alg: -257 }  // RS256
+                { type: "public-key", alg: -7 },
+                { type: "public-key", alg: -257 }
             ],
             authenticatorSelection: {
                 authenticatorAttachment: "platform",
@@ -774,7 +880,6 @@
         }
     }
 
-    // ===== Fingerprint Login =====
     async function loginWithFingerprint() {
         const credIdBase64 = localStorage.getItem(LS_CRED_KEY);
         if (!credIdBase64) {
@@ -811,7 +916,6 @@
         }
     }
 
-    // ===== Toggle Fingerprint (setup / disable) =====
     async function toggleFingerprint() {
         if (isFingerprintEnabled()) {
             if (confirm('ফিঙ্গার লগইন বন্ধ করতে চান?')) {
@@ -824,7 +928,6 @@
         }
     }
 
-    // ===== PIN System =====
     function updatePinDisplay() {
         const input = document.getElementById('pinInput');
         if (pin.length === 0) {
@@ -869,7 +972,6 @@
         }
     }
 
-    // ===== Enter App =====
     function enterApp() {
         document.getElementById('loginScreen').style.display = 'none';
         document.getElementById('appContainer').classList.add('show');
@@ -895,7 +997,6 @@
         updateFingerprintUI();
     }
 
-    // ===== Keyboard support on login =====
     document.addEventListener('keydown', function(e) {
         if (document.getElementById('loginScreen').style.display === 'none') return;
 
@@ -908,7 +1009,6 @@
         }
     });
 
-    // ===== Init =====
     updatePinDisplay();
     updateFingerprintUI();
 
@@ -949,7 +1049,63 @@
     }
 
     // ============================================================
-    // CALCULATIONS (unchanged)
+    // 🖨️ প্রিন্ট ফাংশন
+    // ============================================================
+    function printResult(featureId) {
+        if (featureId === 'main') calculateMain();
+        if (featureId === 'pure') calculatePureToTarget();
+        if (featureId === 'any') calculateAnyToTarget();
+        if (featureId === 'gram') convertGramToVori();
+        if (featureId === 'price') calculatePrice();
+
+        let title = '';
+        let content = '';
+
+        if (featureId === 'main') {
+            title = '🪙 পাকা/জমা অ্যাডজাস্ট';
+            content = document.getElementById('mainResult').textContent;
+        } else if (featureId === 'pure') {
+            title = '✨ পাকা (২৪K) → টার্গেট ক্যারেট';
+            content = document.getElementById('pureResult').textContent;
+        } else if (featureId === 'any') {
+            title = '🔄 যেকোনো ক্যারেট → টার্গেট';
+            content = document.getElementById('anyResult').textContent;
+        } else if (featureId === 'gram') {
+            title = '⚖️ গ্রাম ↔ ভরি-আনা-রতি-পয়েন্ট';
+            const gram = document.getElementById('gramInput').value || '0';
+            const vori = document.getElementById('voriOutput').value || '0-0-0-0';
+            content = `গ্রাম  : ${gram} g\nভরি   : ${vori}`;
+        } else if (featureId === 'price') {
+            title = '💰 দাম / মূল্য হিসাব';
+            const amount = document.getElementById('priceAmount').textContent;
+            const subLine = document.getElementById('priceSubLine').textContent;
+            const laborLine = document.getElementById('laborSubLine').textContent;
+            content = `মোট মূল্য : ${amount}\n\nওজন       : ${subLine}\n${laborLine}`;
+        }
+
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('bn-BD', {
+            year: 'numeric', month: 'long', day: 'numeric'
+        });
+        const timeStr = now.toLocaleTimeString('bn-BD', {
+            hour: '2-digit', minute: '2-digit'
+        });
+
+        document.getElementById('printDateTime').textContent = `${dateStr} — ${timeStr}`;
+        document.getElementById('printContent').textContent = `${title}\n${'─'.repeat(30)}\n\n${content}`;
+
+        const printArea = document.getElementById('printArea');
+        printArea.style.display = 'block';
+
+        window.print();
+
+        setTimeout(() => {
+            printArea.style.display = 'none';
+        }, 500);
+    }
+
+    // ============================================================
+    // CALCULATIONS
     // ============================================================
     function calculateMain() {
         const tv = parseFloat(document.getElementById('tvori').value) || 0;
