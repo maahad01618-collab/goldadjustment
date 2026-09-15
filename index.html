@@ -579,13 +579,6 @@
     <h1>GoldAdjustment</h1>
     <div class="sub">সুরক্ষিত অ্যাক্সেস</div>
 
-    <input type="tel" id="phoneInput" inputmode="numeric" maxlength="11"
-           placeholder="01XXXXXXXXX" autocomplete="tel"
-           style="width:80%; padding:14px; font-size:20px; text-align:center;
-                  letter-spacing:2px; border:2px solid #d6cdc0; border-radius:12px;
-                  outline:none; background:#faf8f6; margin-bottom:12px;
-                  font-weight:bold; color:#b8860b;">
-
     <div style="display:flex; gap:8px; width:80%; margin:0 auto 12px auto;">
         <button id="userLoginTab" onclick="showUserLogin()" style="flex:1; padding:10px; border:0; border-radius:10px; background:#b8860b; color:#fff; font-weight:bold; cursor:pointer;">👤 User Login</button>
         <button id="adminLoginTab" onclick="showAdminLogin()" style="flex:1; padding:10px; border:1px solid #d6cdc0; border-radius:10px; background:#fff; color:#333; font-weight:bold; cursor:pointer;">🛠️ Admin Login</button>
@@ -975,6 +968,10 @@
     }
 
     async function initFirebaseLogin() {
+        // Keep login hidden while Firebase restores the saved local session.
+        document.getElementById('loginScreen').style.display = 'none';
+        setLoginError('');
+
         try {
             const appModule = await import('https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js');
             const authModule = await import('https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js');
@@ -984,18 +981,63 @@
             firebaseAuth = authModule.getAuth(app);
             firebaseDb = dbModule.getDatabase(app);
 
+            // IMPORTANT: restore Firebase session from this browser/device.
             await authModule.setPersistence(firebaseAuth, authModule.browserLocalPersistence);
             firebaseReady = true;
 
+            let authStateResolved = false;
+
             authModule.onAuthStateChanged(firebaseAuth, async (user) => {
-                if (!user) return;
-                await checkFirebaseUserAccess(user);
+                authStateResolved = true;
+
+                if (user) {
+                    await checkFirebaseUserAccess(user);
+                } else {
+                    // No saved Firebase session. Only now show the login screen.
+                    document.getElementById('appContainer').classList.remove('show');
+                    document.getElementById('loginScreen').style.display = 'block';
+                    showUserLogin();
+                }
             });
+
+            // Safety fallback: if Firebase takes unusually long to restore state,
+            // use the verified offline cache when available.
+            setTimeout(() => {
+                if (!authStateResolved && !firebaseAuth.currentUser) {
+                    const cachedRaw = (() => {
+                        try {
+                            return JSON.parse(localStorage.getItem(OFFLINE_ACCESS_KEY) || 'null');
+                        } catch (e) {
+                            return null;
+                        }
+                    })();
+
+                    if (cachedRaw && cachedRaw.uid && cachedRaw.status === 'active' && cachedRaw.activated === true) {
+                        if (!cachedRaw.expiryDate || new Date(cachedRaw.expiryDate + 'T23:59:59') >= new Date()) {
+                            enterApp();
+                            showToast('📴 Offline Mode — অ্যাপ চালু আছে', 'info', 3000);
+                        } else {
+                            clearOfflineAccess();
+                            document.getElementById('loginScreen').style.display = 'block';
+                        }
+                    } else {
+                        document.getElementById('loginScreen').style.display = 'block';
+                    }
+                }
+            }, 5000);
+
         } catch (error) {
             console.error('Firebase initialization error:', error);
-            // If Firebase/CDN is unavailable but this browser has a verified session,
-            // allow the calculation app to open in offline mode.
-            const cachedRaw = (() => { try { return JSON.parse(localStorage.getItem(OFFLINE_ACCESS_KEY) || 'null'); } catch (e) { return null; } })();
+
+            // Firebase/CDN unavailable: use the last verified access cache.
+            const cachedRaw = (() => {
+                try {
+                    return JSON.parse(localStorage.getItem(OFFLINE_ACCESS_KEY) || 'null');
+                } catch (e) {
+                    return null;
+                }
+            })();
+
             if (cachedRaw && cachedRaw.uid && cachedRaw.status === 'active' && cachedRaw.activated === true) {
                 if (!cachedRaw.expiryDate || new Date(cachedRaw.expiryDate + 'T23:59:59') >= new Date()) {
                     enterApp();
@@ -1003,6 +1045,8 @@
                     return;
                 }
             }
+
+            document.getElementById('loginScreen').style.display = 'block';
             setLoginError('❌ Firebase সংযোগ করা যায়নি। প্রথমবার Login/Activation-এর জন্য Internet প্রয়োজন।');
         }
     }
@@ -1162,16 +1206,9 @@
         calculatePrice();
     }
 
-    async function logout() {
-        try {
-            if (firebaseAuth) {
-                const { signOut } = await import('https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js');
-                await signOut(firebaseAuth);
-            }
-        } catch (error) {
-            console.error('Logout error:', error);
-        }
-
+    function logout() {
+        // Exit only hides the app. Do NOT sign out Firebase, so the saved
+        // activation/session remains and the next app launch opens directly.
         document.getElementById('appContainer').classList.remove('show');
         document.getElementById('adminScreen').style.display = 'none';
         document.getElementById('adminControlWrap').style.display = 'none';
