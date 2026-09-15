@@ -915,6 +915,65 @@
         return phone + '@goldadjustment.com';
     }
 
+    // ============================================================
+    // OFFLINE ACCESS CACHE
+    // Stores only the last successfully verified UID/access state.
+    // No password or activation code is stored.
+    // ============================================================
+    const OFFLINE_ACCESS_KEY = 'goldAdjustmentOfflineAccess_v1';
+
+    function saveOfflineAccess(user, data = {}) {
+        try {
+            const expiryDate = String(data.expiryDate || '').trim();
+            localStorage.setItem(OFFLINE_ACCESS_KEY, JSON.stringify({
+                uid: user.uid,
+                phone: String(data.phone || ''),
+                status: String(data.status || 'active').toLowerCase(),
+                activated: data.activated === true,
+                expiryDate: expiryDate,
+                verifiedAt: Date.now(),
+                isAdmin: user.uid === ADMIN_UID
+            }));
+        } catch (e) {
+            console.warn('Offline access cache save failed:', e);
+        }
+    }
+
+    function getOfflineAccess(user) {
+        try {
+            const raw = localStorage.getItem(OFFLINE_ACCESS_KEY);
+            if (!raw) return null;
+            const cached = JSON.parse(raw);
+            if (!cached || cached.uid !== user.uid) return null;
+            if (cached.isAdmin) return cached;
+            if (cached.status !== 'active' || cached.activated !== true) return null;
+
+            if (cached.expiryDate) {
+                const expiry = new Date(cached.expiryDate + 'T23:59:59');
+                if (expiry < new Date()) {
+                    localStorage.removeItem(OFFLINE_ACCESS_KEY);
+                    return null;
+                }
+            }
+            return cached;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    function clearOfflineAccess() {
+        try { localStorage.removeItem(OFFLINE_ACCESS_KEY); } catch (e) {}
+    }
+
+    function tryOfflineAccess(user) {
+        const cached = getOfflineAccess(user);
+        if (!cached) return false;
+        enterApp();
+        updateAdminButton();
+        showToast('📴 Offline Mode — অ্যাপ চালু আছে', 'info', 3000);
+        return true;
+    }
+
     async function initFirebaseLogin() {
         try {
             const appModule = await import('https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js');
@@ -934,7 +993,17 @@
             });
         } catch (error) {
             console.error('Firebase initialization error:', error);
-            setLoginError('❌ Firebase সংযোগ করা যায়নি। ইন্টারনেট সংযোগ পরীক্ষা করুন।');
+            // If Firebase/CDN is unavailable but this browser has a verified session,
+            // allow the calculation app to open in offline mode.
+            const cachedRaw = (() => { try { return JSON.parse(localStorage.getItem(OFFLINE_ACCESS_KEY) || 'null'); } catch (e) { return null; } })();
+            if (cachedRaw && cachedRaw.uid && cachedRaw.status === 'active' && cachedRaw.activated === true) {
+                if (!cachedRaw.expiryDate || new Date(cachedRaw.expiryDate + 'T23:59:59') >= new Date()) {
+                    enterApp();
+                    showToast('📴 Internet নেই — Offline Mode চালু', 'info', 3500);
+                    return;
+                }
+            }
+            setLoginError('❌ Firebase সংযোগ করা যায়নি। প্রথমবার Login/Activation-এর জন্য Internet প্রয়োজন।');
         }
     }
 
@@ -943,6 +1012,7 @@
             const { ref, get } = await import('https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js');
             // Admin UID bypasses normal user activation/database record requirement.
             if (user.uid === ADMIN_UID) {
+                saveOfflineAccess(user, { status: 'active', activated: true });
                 enterApp();
                 updateAdminButton();
                 return true;
@@ -951,6 +1021,7 @@
             const snapshot = await get(ref(firebaseDb, 'users/' + user.uid));
 
             if (!snapshot.exists()) {
+                clearOfflineAccess();
                 await firebaseAuth.signOut();
                 setLoginError('❌ User Database record পাওয়া যায়নি।');
                 return false;
@@ -964,7 +1035,7 @@
             const expired = expiryDate && new Date(expiryDate + 'T23:59:59') < new Date();
 
             if (expired) {
-                await firebaseDb;
+                clearOfflineAccess();
                 await import('https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js').then(({ref, update}) =>
                     update(ref(firebaseDb, 'users/' + user.uid), { status: 'blocked', activated: false })
                 );
@@ -974,17 +1045,29 @@
             }
 
             if (status !== 'active' || !activated) {
+                clearOfflineAccess();
                 await firebaseAuth.signOut();
                 setLoginError('🚫 আপনার অ্যাকাউন্ট Block করা আছে। Payment/Activation সম্পন্ন করুন।');
                 showToast('🚫 Access Blocked', 'error', 3500);
                 return false;
             }
 
+            // Successful online verification = permission to continue offline.
+            // Empty expiryDate means lifetime access until Admin blocks the account.
+            saveOfflineAccess(user, data);
             enterApp();
             return true;
         } catch (error) {
             console.error('Access check error:', error);
-            setLoginError('❌ User status যাচাই করা যায়নি।');
+
+            // Only fall back to cached access when the device is actually offline.
+            // When Internet is available, Firebase remains the authority so that
+            // Admin block/unblock changes are applied immediately.
+            if (!navigator.onLine && tryOfflineAccess(user)) {
+                return true;
+            }
+
+            setLoginError('❌ User status যাচাই করা যায়নি। Internet সংযোগ পরীক্ষা করুন।');
             return false;
         }
     }
@@ -1112,6 +1195,19 @@
     });
     document.getElementById('adminPasswordInput').addEventListener('keydown', function (e) {
         if (e.key === 'Enter') loginWithFirebase();
+    });
+
+    // When Internet returns, immediately re-check Firebase so an Admin block/unblock
+    // or expiry change is applied to the currently open app.
+    window.addEventListener('online', async () => {
+        showToast('🌐 Internet connected — License যাচাই হচ্ছে...', 'info', 2500);
+        if (firebaseAuth && firebaseAuth.currentUser) {
+            await checkFirebaseUserAccess(firebaseAuth.currentUser);
+        }
+    });
+
+    window.addEventListener('offline', () => {
+        showToast('📴 Offline Mode — Calculation চালু থাকবে', 'info', 3000);
     });
 
     initFirebaseLogin();
@@ -1591,5 +1687,16 @@
     }
 </script>
 
+<script>
+// Cache the app shell and Firebase modules after the first online visit.
+// This makes the calculation app load offline on supported browsers/PWA installs.
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err =>
+            console.warn('Offline service worker registration failed:', err)
+        );
+    });
+}
+</script>
 </body>
 </html>
