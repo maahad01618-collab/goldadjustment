@@ -1118,7 +1118,7 @@
             if (status !== 'active' || !activated) {
                 clearOfflineAccess();
                 await firebaseAuth.signOut();
-                setLoginError('🚫 আপনার অ্যাকাউন্ট Block করা আছে। Payment/Activation সম্পন্ন করুন।');
+                setLoginError('🚫 আপনার অ্যাকাউন্টের মেয়াদ শেষ হয়েছ। Payment/Activation সম্পন্ন করুন।');
                 showToast('🚫 Access Blocked', 'error', 3500);
                 return false;
             }
