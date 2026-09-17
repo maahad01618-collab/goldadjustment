@@ -219,6 +219,27 @@
             grid-column: span 2;
         }
 
+        /* 🧮 ক্যালকুলেটর বাটন ছোট ভার্সন (দাম/মূল্য এর ডানে) */
+        .dash-btn.calc-mini {
+            padding: 22px 4px;
+            font-size: 12px;
+        }
+        .dash-btn.calc-mini .icon {
+            font-size: 26px;
+            margin-bottom: 4px;
+        }
+
+        /* দাম/মূল্য + ক্যালকুলেটর একসাথে একই সারিতে */
+        .dash-row-price-calc {
+            grid-column: span 2;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 12px;
+        }
+        .dash-row-price-calc .dash-btn {
+            width: 100%;
+        }
+
         /* ===== Footer with Exit button ===== */
         .dashboard-footer {
             text-align: center;
@@ -458,7 +479,7 @@
             border-radius: 10px;
             font-size: 14px;
             font-weight: 600;
-            z-index: 9999;
+            z-index: 99999;
             transition: transform 0.3s ease;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             max-width: 90%;
@@ -518,11 +539,122 @@
         }
 
         /* ============================================================
+           ===== 🧮 CALCULATOR MODAL CSS =====
+           ============================================================ */
+        .calc-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 99999;
+            justify-content: center;
+            align-items: center;
+        }
+        .calc-modal .calculator {
+            position: relative;
+            width: 340px;
+            background-color: #f3f3f3;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            padding-bottom: 5px;
+            cursor: grab;
+        }
+        .calc-modal .calculator:active { cursor: grabbing; }
+
+        .calc-modal .display-container {
+            background-color: #f3f3f3;
+            padding: 15px 15px 5px 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            min-height: 100px;
+        }
+        .calc-modal .expression {
+            font-size: 13px;
+            color: #666;
+            text-align: right;
+            min-height: 18px;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .calc-modal .result {
+            font-size: 38px;
+            font-weight: 600;
+            color: #000;
+            text-align: right;
+            word-wrap: break-word;
+            word-break: break-all;
+            line-height: 1.1;
+        }
+        .calc-modal .memory-row {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            padding: 0 5px 5px 5px;
+            gap: 2px;
+        }
+        .calc-modal .memory-btn {
+            background: transparent;
+            border: none;
+            font-size: 12px;
+            color: #333;
+            padding: 8px 0;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .calc-modal .memory-btn:hover { background-color: #e0e0e0; }
+
+        .calc-modal .keypad {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3px;
+            padding: 0 5px 5px 5px;
+        }
+        .calc-modal button {
+            border: 1px solid #dcdcdc;
+            background-color: #f9f9f9;
+            font-size: 16px;
+            padding: 12px 0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.1s;
+            outline: none;
+            font-weight: 500;
+        }
+        .calc-modal button:hover { background-color: #eaeaea; }
+        .calc-modal button:active { background-color: #dcdcdc; }
+        .calc-modal .operator { font-size: 18px; }
+
+        .calc-modal .equal-btn {
+            background-color: #0067c0;
+            color: white;
+            border: none;
+            font-size: 20px;
+        }
+        .calc-modal .equal-btn:hover { background-color: #005aab; }
+        .calc-modal .equal-btn:active { background-color: #004e94; }
+
+        .calc-close-btn {
+            position: absolute;
+            top: 5px; right: 10px;
+            background: transparent !important;
+            border: none !important;
+            font-size: 20px !important;
+            font-weight: bold;
+            color: #888;
+            cursor: pointer;
+            padding: 0 !important;
+        }
+        .calc-close-btn:hover { color: #d32f2f !important; background: transparent !important; }
+
+        /* ============================================================
            ===== প্রিন্ট স্টাইল (A5 LANDSCAPE + ১.১" টপ মার্জিন) =====
            ============================================================ */
         @page {
-            size: A5 landscape;   /* A5, ল্যান্ডস্কেপ */
-            margin: 0;            /* ব্রাউজারের ডিফল্ট মার্জিন বন্ধ */
+            size: A5 landscape;
+            margin: 0;
         }
 
         @media print {
@@ -537,9 +669,6 @@
                 left: 0;
                 top: 0;
                 width: 100%;
-                /* A5 landscape: 210mm × 148mm
-                   উপরে ১.১" = ২৭.৯৪mm খালি (লেটার হেডের জন্য)
-                   বাকি ৩ দিকে ১০mm মার্জিন */
                 padding: 27.94mm 10mm 10mm 10mm;
                 background: #fff;
                 box-sizing: border-box;
@@ -684,8 +813,14 @@
             <div class="dash-btn" onclick="openFeature('gram')">
                 <span class="icon">⚖️</span> গ্রাম↔ভরি
             </div>
-            <div class="dash-btn full-width" onclick="openFeature('price')">
-                <span class="icon">💰</span> দাম / মূল্য হিসাব
+            <!-- দাম/মূল্য + ক্যালকুলেটর একই সারিতে -->
+            <div class="dash-row-price-calc">
+                <div class="dash-btn" onclick="openFeature('price')">
+                    <span class="icon">💰</span> দাম / মূল্য হিসাব
+                </div>
+                <div class="dash-btn calc-mini" onclick="openCalculator()">
+                    <span class="icon">🧮</span> ক্যালকুলেটর
+                </div>
             </div>
         </div>
 
@@ -864,6 +999,65 @@
     </div>
 </div>
 
+<!-- ============================================================ -->
+<!-- ===== 🧮 CALCULATOR MODAL ===== -->
+<!-- ============================================================ -->
+<div id="calcModal" class="calc-modal">
+    <div class="calculator" id="draggableCalc">
+        <!-- Display Area -->
+        <div class="display-container">
+            <div class="expression" id="calcExpression"></div>
+            <div class="result" id="calcResult">0</div>
+        </div>
+
+        <!-- Memory Buttons -->
+        <div class="memory-row">
+            <button class="memory-btn" onclick="calcMemoryClear()">MC</button>
+            <button class="memory-btn" onclick="calcMemoryRecall()">MR</button>
+            <button class="memory-btn" onclick="calcMemoryAdd()">M+</button>
+            <button class="memory-btn" onclick="calcMemorySub()">M-</button>
+            <button class="memory-btn" onclick="calcMemoryStore()">MS</button>
+            <button class="memory-btn">M▼</button>
+        </div>
+
+        <!-- Main Keypad -->
+        <div class="keypad">
+            <button class="operator" onclick="calcInputOperator('%')">%</button>
+            <button onclick="calcClearEntry()">CE</button>
+            <button onclick="calcClearAll()">C</button>
+            <button class="operator" onclick="calcBackspace()">⌫</button>
+
+            <button class="operator" onclick="calcInputOperator('1/')">1/x</button>
+            <button class="operator" onclick="calcInputOperator('sqr')">x²</button>
+            <button class="operator" onclick="calcInputOperator('sqrt')">²√x</button>
+            <button class="operator" onclick="calcInputOperator('/')">÷</button>
+
+            <button onclick="calcInputDigit('7')">7</button>
+            <button onclick="calcInputDigit('8')">8</button>
+            <button onclick="calcInputDigit('9')">9</button>
+            <button class="operator" onclick="calcInputOperator('*')">×</button>
+
+            <button onclick="calcInputDigit('4')">4</button>
+            <button onclick="calcInputDigit('5')">5</button>
+            <button onclick="calcInputDigit('6')">6</button>
+            <button class="operator" onclick="calcInputOperator('-')">−</button>
+
+            <button onclick="calcInputDigit('1')">1</button>
+            <button onclick="calcInputDigit('2')">2</button>
+            <button onclick="calcInputDigit('3')">3</button>
+            <button class="operator" onclick="calcInputOperator('+')">+</button>
+
+            <button onclick="calcToggleSign()">+/-</button>
+            <button onclick="calcInputDigit('0')">0</button>
+            <button onclick="calcInputDigit('.')">.</button>
+            <button class="equal-btn" onclick="calcCalculateResult()">=</button>
+        </div>
+        
+        <!-- ক্লোজ বাটন -->
+        <button class="calc-close-btn" onclick="closeCalculator()">✖</button>
+    </div>
+</div>
+
 <script>
     // ============================================================
     // 🔐 FIREBASE PHONE + ACTIVATION CODE LOGIN
@@ -937,8 +1131,6 @@
 
     // ============================================================
     // OFFLINE ACCESS CACHE
-    // Stores only the last successfully verified UID/access state.
-    // No password or activation code is stored.
     // ============================================================
     const OFFLINE_ACCESS_KEY = 'goldAdjustmentOfflineAccess_v1';
 
@@ -995,7 +1187,6 @@
     }
 
     async function initFirebaseLogin() {
-        // Keep login hidden while Firebase restores the saved local session.
         document.getElementById('loginScreen').style.display = 'none';
         setLoginError('');
 
@@ -1008,7 +1199,6 @@
             firebaseAuth = authModule.getAuth(app);
             firebaseDb = dbModule.getDatabase(app);
 
-            // IMPORTANT: restore Firebase session from this browser/device.
             await authModule.setPersistence(firebaseAuth, authModule.browserLocalPersistence);
             firebaseReady = true;
 
@@ -1020,15 +1210,12 @@
                 if (user) {
                     await checkFirebaseUserAccess(user);
                 } else {
-                    // No saved Firebase session. Only now show the login screen.
                     document.getElementById('appContainer').classList.remove('show');
                     document.getElementById('loginScreen').style.display = 'block';
                     showUserLogin();
                 }
             });
 
-            // Safety fallback: if Firebase takes unusually long to restore state,
-            // use the verified offline cache when available.
             setTimeout(() => {
                 if (!authStateResolved && !firebaseAuth.currentUser) {
                     const cachedRaw = (() => {
@@ -1056,7 +1243,6 @@
         } catch (error) {
             console.error('Firebase initialization error:', error);
 
-            // Firebase/CDN unavailable: use the last verified access cache.
             const cachedRaw = (() => {
                 try {
                     return JSON.parse(localStorage.getItem(OFFLINE_ACCESS_KEY) || 'null');
@@ -1081,7 +1267,6 @@
     async function checkFirebaseUserAccess(user) {
         try {
             const { ref, get } = await import('https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js');
-            // Admin UID bypasses normal user activation/database record requirement.
             if (user.uid === ADMIN_UID) {
                 saveOfflineAccess(user, { status: 'active', activated: true });
                 enterApp();
@@ -1123,17 +1308,12 @@
                 return false;
             }
 
-            // Successful online verification = permission to continue offline.
-            // Empty expiryDate means lifetime access until Admin blocks the account.
             saveOfflineAccess(user, data);
             enterApp();
             return true;
         } catch (error) {
             console.error('Access check error:', error);
 
-            // Only fall back to cached access when the device is actually offline.
-            // When Internet is available, Firebase remains the authority so that
-            // Admin block/unblock changes are applied immediately.
             if (!navigator.onLine && tryOfflineAccess(user)) {
                 return true;
             }
@@ -1233,11 +1413,7 @@
         calculatePrice();
     }
 
-    // Exit: completely close the app. Does NOT sign out Firebase, so the
-    // saved session remains and next launch opens directly (no login page).
     function exitApp() {
-        // Try to close the actual window/tab. Most mobile browsers block this,
-        // so the fallback overlay is shown if the window is still open.
         window.close();
 
         setTimeout(() => {
@@ -1251,7 +1427,6 @@
         }, 150);
     }
 
-    // Re-open the app from the closed overlay without showing the login page.
     function reopenApp() {
         document.getElementById('closedOverlay').classList.remove('show');
         enterApp();
@@ -1270,8 +1445,6 @@
         if (e.key === 'Enter') loginWithFirebase();
     });
 
-    // When Internet returns, immediately re-check Firebase so an Admin block/unblock
-    // or expiry change is applied to the currently open app.
     window.addEventListener('online', async () => {
         showToast('🌐 Internet connected — License যাচাই হচ্ছে...', 'info', 2500);
         if (firebaseAuth && firebaseAuth.currentUser) {
@@ -1459,7 +1632,6 @@
             const authModule = await import('https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js');
             const dbModule = await import('https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js');
 
-            // Secondary Firebase app prevents the Admin session from being replaced.
             const creatorAppName = 'userCreator_' + Date.now();
             const creatorApp = appModule.initializeApp(FIREBASE_CONFIG, creatorAppName);
             const creatorAuth = authModule.getAuth(creatorApp);
@@ -1758,11 +1930,303 @@
         const p = Math.round(rem % 10);
         return `${v}-${a}-${r}-${p}`;
     }
+
+    // ============================================================
+    // 🧮 CALCULATOR MODAL FUNCTIONS
+    // ============================================================
+    let calcCurrentInput = '0';
+    let calcPreviousInput = '';
+    let calcOperator = '';
+    let calcExpressionHistory = '';
+    let calcIsNewInput = true;
+    let calcMemoryValue = 0;
+
+    const calcResultEl = document.getElementById('calcResult');
+    const calcExpressionEl = document.getElementById('calcExpression');
+
+    function openCalculator() {
+        document.getElementById('calcModal').style.display = 'flex';
+        const calcBox = document.getElementById('draggableCalc');
+        calcBox.style.position = 'relative';
+        calcBox.style.left = 'auto';
+        calcBox.style.top = 'auto';
+    }
+
+    function closeCalculator() {
+        document.getElementById('calcModal').style.display = 'none';
+    }
+
+    const calcModalEl = document.getElementById('calcModal');
+    const draggableCalcEl = document.getElementById('draggableCalc');
+    let calcIsDragging = false;
+    let calcOffsetX, calcOffsetY;
+
+    draggableCalcEl.addEventListener('mousedown', (e) => {
+        if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT') return;
+        calcIsDragging = true;
+        calcOffsetX = e.clientX - draggableCalcEl.getBoundingClientRect().left;
+        calcOffsetY = e.clientY - draggableCalcEl.getBoundingClientRect().top;
+        calcModalEl.style.justifyContent = 'flex-start';
+        calcModalEl.style.alignItems = 'flex-start';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!calcIsDragging) return;
+        draggableCalcEl.style.position = 'absolute';
+        draggableCalcEl.style.left = `${e.clientX - calcOffsetX}px`;
+        draggableCalcEl.style.top = `${e.clientY - calcOffsetY}px`;
+    });
+
+    document.addEventListener('mouseup', () => { calcIsDragging = false; });
+
+    draggableCalcEl.addEventListener('touchstart', (e) => {
+        if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT') return;
+        calcIsDragging = true;
+        const touch = e.touches[0];
+        calcOffsetX = touch.clientX - draggableCalcEl.getBoundingClientRect().left;
+        calcOffsetY = touch.clientY - draggableCalcEl.getBoundingClientRect().top;
+        calcModalEl.style.justifyContent = 'flex-start';
+        calcModalEl.style.alignItems = 'flex-start';
+    }, {passive: true});
+
+    document.addEventListener('touchmove', (e) => {
+        if (!calcIsDragging) return;
+        const touch = e.touches[0];
+        draggableCalcEl.style.position = 'absolute';
+        draggableCalcEl.style.left = `${touch.clientX - calcOffsetX}px`;
+        draggableCalcEl.style.top = `${touch.clientY - calcOffsetY}px`;
+    }, {passive: true});
+
+    document.addEventListener('touchend', () => { calcIsDragging = false; });
+
+    function calcFormatNumber(numStr) {
+        if (numStr === 'Error' || numStr === 'Cannot divide by zero') return numStr;
+        if (numStr === '-') return '-';
+        let parts = numStr.split('.');
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return parts.join('.');
+    }
+
+    function calcAdjustFontSize() {
+        const length = calcResultEl.innerText.length;
+        if (length > 14) calcResultEl.style.fontSize = '24px';
+        else if (length > 11) calcResultEl.style.fontSize = '28px';
+        else if (length > 8) calcResultEl.style.fontSize = '33px';
+        else calcResultEl.style.fontSize = '38px';
+    }
+
+    function calcUpdateDisplay() {
+        calcResultEl.innerText = calcFormatNumber(calcCurrentInput);
+        calcExpressionEl.innerText = calcExpressionHistory;
+        calcAdjustFontSize();
+    }
+
+    function calcInputDigit(digit) {
+        if (calcIsNewInput) {
+            calcCurrentInput = digit === '.' ? '0.' : digit;
+            calcIsNewInput = false;
+        } else {
+            if (digit === '.' && calcCurrentInput.includes('.')) return;
+            if (calcCurrentInput === '0' && digit !== '.') {
+                calcCurrentInput = digit;
+            } else {
+                calcCurrentInput += digit;
+            }
+        }
+        calcUpdateDisplay();
+    }
+
+    function calcInputOperator(op) {
+        if (calcCurrentInput === 'Error' || calcCurrentInput === 'Cannot divide by zero') calcClearAll();
+
+        if (op === '1/') {
+            calcExpressionHistory = `1/(${calcFormatNumber(calcCurrentInput)})`;
+            calcCurrentInput = (1 / parseFloat(calcCurrentInput.replace(/,/g, ''))).toString();
+            calcIsNewInput = true; calcUpdateDisplay(); return;
+        }
+        if (op === 'sqr') {
+            calcExpressionHistory = `sqr(${calcFormatNumber(calcCurrentInput)})`;
+            let val = parseFloat(calcCurrentInput.replace(/,/g, ''));
+            calcCurrentInput = (val * val).toString();
+            calcIsNewInput = true; calcUpdateDisplay(); return;
+        }
+        if (op === 'sqrt') {
+            calcExpressionHistory = `√(${calcFormatNumber(calcCurrentInput)})`;
+            let val = parseFloat(calcCurrentInput.replace(/,/g, ''));
+            calcCurrentInput = (Math.sqrt(val)).toString();
+            calcIsNewInput = true; calcUpdateDisplay(); return;
+        }
+        if (op === '%') {
+            let val = parseFloat(calcCurrentInput.replace(/,/g, ''));
+            calcCurrentInput = (val / 100).toString();
+            calcIsNewInput = true; calcUpdateDisplay(); return;
+        }
+
+        let rawCurrent = calcCurrentInput.replace(/,/g, '');
+        if (calcOperator && !calcIsNewInput) {
+            calcCalculateResult(false);
+            rawCurrent = calcCurrentInput.replace(/,/g, '');
+        }
+        calcPreviousInput = rawCurrent;
+        calcOperator = op;
+        calcIsNewInput = true;
+
+        let opSymbol = op === '*' ? '×' : op === '/' ? '÷' : op;
+        calcExpressionHistory = `${calcFormatNumber(calcPreviousInput)} ${opSymbol}`;
+        calcUpdateDisplay();
+    }
+
+    function calcCalculateResult(showFullHistory = true) {
+        if (!calcOperator || calcPreviousInput === '') return;
+
+        let prev = parseFloat(calcPreviousInput);
+        let curr = parseFloat(calcCurrentInput.replace(/,/g, ''));
+        let result = 0;
+
+        switch (calcOperator) {
+            case '+': result = prev + curr; break;
+            case '-': result = prev - curr; break;
+            case '*': result = prev * curr; break;
+            case '/': 
+                if (curr === 0) {
+                    calcCurrentInput = 'Cannot divide by zero';
+                    calcExpressionHistory = '';
+                    calcOperator = ''; calcIsNewInput = true;
+                    calcUpdateDisplay(); return;
+                }
+                result = prev / curr; break;
+        }
+
+        result = Math.round(result * 100000000000) / 100000000000;
+
+        if (showFullHistory) {
+            let opSymbol = calcOperator === '*' ? '×' : calcOperator === '/' ? '÷' : calcOperator;
+            calcExpressionHistory = `${calcFormatNumber(calcPreviousInput)} ${opSymbol} ${calcFormatNumber(calcCurrentInput)} =`;
+        }
+
+        calcCurrentInput = result.toString();
+        calcOperator = ''; calcPreviousInput = ''; calcIsNewInput = true;
+        
+        calcUpdateDisplay();
+    }
+
+    function calcClearAll() {
+        calcCurrentInput = '0'; calcPreviousInput = ''; calcOperator = '';
+        calcExpressionHistory = ''; calcIsNewInput = true;
+        calcUpdateDisplay();
+    }
+
+    function calcClearEntry() {
+        calcCurrentInput = '0'; calcIsNewInput = true;
+        calcUpdateDisplay();
+    }
+
+    function calcBackspace() {
+        if (calcIsNewInput || calcCurrentInput === 'Error' || calcCurrentInput === 'Cannot divide by zero') {
+            calcClearEntry(); return;
+        }
+        if (calcCurrentInput.length > 1) {
+            calcCurrentInput = calcCurrentInput.slice(0, -1);
+            if (calcCurrentInput === '-') calcCurrentInput = '0';
+        } else {
+            calcCurrentInput = '0'; calcIsNewInput = true;
+        }
+        calcUpdateDisplay();
+    }
+
+    function calcToggleSign() {
+        if (calcCurrentInput === '0' || calcCurrentInput === 'Error' || calcCurrentInput === 'Cannot divide by zero') return;
+        if (calcCurrentInput.startsWith('-')) {
+            calcCurrentInput = calcCurrentInput.substring(1);
+        } else {
+            calcCurrentInput = '-' + calcCurrentInput;
+        }
+        calcUpdateDisplay();
+    }
+
+    function calcMemoryClear() { calcMemoryValue = 0; showToast('Memory Cleared', 'info', 1500); }
+    function calcMemoryRecall() { 
+        calcCurrentInput = calcMemoryValue.toString(); 
+        calcIsNewInput = true; calcUpdateDisplay();
+    }
+    function calcMemoryStore() { 
+        calcMemoryValue = parseFloat(calcCurrentInput.replace(/,/g, '')) || 0; 
+        showToast('Stored in Memory', 'success', 1500);
+    }
+    function calcMemoryAdd() { 
+        calcMemoryValue += parseFloat(calcCurrentInput.replace(/,/g, '')) || 0; 
+        calcIsNewInput = true; showToast('Added to Memory', 'success', 1500);
+    }
+    function calcMemorySub() { 
+        calcMemoryValue -= parseFloat(calcCurrentInput.replace(/,/g, '')) || 0; 
+        calcIsNewInput = true; showToast('Subtracted from Memory', 'success', 1500);
+    }
+
+    // ============================================================
+    // ⌨️ PC KEYBOARD SUPPORT
+    // ============================================================
+    document.addEventListener('keydown', function(event) {
+        const calcModal = document.getElementById('calcModal');
+        const isCalcOpen = calcModal && calcModal.style.display === 'flex';
+        
+        if (isCalcOpen) {
+            const activeEl = document.activeElement;
+            const isInputFocused = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA');
+            
+            if (isInputFocused) return;
+            
+            const key = event.key;
+            
+            if (/^[0-9]$/.test(key)) {
+                event.preventDefault();
+                calcInputDigit(key);
+            }
+            else if (key === '.' || key === ',') {
+                event.preventDefault();
+                calcInputDigit('.');
+            }
+            else if (key === '+') {
+                event.preventDefault();
+                calcInputOperator('+');
+            }
+            else if (key === '-') {
+                event.preventDefault();
+                calcInputOperator('-');
+            }
+            else if (key === '*' || key === 'x' || key === 'X') {
+                event.preventDefault();
+                calcInputOperator('*');
+            }
+            else if (key === '/') {
+                event.preventDefault();
+                calcInputOperator('/');
+            }
+            else if (key === '=' || key === 'Enter') {
+                event.preventDefault();
+                calcCalculateResult();
+            }
+            else if (key === 'Backspace') {
+                event.preventDefault();
+                calcBackspace();
+            }
+            else if (key === 'Escape') {
+                event.preventDefault();
+                closeCalculator();
+            }
+            else if (key === 'Delete') {
+                event.preventDefault();
+                calcClearAll();
+            }
+            else if (key === '%') {
+                event.preventDefault();
+                calcInputOperator('%');
+            }
+        }
+    });
 </script>
 
 <script>
 // Cache the app shell and Firebase modules after the first online visit.
-// This makes the calculation app load offline on supported browsers/PWA installs.
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').catch(err =>
