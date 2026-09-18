@@ -52,14 +52,6 @@
             margin-bottom: 24px;
         }
 
-        .or-divider {
-            display: none;
-            color: #bbb;
-            font-size: 12px;
-            letter-spacing: 2px;
-            margin: 8px 0 4px 0;
-        }
-
         #loginScreen input {
             width: 80%;
             padding: 14px;
@@ -90,32 +82,6 @@
             font-size: 14px;
             margin-top: 8px;
             min-height: 24px;
-        }
-        .login-numpad {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            max-width: 280px;
-            margin: 12px auto;
-        }
-        .login-numpad button {
-            padding: 16px;
-            font-size: 22px;
-            border: 1px solid #d6cdc0;
-            border-radius: 12px;
-            background: #f5f3f0;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .login-numpad button:active {
-            background: #e0d6c8;
-        }
-        .login-numpad .clear-btn {
-            background: #ffcdd2;
-            color: #c62828;
-        }
-        .login-numpad .clear-btn:active {
-            background: #ef9a9a;
         }
 
         .login-footer {
@@ -402,7 +368,6 @@
             min-height: 40px;
         }
 
-        /* ===== প্রিন্ট বাটন ===== */
         .print-btn {
             background: #37474f;
             color: #fff;
@@ -476,52 +441,6 @@
         #toast.success { background: #2e7d32; }
         #toast.error { background: #c62828; }
         #toast.info { background: #1565c0; }
-
-        /* ===== App closed overlay ===== */
-        #closedOverlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: #f5f3f0;
-            z-index: 10000;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 24px;
-        }
-        #closedOverlay.show {
-            display: flex;
-        }
-        #closedOverlay .close-icon {
-            font-size: 64px;
-            margin-bottom: 16px;
-        }
-        #closedOverlay h2 {
-            font-size: 22px;
-            color: #b8860b;
-            margin-bottom: 8px;
-        }
-        #closedOverlay p {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 24px;
-            max-width: 320px;
-        }
-        #closedOverlay button {
-            padding: 14px 32px;
-            font-size: 16px;
-            font-weight: bold;
-            color: #fff;
-            background: #b8860b;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(184,134,11,0.35);
-        }
-        #closedOverlay button:active {
-            transform: scale(0.97);
-        }
 
         /* ============================================================
            ===== 🧮 CALCULATOR (as Feature Box) =====
@@ -672,14 +591,6 @@
 <!-- Toast notification -->
 <div id="toast"></div>
 
-<!-- App closed overlay (shown after Exit) -->
-<div id="closedOverlay">
-    <div class="close-icon">🔒</div>
-    <h2>GoldAdjustment বন্ধ হয়েছে</h2>
-    <p>অ্যাপটি বন্ধ করা হয়েছে। পুনরায় ব্যবহার করতে নিচের বাটনে ক্লিক করুন।</p>
-    <button onclick="reopenApp()">🔄 আবার খুলুন</button>
-</div>
-
 <!-- প্রিন্ট এরিয়া (প্রিন্টের সময় ব্যবহৃত হবে) -->
 <div id="printArea" style="display:none;">
     <div class="print-header">
@@ -758,12 +669,10 @@
 
     <!-- SCREEN 1: DASHBOARD -->
     <div id="dashboardScreen">
-        <!-- 🛠️ Admin Control (Admin-only) -->
         <div id="adminControlWrap" style="display:none; margin:0 0 14px 0;">
             <button class="admin-style-btn" onclick="openAdminPanel()" style="background:#333;">🛠️ Admin Control</button>
         </div>
 
-        <!-- 📈 আজকের সোনার দর (সবার জন্য দৃশ্যমান, Admin Control এর নিচে, একই সাইজ) -->
         <div style="margin:0 0 14px 0;">
             <button class="admin-style-btn" onclick="openFeature('liveRate')" style="background:linear-gradient(135deg, #b8860b, #8a6508);">📈 আজকের সোনার দর</button>
         </div>
@@ -781,7 +690,6 @@
             <div class="dash-btn" onclick="openFeature('gram')">
                 <span class="icon">⚖️</span> গ্রাম↔ভরি
             </div>
-            <!-- দাম/মূল্য + ক্যালকুলেটর একই সারিতে -->
             <div class="dash-row-price-calc">
                 <div class="dash-btn" onclick="openFeature('price')">
                     <span class="icon">💰</span> দাম / মূল্য হিসাব
@@ -973,7 +881,6 @@
                 নিচের যেকোনো একটি সোর্স থেকে সর্বশেষ দর দেখুন
             </div>
 
-            <!-- GoldR.org (আন্তর্জাতিক দর) -->
             <a href="https://www.goldr.org" target="_self"
                style="display:block; text-decoration:none; margin-bottom:10px;">
                 <div class="dash-btn" style="background: linear-gradient(135deg, #fff8e1, #ffe9b0); border: 2px solid #b8860b; padding: 18px 10px;">
@@ -983,7 +890,6 @@
                 </div>
             </a>
 
-            <!-- বাজুস (বাংলাদেশ অফিসিয়াল দর) -->
             <a href="https://www.bajus.org" target="_self"
                style="display:block; text-decoration:none; margin-bottom:10px;">
                 <div class="dash-btn" style="background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border: 2px solid #2e7d32; padding: 18px 10px;">
@@ -993,22 +899,19 @@
                 </div>
             </a>
 
-            <!-- তথ্য নোট -->
             <div style="background: #faf8f6; border: 1px dashed #d6cdc0; border-radius: 10px; padding: 10px; font-size: 12px; color: #666; text-align: center; margin-top: 10px;">
                 💡 দর প্রায় প্রতিদিনই পরিবর্তন হয়।
             </div>
         </div>
 
-        <!-- 🆕 FEATURE 7: CALCULATOR (as a full page) -->
+        <!-- FEATURE 7: CALCULATOR (as full page) -->
         <div id="feature-calc" class="feature-box" style="background:transparent; border:none; padding:0;">
             <div class="calculator" id="calculatorBox">
-                <!-- Display Area -->
                 <div class="display-container">
                     <div class="expression" id="calcExpression"></div>
                     <div class="result" id="calcResult">0</div>
                 </div>
 
-                <!-- Memory Buttons -->
                 <div class="memory-row">
                     <button class="memory-btn" onclick="calcMemoryClear()">MC</button>
                     <button class="memory-btn" onclick="calcMemoryRecall()">MR</button>
@@ -1018,7 +921,6 @@
                     <button class="memory-btn">M▼</button>
                 </div>
 
-                <!-- Main Keypad -->
                 <div class="keypad">
                     <button class="operator" onclick="calcInputOperator('%')">%</button>
                     <button onclick="calcClearEntry()">CE</button>
@@ -1058,9 +960,8 @@
 
 <script>
     // ============================================================
-    // 🔐 FIREBASE PHONE + ACTIVATION CODE LOGIN
+    // 🔐 FIREBASE CONFIG
     // ============================================================
-
     const FIREBASE_CONFIG = {
         apiKey: "AIzaSyBhQ6_lKIFSks0Rjz0xnc1qbYnRLwAzcig",
         authDomain: "goldadjustment.firebaseapp.com",
@@ -1081,7 +982,6 @@
     // ============================================================
     let currentScreen = 'login';
     let popstateLock = false;
-    let exitConfirmed = false;
 
     function pushHistoryState(stateName) {
         try {
@@ -1435,30 +1335,33 @@
         calculatePrice();
     }
 
+    // ============================================================
+    // 🚪 EXIT — PWA সরাসরি ক্লোজ (কোনো সাদা পেজ নেই)
+    // ============================================================
+    function closeAppPWA() {
+        // PWA standalone (installed) হলে window.close() সরাসরি ফোন হোম স্ক্রিনে নিয়ে যায়
+        try { window.close(); } catch (e) {}
+
+        // Fallback: কিছু ব্রাউজারের জন্য
+        setTimeout(() => {
+            try { self.close(); } catch (e) {}
+            try { window.open('', '_self', ''); window.close(); } catch (e) {}
+        }, 80);
+
+        // শেষ fallback: নীরব সাদা পেজ (কোনো লেখা নেই)
+        setTimeout(() => {
+            try {
+                document.documentElement.innerHTML =
+                    '<head><title></title></head><body style="background:#f5f3f0;margin:0;"></body>';
+            } catch (e) {}
+        }, 250);
+    }
+
     function exitApp() {
         const wantExit = confirm('GoldAdjustment থেকে বেরিয়ে যেতে চান?\n\nYes = বেরিয়ে যাব\nNo = অ্যাপে থাকব');
         if (!wantExit) return;
 
-        exitConfirmed = true;
-        window.close();
-
-        setTimeout(() => {
-            if (!document.hidden) {
-                document.getElementById('appContainer').classList.remove('show');
-                document.getElementById('adminScreen').style.display = 'none';
-                document.getElementById('adminControlWrap').style.display = 'none';
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('closedOverlay').classList.add('show');
-                currentScreen = 'closed';
-            }
-        }, 150);
-    }
-
-    function reopenApp() {
-        document.getElementById('closedOverlay').classList.remove('show');
-        exitConfirmed = false;
-        enterApp();
-        showToast('✅ অ্যাপ আবার চালু হয়েছে', 'success', 2000);
+        closeAppPWA();
     }
 
     document.getElementById('phoneInput').addEventListener('input', function () {
@@ -1485,61 +1388,41 @@
     });
 
     // ============================================================
-    // 📱 ফোনের ডিফল্ট ব্যাক বাটন হ্যান্ডেল (popstate)
+    // 📱 ফোনের ব্যাক বাটন হ্যান্ডেল (popstate)
     // ============================================================
     window.addEventListener('popstate', function () {
         if (popstateLock) return;
 
+        // ১) Feature screen → Dashboard
         if (currentScreen === 'feature') {
             showDashboard(false);
             currentScreen = 'dashboard';
-            try {
-                history.pushState({ screen: 'dashboard', ts: Date.now() }, '');
-            } catch (e) {}
+            try { history.pushState({ screen: 'dashboard', ts: Date.now() }, ''); } catch (e) {}
             return;
         }
 
+        // ২) Admin screen → Dashboard
         if (currentScreen === 'admin') {
             document.getElementById('adminScreen').style.display = 'none';
             showDashboard(false);
             currentScreen = 'dashboard';
-            try {
-                history.pushState({ screen: 'dashboard', ts: Date.now() }, '');
-            } catch (e) {}
+            try { history.pushState({ screen: 'dashboard', ts: Date.now() }, ''); } catch (e) {}
             return;
         }
 
-        if (currentScreen === 'closed') {
-            return;
-        }
-
+        // ৩) Login screen → কিছু করব না
         if (currentScreen === 'login') {
             return;
         }
 
+        // ৪) Dashboard → Yes/No → Yes → সরাসরি PWA ক্লোজ
         if (currentScreen === 'dashboard') {
-            try {
-                history.pushState({ screen: 'dashboard', ts: Date.now() }, '');
-            } catch (e) {}
+            try { history.pushState({ screen: 'dashboard', ts: Date.now() }, ''); } catch (e) {}
 
             const wantExit = confirm('GoldAdjustment থেকে বেরিয়ে যেতে চান?\n\nYes = বেরিয়ে যাব\nNo = অ্যাপে থাকব');
             if (wantExit) {
                 popstateLock = true;
-                exitConfirmed = true;
-                try { history.back(); } catch (e) {}
-                setTimeout(() => {
-                    window.close();
-                    setTimeout(() => {
-                        if (!document.hidden) {
-                            document.getElementById('appContainer').classList.remove('show');
-                            document.getElementById('adminScreen').style.display = 'none';
-                            document.getElementById('adminControlWrap').style.display = 'none';
-                            document.getElementById('loginScreen').style.display = 'none';
-                            document.getElementById('closedOverlay').classList.add('show');
-                            currentScreen = 'closed';
-                        }
-                    }, 200);
-                }, 100);
+                closeAppPWA();
             }
         }
     });
@@ -1786,7 +1669,7 @@
     }
 
     // ============================================================
-    // SCREEN NAVIGATION + HISTORY
+    // SCREEN NAVIGATION
     // ============================================================
     const featureNames = {
         main: '🪙 পাকা/জমা অ্যাডজাস্ট',
@@ -2048,7 +1931,7 @@
     }
 
     // ============================================================
-    // 🧮 CALCULATOR (now runs inside feature page)
+    // 🧮 CALCULATOR
     // ============================================================
     let calcCurrentInput = '0';
     let calcPreviousInput = '';
@@ -2224,7 +2107,7 @@
     }
 
     // ============================================================
-    // ⌨️ PC KEYBOARD SUPPORT (only when calculator feature is active)
+    // ⌨️ PC KEYBOARD SUPPORT
     // ============================================================
     document.addEventListener('keydown', function(event) {
         const calcFeature = document.getElementById('feature-calc');
