@@ -240,6 +240,19 @@
             width: 100%;
         }
 
+        /* ===== Admin Control + Live Rate (একই সাইজ) ===== */
+        .admin-style-btn {
+            width: 100%;
+            padding: 13px;
+            border: 0;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+        }
+
         /* ===== Footer with Exit button ===== */
         .dashboard-footer {
             text-align: center;
@@ -796,8 +809,14 @@
 
     <!-- SCREEN 1: DASHBOARD -->
     <div id="dashboardScreen">
+        <!-- 🛠️ Admin Control (Admin-only) -->
         <div id="adminControlWrap" style="display:none; margin:0 0 14px 0;">
-            <button onclick="openAdminPanel()" style="width:100%; padding:13px; border:0; border-radius:12px; background:#333; color:#fff; font-size:16px; font-weight:bold; cursor:pointer;">🛠️ Admin Control</button>
+            <button class="admin-style-btn" onclick="openAdminPanel()" style="background:#333;">🛠️ Admin Control</button>
+        </div>
+
+        <!-- 📈 আজকের সোনার দর (সবার জন্য দৃশ্যমান, Admin Control এর নিচে, একই সাইজ) -->
+        <div style="margin:0 0 14px 0;">
+            <button class="admin-style-btn" onclick="openFeature('liveRate')" style="background:linear-gradient(135deg, #b8860b, #8a6508);">📈 আজকের সোনার দর</button>
         </div>
 
         <div class="dashboard-grid">
@@ -996,6 +1015,40 @@
                 <span class="p-icon">🖨️</span> ফলাফল প্রিন্ট করুন
             </button>
         </div>
+
+        <!-- 🆕 FEATURE 6: LIVE GOLD RATE -->
+        <div id="feature-liveRate" class="feature-box">
+            <div class="feature-title">📈 আজকের সোনার দর</div>
+
+            <div style="font-size:13px; color:#555; margin-bottom:10px; text-align:center;">
+                নিচের যেকোনো একটি সোর্স থেকে সর্বশেষ দর দেখুন
+            </div>
+
+            <!-- GoldR.org (আন্তর্জাতিক দর) -->
+            <a href="https://www.goldr.org" target="_self"
+               style="display:block; text-decoration:none; margin-bottom:10px;">
+                <div class="dash-btn" style="background: linear-gradient(135deg, #fff8e1, #ffe9b0); border: 2px solid #b8860b; padding: 18px 10px;">
+                    <span class="icon">🌐</span>
+                    <div style="font-size: 16px; font-weight: bold; color: #b8860b;">GoldR.org</div>
+                    <div style="font-size: 12px; color: #7a5c00; margin-top: 4px;">আন্তর্জাতিক সোনার দর (USD)</div>
+                </div>
+            </a>
+
+            <!-- বাজুস (বাংলাদেশ অফিসিয়াল দর) -->
+            <a href="https://www.bajus.org" target="_self"
+               style="display:block; text-decoration:none; margin-bottom:10px;">
+                <div class="dash-btn" style="background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border: 2px solid #2e7d32; padding: 18px 10px;">
+                    <span class="icon">🇧🇩</span>
+                    <div style="font-size: 16px; font-weight: bold; color: #2e7d32;">বাজুস (BAJUS)</div>
+                    <div style="font-size: 12px; color: #1b5e20; margin-top: 4px;">বাংলাদেশের অফিসিয়াল দর (৳)</div>
+                </div>
+            </a>
+
+            <!-- তথ্য নোট -->
+            <div style="background: #faf8f6; border: 1px dashed #d6cdc0; border-radius: 10px; padding: 10px; font-size: 12px; color: #666; text-align: center; margin-top: 10px;">
+                💡 দর প্রতিদিন পরিবর্তন হয়। উপরের লিংকে ক্লিক করলে একই ট্যাবে নতুন পেজ খুলবে — ফিরে আসতে <b>ব্যাক বাটন</b> চাপুন।
+            </div>
+        </div>
     </div>
 </div>
 
@@ -1077,6 +1130,22 @@
     let firebaseReady = false;
     let firebaseAuth = null;
     let firebaseDb = null;
+
+    // ============================================================
+    // 📱 SCREEN + HISTORY TRACKING (ডিফল্ট ব্যাক বাটন হ্যান্ডেল)
+    // ============================================================
+    let currentScreen = 'login'; // 'login', 'dashboard', 'feature', 'admin'
+    let popstateLock = false;
+    let exitConfirmed = false;
+
+    function pushHistoryState(stateName) {
+        try {
+            if (history.state && history.state.screen === stateName) return;
+            history.pushState({ screen: stateName, ts: Date.now() }, '');
+        } catch (e) {
+            console.warn('History pushState failed:', e);
+        }
+    }
 
     function showToast(msg, type = 'info', duration = 2500) {
         const t = document.getElementById('toast');
@@ -1212,6 +1281,7 @@
                 } else {
                     document.getElementById('appContainer').classList.remove('show');
                     document.getElementById('loginScreen').style.display = 'block';
+                    currentScreen = 'login';
                     showUserLogin();
                 }
             });
@@ -1233,9 +1303,11 @@
                         } else {
                             clearOfflineAccess();
                             document.getElementById('loginScreen').style.display = 'block';
+                            currentScreen = 'login';
                         }
                     } else {
                         document.getElementById('loginScreen').style.display = 'block';
+                        currentScreen = 'login';
                     }
                 }
             }, 5000);
@@ -1260,6 +1332,7 @@
             }
 
             document.getElementById('loginScreen').style.display = 'block';
+            currentScreen = 'login';
             setLoginError('❌ Firebase সংযোগ করা যায়নি। প্রথমবার Login/Activation-এর জন্য Internet প্রয়োজন।');
         }
     }
@@ -1405,7 +1478,11 @@
         updateAdminButton();
         document.getElementById('adminScreen').style.display = 'none';
         setLoginError('');
-        showDashboard();
+        showDashboard(false);
+        currentScreen = 'dashboard';
+        try {
+            history.replaceState({ screen: 'dashboard', ts: Date.now() }, '');
+        } catch (e) {}
         calculateMain();
         calculatePureToTarget();
         calculateAnyToTarget();
@@ -1414,6 +1491,11 @@
     }
 
     function exitApp() {
+        // ⚠️ ব্যবহারকারীর Exit বাটনে চাপলে সরাসরি Yes/No জিজ্ঞেস
+        const wantExit = confirm('GoldAdjustment থেকে বেরিয়ে যেতে চান?\n\nYes = বেরিয়ে যাব\nNo = অ্যাপে থাকব');
+        if (!wantExit) return;
+
+        exitConfirmed = true;
         window.close();
 
         setTimeout(() => {
@@ -1423,12 +1505,14 @@
                 document.getElementById('adminControlWrap').style.display = 'none';
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('closedOverlay').classList.add('show');
+                currentScreen = 'closed';
             }
         }, 150);
     }
 
     function reopenApp() {
         document.getElementById('closedOverlay').classList.remove('show');
+        exitConfirmed = false;
         enterApp();
         showToast('✅ অ্যাপ আবার চালু হয়েছে', 'success', 2000);
     }
@@ -1456,6 +1540,72 @@
         showToast('📴 Offline Mode — Calculation চালু থাকবে', 'info', 3000);
     });
 
+    // ============================================================
+    // 📱 ফোনের ডিফল্ট ব্যাক বাটন হ্যান্ডেল (popstate)
+    // ============================================================
+    window.addEventListener('popstate', function () {
+        if (popstateLock) return;
+
+        // ১) ফিচার স্ক্রিনে থাকলে → ড্যাশবোর্ডে ফিরবে
+        if (currentScreen === 'feature') {
+            showDashboard(false);
+            currentScreen = 'dashboard';
+            try {
+                history.pushState({ screen: 'dashboard', ts: Date.now() }, '');
+            } catch (e) {}
+            return;
+        }
+
+        // ২) অ্যাডমিন স্ক্রিনে থাকলে → ড্যাশবোর্ডে ফিরবে
+        if (currentScreen === 'admin') {
+            document.getElementById('adminScreen').style.display = 'none';
+            showDashboard(false);
+            currentScreen = 'dashboard';
+            try {
+                history.pushState({ screen: 'dashboard', ts: Date.now() }, '');
+            } catch (e) {}
+            return;
+        }
+
+        // ৩) ক্লোজড ওভারলে থাকলে → কিছু করব না
+        if (currentScreen === 'closed') {
+            return;
+        }
+
+        // ৪) লগইন স্ক্রিনে থাকলে → কিছু করব না
+        if (currentScreen === 'login') {
+            return;
+        }
+
+        // ৫) ড্যাশবোর্ডে থাকলে → Yes/No কনফার্মেশন
+        if (currentScreen === 'dashboard') {
+            // history আবার push করা — যাতে অ্যাপ থেকে বেরিয়ে না যায়
+            try {
+                history.pushState({ screen: 'dashboard', ts: Date.now() }, '');
+            } catch (e) {}
+
+            const wantExit = confirm('GoldAdjustment থেকে বেরিয়ে যেতে চান?\n\nYes = বেরিয়ে যাব\nNo = অ্যাপে থাকব');
+            if (wantExit) {
+                popstateLock = true;
+                exitConfirmed = true;
+                try { history.back(); } catch (e) {}
+                setTimeout(() => {
+                    window.close();
+                    setTimeout(() => {
+                        if (!document.hidden) {
+                            document.getElementById('appContainer').classList.remove('show');
+                            document.getElementById('adminScreen').style.display = 'none';
+                            document.getElementById('adminControlWrap').style.display = 'none';
+                            document.getElementById('loginScreen').style.display = 'none';
+                            document.getElementById('closedOverlay').classList.add('show');
+                            currentScreen = 'closed';
+                        }
+                    }, 200);
+                }, 100);
+            }
+        }
+    });
+
     initFirebaseLogin();
 
 
@@ -1480,16 +1630,22 @@
             return;
         }
 
+        currentScreen = 'admin';
         document.getElementById('dashboardScreen').style.display = 'none';
         document.getElementById('featureScreen').style.display = 'none';
         document.getElementById('adminScreen').style.display = 'block';
         document.getElementById('adminSearch').value = '';
+        pushHistoryState('admin');
         await loadAdminUsers();
     }
 
     function closeAdminPanel() {
         document.getElementById('adminScreen').style.display = 'none';
-        showDashboard();
+        showDashboard(false);
+        currentScreen = 'dashboard';
+        try {
+            history.replaceState({ screen: 'dashboard', ts: Date.now() }, '');
+        } catch (e) {}
     }
 
     async function loadAdminUsers() {
@@ -1692,23 +1848,29 @@
     }
 
     // ============================================================
-    // SCREEN NAVIGATION
+    // SCREEN NAVIGATION + HISTORY (ডিফল্ট ব্যাক বাটন হ্যান্ডেল)
     // ============================================================
     const featureNames = {
         main: '🪙 পাকা/জমা অ্যাডজাস্ট',
         pure: '✨ পাকা → টার্গেট',
         any: '🔄 যেকোনো → টার্গেট',
         gram: '⚖️ গ্রাম ↔ ভরি',
-        price: '💰 দাম / মূল্য হিসাব'
+        price: '💰 দাম / মূল্য হিসাব',
+        liveRate: '📈 আজকের সোনার দর'
     };
 
-    function showDashboard() {
+    function showDashboard(pushState = true) {
+        currentScreen = 'dashboard';
         document.getElementById('dashboardScreen').style.display = 'block';
         document.getElementById('featureScreen').classList.remove('show');
+        document.getElementById('adminScreen').style.display = 'none';
+        if (pushState) pushHistoryState('dashboard');
     }
 
     function openFeature(id) {
+        currentScreen = 'feature';
         document.getElementById('dashboardScreen').style.display = 'none';
+        document.getElementById('adminScreen').style.display = 'none';
         document.getElementById('featureScreen').classList.add('show');
 
         document.querySelectorAll('.feature-box').forEach(f => f.classList.remove('active'));
@@ -1721,10 +1883,24 @@
         if (id === 'any') calculateAnyToTarget();
         if (id === 'gram') convertGramToVori();
         if (id === 'price') calculatePrice();
+
+        pushHistoryState('feature');
     }
 
     function goBack() {
-        showDashboard();
+        if (currentScreen === 'feature' || currentScreen === 'admin') {
+            document.getElementById('adminScreen').style.display = 'none';
+            showDashboard(false);
+            currentScreen = 'dashboard';
+            try {
+                history.replaceState({ screen: 'dashboard', ts: Date.now() }, '');
+            } catch (e) {}
+        } else {
+            showDashboard(false);
+            try {
+                history.replaceState({ screen: 'dashboard', ts: Date.now() }, '');
+            } catch (e) {}
+        }
     }
 
     // ============================================================
