@@ -52,31 +52,6 @@
             margin-bottom: 24px;
         }
 
-        #fingerprintBtn {
-            display: none;
-            width: 80%;
-            padding: 16px;
-            font-size: 18px;
-            font-weight: bold;
-            color: white;
-            background: linear-gradient(135deg, #2e7d32, #1b5e20);
-            border: none;
-            border-radius: 14px;
-            cursor: pointer;
-            margin: 0 auto 12px auto;
-            box-shadow: 0 4px 12px rgba(46,125,50,0.35);
-            transition: 0.15s;
-            letter-spacing: 0.5px;
-        }
-        #fingerprintBtn:active {
-            transform: scale(0.97);
-        }
-        #fingerprintBtn .fp-icon {
-            font-size: 24px;
-            margin-right: 6px;
-            vertical-align: middle;
-        }
-
         .or-divider {
             display: none;
             color: #bbb;
@@ -219,7 +194,6 @@
             grid-column: span 2;
         }
 
-        /* 🧮 ক্যালকুলেটর বাটন ছোট ভার্সন (দাম/মূল্য এর ডানে) */
         .dash-btn.calc-mini {
             padding: 22px 4px;
             font-size: 12px;
@@ -229,7 +203,6 @@
             margin-bottom: 4px;
         }
 
-        /* দাম/মূল্য + ক্যালকুলেটর একসাথে একই সারিতে */
         .dash-row-price-calc {
             grid-column: span 2;
             display: grid;
@@ -240,7 +213,6 @@
             width: 100%;
         }
 
-        /* ===== Admin Control + Live Rate (একই সাইজ) ===== */
         .admin-style-btn {
             width: 100%;
             padding: 13px;
@@ -552,30 +524,20 @@
         }
 
         /* ============================================================
-           ===== 🧮 CALCULATOR MODAL CSS =====
+           ===== 🧮 CALCULATOR (as Feature Box) =====
            ============================================================ */
-        .calc-modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 99999;
-            justify-content: center;
-            align-items: center;
-        }
-        .calc-modal .calculator {
-            position: relative;
-            width: 340px;
+        .calculator {
+            width: 100%;
+            max-width: 340px;
+            margin: 0 auto;
             background-color: #f3f3f3;
             border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
             overflow: hidden;
             padding-bottom: 5px;
-            cursor: grab;
         }
-        .calc-modal .calculator:active { cursor: grabbing; }
 
-        .calc-modal .display-container {
+        .calculator .display-container {
             background-color: #f3f3f3;
             padding: 15px 15px 5px 15px;
             display: flex;
@@ -583,7 +545,7 @@
             justify-content: flex-end;
             min-height: 100px;
         }
-        .calc-modal .expression {
+        .calculator .expression {
             font-size: 13px;
             color: #666;
             text-align: right;
@@ -593,7 +555,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        .calc-modal .result {
+        .calculator .result {
             font-size: 38px;
             font-weight: 600;
             color: #000;
@@ -602,13 +564,13 @@
             word-break: break-all;
             line-height: 1.1;
         }
-        .calc-modal .memory-row {
+        .calculator .memory-row {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
             padding: 0 5px 5px 5px;
             gap: 2px;
         }
-        .calc-modal .memory-btn {
+        .calculator .memory-btn {
             background: transparent;
             border: none;
             font-size: 12px;
@@ -617,15 +579,15 @@
             cursor: pointer;
             border-radius: 4px;
         }
-        .calc-modal .memory-btn:hover { background-color: #e0e0e0; }
+        .calculator .memory-btn:hover { background-color: #e0e0e0; }
 
-        .calc-modal .keypad {
+        .calculator .keypad {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 3px;
             padding: 0 5px 5px 5px;
         }
-        .calc-modal button {
+        .calculator button {
             border: 1px solid #dcdcdc;
             background-color: #f9f9f9;
             font-size: 16px;
@@ -636,31 +598,18 @@
             outline: none;
             font-weight: 500;
         }
-        .calc-modal button:hover { background-color: #eaeaea; }
-        .calc-modal button:active { background-color: #dcdcdc; }
-        .calc-modal .operator { font-size: 18px; }
+        .calculator button:hover { background-color: #eaeaea; }
+        .calculator button:active { background-color: #dcdcdc; }
+        .calculator .operator { font-size: 18px; }
 
-        .calc-modal .equal-btn {
+        .calculator .equal-btn {
             background-color: #0067c0;
             color: white;
             border: none;
             font-size: 20px;
         }
-        .calc-modal .equal-btn:hover { background-color: #005aab; }
-        .calc-modal .equal-btn:active { background-color: #004e94; }
-
-        .calc-close-btn {
-            position: absolute;
-            top: 5px; right: 10px;
-            background: transparent !important;
-            border: none !important;
-            font-size: 20px !important;
-            font-weight: bold;
-            color: #888;
-            cursor: pointer;
-            padding: 0 !important;
-        }
-        .calc-close-btn:hover { color: #d32f2f !important; background: transparent !important; }
+        .calculator .equal-btn:hover { background-color: #005aab; }
+        .calculator .equal-btn:active { background-color: #004e94; }
 
         /* ============================================================
            ===== প্রিন্ট স্টাইল (A5 LANDSCAPE + ১.১" টপ মার্জিন) =====
@@ -837,7 +786,7 @@
                 <div class="dash-btn" onclick="openFeature('price')">
                     <span class="icon">💰</span> দাম / মূল্য হিসাব
                 </div>
-                <div class="dash-btn calc-mini" onclick="openCalculator()">
+                <div class="dash-btn calc-mini" onclick="openFeature('calc')">
                     <span class="icon">🧮</span> ক্যালকুলেটর
                 </div>
             </div>
@@ -1016,7 +965,7 @@
             </button>
         </div>
 
-        <!-- 🆕 FEATURE 6: LIVE GOLD RATE -->
+        <!-- FEATURE 6: LIVE GOLD RATE -->
         <div id="feature-liveRate" class="feature-box">
             <div class="feature-title">📈 আজকের সোনার দর</div>
 
@@ -1046,68 +995,64 @@
 
             <!-- তথ্য নোট -->
             <div style="background: #faf8f6; border: 1px dashed #d6cdc0; border-radius: 10px; padding: 10px; font-size: 12px; color: #666; text-align: center; margin-top: 10px;">
-                💡 দর প্রায় প্রতিদিনই পরিবর্তন হয়। — <b> </b> 
+                💡 দর প্রায় প্রতিদিনই পরিবর্তন হয়।
             </div>
         </div>
-    </div>
-</div>
 
-<!-- ============================================================ -->
-<!-- ===== 🧮 CALCULATOR MODAL ===== -->
-<!-- ============================================================ -->
-<div id="calcModal" class="calc-modal">
-    <div class="calculator" id="draggableCalc">
-        <!-- Display Area -->
-        <div class="display-container">
-            <div class="expression" id="calcExpression"></div>
-            <div class="result" id="calcResult">0</div>
+        <!-- 🆕 FEATURE 7: CALCULATOR (as a full page) -->
+        <div id="feature-calc" class="feature-box" style="background:transparent; border:none; padding:0;">
+            <div class="calculator" id="calculatorBox">
+                <!-- Display Area -->
+                <div class="display-container">
+                    <div class="expression" id="calcExpression"></div>
+                    <div class="result" id="calcResult">0</div>
+                </div>
+
+                <!-- Memory Buttons -->
+                <div class="memory-row">
+                    <button class="memory-btn" onclick="calcMemoryClear()">MC</button>
+                    <button class="memory-btn" onclick="calcMemoryRecall()">MR</button>
+                    <button class="memory-btn" onclick="calcMemoryAdd()">M+</button>
+                    <button class="memory-btn" onclick="calcMemorySub()">M-</button>
+                    <button class="memory-btn" onclick="calcMemoryStore()">MS</button>
+                    <button class="memory-btn">M▼</button>
+                </div>
+
+                <!-- Main Keypad -->
+                <div class="keypad">
+                    <button class="operator" onclick="calcInputOperator('%')">%</button>
+                    <button onclick="calcClearEntry()">CE</button>
+                    <button onclick="calcClearAll()">C</button>
+                    <button class="operator" onclick="calcBackspace()">⌫</button>
+
+                    <button class="operator" onclick="calcInputOperator('1/')">1/x</button>
+                    <button class="operator" onclick="calcInputOperator('sqr')">x²</button>
+                    <button class="operator" onclick="calcInputOperator('sqrt')">²√x</button>
+                    <button class="operator" onclick="calcInputOperator('/')">÷</button>
+
+                    <button onclick="calcInputDigit('7')">7</button>
+                    <button onclick="calcInputDigit('8')">8</button>
+                    <button onclick="calcInputDigit('9')">9</button>
+                    <button class="operator" onclick="calcInputOperator('*')">×</button>
+
+                    <button onclick="calcInputDigit('4')">4</button>
+                    <button onclick="calcInputDigit('5')">5</button>
+                    <button onclick="calcInputDigit('6')">6</button>
+                    <button class="operator" onclick="calcInputOperator('-')">−</button>
+
+                    <button onclick="calcInputDigit('1')">1</button>
+                    <button onclick="calcInputDigit('2')">2</button>
+                    <button onclick="calcInputDigit('3')">3</button>
+                    <button class="operator" onclick="calcInputOperator('+')">+</button>
+
+                    <button onclick="calcToggleSign()">+/-</button>
+                    <button onclick="calcInputDigit('0')">0</button>
+                    <button onclick="calcInputDigit('.')">.</button>
+                    <button class="equal-btn" onclick="calcCalculateResult()">=</button>
+                </div>
+            </div>
         </div>
 
-        <!-- Memory Buttons -->
-        <div class="memory-row">
-            <button class="memory-btn" onclick="calcMemoryClear()">MC</button>
-            <button class="memory-btn" onclick="calcMemoryRecall()">MR</button>
-            <button class="memory-btn" onclick="calcMemoryAdd()">M+</button>
-            <button class="memory-btn" onclick="calcMemorySub()">M-</button>
-            <button class="memory-btn" onclick="calcMemoryStore()">MS</button>
-            <button class="memory-btn">M▼</button>
-        </div>
-
-        <!-- Main Keypad -->
-        <div class="keypad">
-            <button class="operator" onclick="calcInputOperator('%')">%</button>
-            <button onclick="calcClearEntry()">CE</button>
-            <button onclick="calcClearAll()">C</button>
-            <button class="operator" onclick="calcBackspace()">⌫</button>
-
-            <button class="operator" onclick="calcInputOperator('1/')">1/x</button>
-            <button class="operator" onclick="calcInputOperator('sqr')">x²</button>
-            <button class="operator" onclick="calcInputOperator('sqrt')">²√x</button>
-            <button class="operator" onclick="calcInputOperator('/')">÷</button>
-
-            <button onclick="calcInputDigit('7')">7</button>
-            <button onclick="calcInputDigit('8')">8</button>
-            <button onclick="calcInputDigit('9')">9</button>
-            <button class="operator" onclick="calcInputOperator('*')">×</button>
-
-            <button onclick="calcInputDigit('4')">4</button>
-            <button onclick="calcInputDigit('5')">5</button>
-            <button onclick="calcInputDigit('6')">6</button>
-            <button class="operator" onclick="calcInputOperator('-')">−</button>
-
-            <button onclick="calcInputDigit('1')">1</button>
-            <button onclick="calcInputDigit('2')">2</button>
-            <button onclick="calcInputDigit('3')">3</button>
-            <button class="operator" onclick="calcInputOperator('+')">+</button>
-
-            <button onclick="calcToggleSign()">+/-</button>
-            <button onclick="calcInputDigit('0')">0</button>
-            <button onclick="calcInputDigit('.')">.</button>
-            <button class="equal-btn" onclick="calcCalculateResult()">=</button>
-        </div>
-        
-        <!-- ক্লোজ বাটন -->
-        <button class="calc-close-btn" onclick="closeCalculator()">✖</button>
     </div>
 </div>
 
@@ -1132,9 +1077,9 @@
     let firebaseDb = null;
 
     // ============================================================
-    // 📱 SCREEN + HISTORY TRACKING (ডিফল্ট ব্যাক বাটন হ্যান্ডেল)
+    // 📱 SCREEN + HISTORY TRACKING
     // ============================================================
-    let currentScreen = 'login'; // 'login', 'dashboard', 'feature', 'admin'
+    let currentScreen = 'login';
     let popstateLock = false;
     let exitConfirmed = false;
 
@@ -1491,7 +1436,6 @@
     }
 
     function exitApp() {
-        // ⚠️ ব্যবহারকারীর Exit বাটনে চাপলে সরাসরি Yes/No জিজ্ঞেস
         const wantExit = confirm('GoldAdjustment থেকে বেরিয়ে যেতে চান?\n\nYes = বেরিয়ে যাব\nNo = অ্যাপে থাকব');
         if (!wantExit) return;
 
@@ -1546,7 +1490,6 @@
     window.addEventListener('popstate', function () {
         if (popstateLock) return;
 
-        // ১) ফিচার স্ক্রিনে থাকলে → ড্যাশবোর্ডে ফিরবে
         if (currentScreen === 'feature') {
             showDashboard(false);
             currentScreen = 'dashboard';
@@ -1556,7 +1499,6 @@
             return;
         }
 
-        // ২) অ্যাডমিন স্ক্রিনে থাকলে → ড্যাশবোর্ডে ফিরবে
         if (currentScreen === 'admin') {
             document.getElementById('adminScreen').style.display = 'none';
             showDashboard(false);
@@ -1567,19 +1509,15 @@
             return;
         }
 
-        // ৩) ক্লোজড ওভারলে থাকলে → কিছু করব না
         if (currentScreen === 'closed') {
             return;
         }
 
-        // ৪) লগইন স্ক্রিনে থাকলে → কিছু করব না
         if (currentScreen === 'login') {
             return;
         }
 
-        // ৫) ড্যাশবোর্ডে থাকলে → Yes/No কনফার্মেশন
         if (currentScreen === 'dashboard') {
-            // history আবার push করা — যাতে অ্যাপ থেকে বেরিয়ে না যায়
             try {
                 history.pushState({ screen: 'dashboard', ts: Date.now() }, '');
             } catch (e) {}
@@ -1848,7 +1786,7 @@
     }
 
     // ============================================================
-    // SCREEN NAVIGATION + HISTORY (ডিফল্ট ব্যাক বাটন হ্যান্ডেল)
+    // SCREEN NAVIGATION + HISTORY
     // ============================================================
     const featureNames = {
         main: '🪙 পাকা/জমা অ্যাডজাস্ট',
@@ -1856,7 +1794,8 @@
         any: '🔄 যেকোনো → টার্গেট',
         gram: '⚖️ গ্রাম ↔ ভরি',
         price: '💰 দাম / মূল্য হিসাব',
-        liveRate: '📈 আজকের সোনার দর'
+        liveRate: '📈 আজকের সোনার দর',
+        calc: '🧮 ক্যালকুলেটর'
     };
 
     function showDashboard(pushState = true) {
@@ -1883,6 +1822,7 @@
         if (id === 'any') calculateAnyToTarget();
         if (id === 'gram') convertGramToVori();
         if (id === 'price') calculatePrice();
+        if (id === 'calc') calcClearAll();
 
         pushHistoryState('feature');
     }
@@ -2108,7 +2048,7 @@
     }
 
     // ============================================================
-    // 🧮 CALCULATOR MODAL FUNCTIONS
+    // 🧮 CALCULATOR (now runs inside feature page)
     // ============================================================
     let calcCurrentInput = '0';
     let calcPreviousInput = '';
@@ -2119,61 +2059,6 @@
 
     const calcResultEl = document.getElementById('calcResult');
     const calcExpressionEl = document.getElementById('calcExpression');
-
-    function openCalculator() {
-        document.getElementById('calcModal').style.display = 'flex';
-        const calcBox = document.getElementById('draggableCalc');
-        calcBox.style.position = 'relative';
-        calcBox.style.left = 'auto';
-        calcBox.style.top = 'auto';
-    }
-
-    function closeCalculator() {
-        document.getElementById('calcModal').style.display = 'none';
-    }
-
-    const calcModalEl = document.getElementById('calcModal');
-    const draggableCalcEl = document.getElementById('draggableCalc');
-    let calcIsDragging = false;
-    let calcOffsetX, calcOffsetY;
-
-    draggableCalcEl.addEventListener('mousedown', (e) => {
-        if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT') return;
-        calcIsDragging = true;
-        calcOffsetX = e.clientX - draggableCalcEl.getBoundingClientRect().left;
-        calcOffsetY = e.clientY - draggableCalcEl.getBoundingClientRect().top;
-        calcModalEl.style.justifyContent = 'flex-start';
-        calcModalEl.style.alignItems = 'flex-start';
-    });
-
-    document.addEventListener('mousemove', (e) => {
-        if (!calcIsDragging) return;
-        draggableCalcEl.style.position = 'absolute';
-        draggableCalcEl.style.left = `${e.clientX - calcOffsetX}px`;
-        draggableCalcEl.style.top = `${e.clientY - calcOffsetY}px`;
-    });
-
-    document.addEventListener('mouseup', () => { calcIsDragging = false; });
-
-    draggableCalcEl.addEventListener('touchstart', (e) => {
-        if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT') return;
-        calcIsDragging = true;
-        const touch = e.touches[0];
-        calcOffsetX = touch.clientX - draggableCalcEl.getBoundingClientRect().left;
-        calcOffsetY = touch.clientY - draggableCalcEl.getBoundingClientRect().top;
-        calcModalEl.style.justifyContent = 'flex-start';
-        calcModalEl.style.alignItems = 'flex-start';
-    }, {passive: true});
-
-    document.addEventListener('touchmove', (e) => {
-        if (!calcIsDragging) return;
-        const touch = e.touches[0];
-        draggableCalcEl.style.position = 'absolute';
-        draggableCalcEl.style.left = `${touch.clientX - calcOffsetX}px`;
-        draggableCalcEl.style.top = `${touch.clientY - calcOffsetY}px`;
-    }, {passive: true});
-
-    document.addEventListener('touchend', () => { calcIsDragging = false; });
 
     function calcFormatNumber(numStr) {
         if (numStr === 'Error' || numStr === 'Cannot divide by zero') return numStr;
@@ -2339,64 +2224,54 @@
     }
 
     // ============================================================
-    // ⌨️ PC KEYBOARD SUPPORT
+    // ⌨️ PC KEYBOARD SUPPORT (only when calculator feature is active)
     // ============================================================
     document.addEventListener('keydown', function(event) {
-        const calcModal = document.getElementById('calcModal');
-        const isCalcOpen = calcModal && calcModal.style.display === 'flex';
+        const calcFeature = document.getElementById('feature-calc');
+        const isCalcOpen = currentScreen === 'feature' &&
+                           calcFeature &&
+                           calcFeature.classList.contains('active');
         
-        if (isCalcOpen) {
-            const activeEl = document.activeElement;
-            const isInputFocused = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA');
-            
-            if (isInputFocused) return;
-            
-            const key = event.key;
-            
-            if (/^[0-9]$/.test(key)) {
-                event.preventDefault();
-                calcInputDigit(key);
-            }
-            else if (key === '.' || key === ',') {
-                event.preventDefault();
-                calcInputDigit('.');
-            }
-            else if (key === '+') {
-                event.preventDefault();
-                calcInputOperator('+');
-            }
-            else if (key === '-') {
-                event.preventDefault();
-                calcInputOperator('-');
-            }
-            else if (key === '*' || key === 'x' || key === 'X') {
-                event.preventDefault();
-                calcInputOperator('*');
-            }
-            else if (key === '/') {
-                event.preventDefault();
-                calcInputOperator('/');
-            }
-            else if (key === '=' || key === 'Enter') {
-                event.preventDefault();
-                calcCalculateResult();
-            }
-            else if (key === 'Backspace') {
-                event.preventDefault();
-                calcBackspace();
-            }
-            else if (key === 'Escape') {
-                event.preventDefault();
-                closeCalculator();
-            }
-            else if (key === 'Delete') {
-                event.preventDefault();
-                calcClearAll();
-            }
-            else if (key === '%') {
-                event.preventDefault();
-                calcInputOperator('%');
-            }
+        if (!isCalcOpen) return;
+
+        const activeEl = document.activeElement;
+        const isInputFocused = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA');
+        if (isInputFocused) return;
+
+        const key = event.key;
+
+        if (/^[0-9]$/.test(key)) {
+            event.preventDefault(); calcInputDigit(key);
+        }
+        else if (key === '.' || key === ',') {
+            event.preventDefault(); calcInputDigit('.');
+        }
+        else if (key === '+') {
+            event.preventDefault(); calcInputOperator('+');
+        }
+        else if (key === '-') {
+            event.preventDefault(); calcInputOperator('-');
+        }
+        else if (key === '*' || key === 'x' || key === 'X') {
+            event.preventDefault(); calcInputOperator('*');
+        }
+        else if (key === '/') {
+            event.preventDefault(); calcInputOperator('/');
+        }
+        else if (key === '=' || key === 'Enter') {
+            event.preventDefault(); calcCalculateResult();
+        }
+        else if (key === 'Backspace') {
+            event.preventDefault(); calcBackspace();
+        }
+        else if (key === 'Escape') {
+            event.preventDefault(); goBack();
+        }
+        else if (key === 'Delete') {
+            event.preventDefault(); calcClearAll();
+        }
+        else if (key === '%') {
+            event.preventDefault(); calcInputOperator('%');
         }
     });
 </script>
