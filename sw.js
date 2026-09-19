@@ -3,7 +3,7 @@
 // Offline + Lifetime Access Support
 // ============================================================
 
-const CACHE_NAME = 'gold-adjustment-cache-v3';
+const CACHE_NAME = 'gold-adjustment-cache-v4';
 
 const ASSETS = [
   '/goldadjustment/',
