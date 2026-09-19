@@ -878,24 +878,15 @@
             <div class="feature-title">📈 আজকের সোনার দর</div>
 
             <div style="font-size:13px; color:#555; margin-bottom:10px; text-align:center;">
-                নিচের যেকোনো একটি সোর্স থেকে সর্বশেষ দর দেখুন
+                সর্বশেষ সোনার দর দেখতে নিচের লিংকে ক্লিক করুন
             </div>
 
-            <a href="https://www.goldr.org" target="_self"
-               style="display:block; text-decoration:none; margin-bottom:10px;">
-                <div class="dash-btn" style="background: linear-gradient(135deg, #fff8e1, #ffe9b0); border: 2px solid #b8860b; padding: 18px 10px;">
-                    <span class="icon">🌐</span>
-                    <div style="font-size: 16px; font-weight: bold; color: #b8860b;">GoldR.org</div>
-                    <div style="font-size: 12px; color: #7a5c00; margin-top: 4px;">আন্তর্জাতিক সোনার দর (USD)</div>
-                </div>
-            </a>
-
-            <a href="https://www.bajus.org" target="_self"
+            <a href="https://bajushub.com/" target="_self"
                style="display:block; text-decoration:none; margin-bottom:10px;">
                 <div class="dash-btn" style="background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border: 2px solid #2e7d32; padding: 18px 10px;">
                     <span class="icon">🇧🇩</span>
-                    <div style="font-size: 16px; font-weight: bold; color: #2e7d32;">বাজুস (BAJUS)</div>
-                    <div style="font-size: 12px; color: #1b5e20; margin-top: 4px;">বাংলাদেশের অফিসিয়াল দর (৳)</div>
+                    <div style="font-size: 16px; font-weight: bold; color: #2e7d32;">বাজুস দর (Bajushub.com)</div>
+                    <div style="font-size: 12px; color: #1b5e20; margin-top: 4px;">আজকের সোনা ও রুপার দাম (৳)</div>
                 </div>
             </a>
 
@@ -1339,16 +1330,13 @@
     // 🚪 EXIT — PWA সরাসরি ক্লোজ (কোনো সাদা পেজ নেই)
     // ============================================================
     function closeAppPWA() {
-        // PWA standalone (installed) হলে window.close() সরাসরি ফোন হোম স্ক্রিনে নিয়ে যায়
         try { window.close(); } catch (e) {}
 
-        // Fallback: কিছু ব্রাউজারের জন্য
         setTimeout(() => {
             try { self.close(); } catch (e) {}
             try { window.open('', '_self', ''); window.close(); } catch (e) {}
         }, 80);
 
-        // শেষ fallback: নীরব সাদা পেজ (কোনো লেখা নেই)
         setTimeout(() => {
             try {
                 document.documentElement.innerHTML =
@@ -1393,7 +1381,6 @@
     window.addEventListener('popstate', function () {
         if (popstateLock) return;
 
-        // ১) Feature screen → Dashboard
         if (currentScreen === 'feature') {
             showDashboard(false);
             currentScreen = 'dashboard';
@@ -1401,7 +1388,6 @@
             return;
         }
 
-        // ২) Admin screen → Dashboard
         if (currentScreen === 'admin') {
             document.getElementById('adminScreen').style.display = 'none';
             showDashboard(false);
@@ -1410,12 +1396,10 @@
             return;
         }
 
-        // ৩) Login screen → কিছু করব না
         if (currentScreen === 'login') {
             return;
         }
 
-        // ৪) Dashboard → Yes/No → Yes → সরাসরি PWA ক্লোজ
         if (currentScreen === 'dashboard') {
             try { history.pushState({ screen: 'dashboard', ts: Date.now() }, ''); } catch (e) {}
 
