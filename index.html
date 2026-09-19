@@ -1236,6 +1236,115 @@
 
 <script>
     // ============================================================
+    // 🔢 NUMERIC INPUT UX ENHANCEMENT
+    // Focus → auto-select value (0 কেটে লিখতে হবে না)
+    // Blur  → খালি হলে অটো 0
+    // Enter → next field
+    // Mobile + Desktop friendly
+    // ============================================================
+    (function() {
+        'use strict';
+
+        function isNumericInput(el) {
+            if (!el || el.tagName !== 'INPUT') return false;
+            const type = (el.type || '').toLowerCase();
+            if (type === 'number') return true;
+            const mode = (el.getAttribute('inputmode') || '').toLowerCase();
+            if (mode === 'numeric' || mode === 'decimal') return true;
+            return false;
+        }
+
+        function emptySafeValue(el) {
+            const v = String(el.value).trim();
+            if (v === '' || v === '-' || v === '.' || v === '-.' || isNaN(parseFloat(v))) {
+                const def = el.getAttribute('data-default');
+                if (def !== null && def !== undefined) {
+                    el.value = def;
+                } else {
+                    el.value = '0';
+                }
+            }
+        }
+
+        function enhanceInput(el) {
+            if (el._numericEnhanced) return;
+            el._numericEnhanced = true;
+
+            // ① Focus → select all
+            el.addEventListener('focus', function() {
+                setTimeout(() => {
+                    try {
+                        if (this.value !== '' && this.value !== '-') {
+                            this.select();
+                        }
+                    } catch (e) {}
+                }, 30);
+            });
+
+            // ② Click on the input → if cursor at start/end, select all
+            el.addEventListener('click', function() {
+                try {
+                    if (this.selectionStart === this.selectionEnd &&
+                        (this.selectionStart === 0 || this.selectionStart === this.value.length)) {
+                        this.select();
+                    }
+                } catch (err) {}
+            });
+
+            // ③ Blur → empty-safe (auto 0)
+            el.addEventListener('blur', function() {
+                emptySafeValue(this);
+            });
+
+            // ④ Enter → next visible numeric input in the same feature
+            el.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const all = Array.from(document.querySelectorAll('input'))
+                        .filter(isNumericInput)
+                        .filter(x => {
+                            const box = x.closest('.feature-box');
+                            if (box && !box.classList.contains('active')) return false;
+                            if (x.offsetParent === null) return false;
+                            if (x.disabled || x.readOnly) return false;
+                            return true;
+                        });
+                    const idx = all.indexOf(this);
+                    if (idx > -1 && idx < all.length - 1) {
+                        all[idx + 1].focus();
+                    } else {
+                        this.blur();
+                    }
+                }
+            });
+
+            // ⑤ text input + inputmode numeric → digits filter
+            el.addEventListener('input', function() {
+                if (this.type === 'text' && this.getAttribute('inputmode') === 'numeric') {
+                    this.value = this.value.replace(/[^0-9]/g, '');
+                }
+            });
+        }
+
+        function applyToAll() {
+            document.querySelectorAll('input').forEach(el => {
+                if (isNumericInput(el)) enhanceInput(el);
+            });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', applyToAll);
+        } else {
+            applyToAll();
+        }
+
+        // Admin panel / dynamic content
+        const mo = new MutationObserver(applyToAll);
+        mo.observe(document.body, { childList: true, subtree: true });
+    })();
+
+
+    // ============================================================
     // 🔐 FIREBASE CONFIG
     // ============================================================
     const FIREBASE_CONFIG = {
