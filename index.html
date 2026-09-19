@@ -1688,7 +1688,7 @@
         if (currentScreen === 'dashboard') {
             try { history.pushState({ screen: 'dashboard', ts: Date.now() }, ''); } catch (e) {}
 
-            const wantExit = confirm('GoldAdjustment থেকে বেরিয়ে যেতে চান?\n\nYes = বেরিয়ে যাব\nNo = অ্যাপে থাকব');
+            const wantExit = confirm('GoldAdjustment থেকে বেরিয়ে যেতে চান?\n\nOk = বেরিয়ে যাব\nCancel = অ্যাপে থাকব');
             if (wantExit) {
                 popstateLock = true;
                 closeAppPWA();
