@@ -109,6 +109,7 @@
             margin-top: 8px;
             min-height: 24px;
             font-weight: 600;
+            white-space: pre-line;
         }
 
         .login-footer {
@@ -1236,11 +1237,51 @@
 
 <script>
     // ============================================================
+    // 🆔 DEVICE IDENTITY — Single Device Lock
+    // ============================================================
+    const DEVICE_ID_KEY = 'goldAdjustmentDeviceId_v1';
+
+    function getOrCreateDeviceId() {
+        try {
+            let id = localStorage.getItem(DEVICE_ID_KEY);
+            if (!id) {
+                const arr = new Uint8Array(16);
+                crypto.getRandomValues(arr);
+                id = Array.from(arr).map(b => b.toString(16).padStart(2, '0')).join('');
+                localStorage.setItem(DEVICE_ID_KEY, id);
+            }
+            return id;
+        } catch (e) {
+            return 'fallback-' + Date.now();
+        }
+    }
+
+    const MY_DEVICE_ID = getOrCreateDeviceId();
+
+    function getDeviceLabel() {
+        const ua = navigator.userAgent || '';
+        let os = 'Unknown';
+        if (/android/i.test(ua)) os = 'Android';
+        else if (/iphone|ipad|ipod/i.test(ua)) os = 'iOS';
+        else if (/windows/i.test(ua)) os = 'Windows';
+        else if (/mac/i.test(ua)) os = 'Mac';
+        else if (/linux/i.test(ua)) os = 'Linux';
+
+        let browser = 'Browser';
+        if (/edg/i.test(ua)) browser = 'Edge';
+        else if (/chrome/i.test(ua)) browser = 'Chrome';
+        else if (/firefox/i.test(ua)) browser = 'Firefox';
+        else if (/safari/i.test(ua)) browser = 'Safari';
+
+        return `${os} • ${browser}`;
+    }
+
+
+    // ============================================================
     // 🔢 NUMERIC INPUT UX ENHANCEMENT
     // Focus → auto-select value (0 কেটে লিখতে হবে না)
     // Blur  → খালি হলে অটো 0
     // Enter → next field
-    // Mobile + Desktop friendly
     // ============================================================
     (function() {
         'use strict';
@@ -1270,7 +1311,6 @@
             if (el._numericEnhanced) return;
             el._numericEnhanced = true;
 
-            // ① Focus → select all
             el.addEventListener('focus', function() {
                 setTimeout(() => {
                     try {
@@ -1281,7 +1321,6 @@
                 }, 30);
             });
 
-            // ② Click on the input → if cursor at start/end, select all
             el.addEventListener('click', function() {
                 try {
                     if (this.selectionStart === this.selectionEnd &&
@@ -1291,12 +1330,10 @@
                 } catch (err) {}
             });
 
-            // ③ Blur → empty-safe (auto 0)
             el.addEventListener('blur', function() {
                 emptySafeValue(this);
             });
 
-            // ④ Enter → next visible numeric input in the same feature
             el.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
@@ -1318,7 +1355,6 @@
                 }
             });
 
-            // ⑤ text input + inputmode numeric → digits filter
             el.addEventListener('input', function() {
                 if (this.type === 'text' && this.getAttribute('inputmode') === 'numeric') {
                     this.value = this.value.replace(/[^0-9]/g, '');
@@ -1338,7 +1374,6 @@
             applyToAll();
         }
 
-        // Admin panel / dynamic content
         const mo = new MutationObserver(applyToAll);
         mo.observe(document.body, { childList: true, subtree: true });
     })();
@@ -1442,6 +1477,7 @@
                 status: String(data.status || 'active').toLowerCase(),
                 activated: data.activated === true,
                 expiryDate: expiryDate,
+                deviceId: String(data.deviceId || MY_DEVICE_ID),
                 verifiedAt: Date.now(),
                 isAdmin: user.uid === ADMIN_UID
             }));
@@ -1458,6 +1494,12 @@
             if (!cached || cached.uid !== user.uid) return null;
             if (cached.isAdmin) return cached;
             if (cached.status !== 'active' || cached.activated !== true) return null;
+
+            // 🆔 Device check
+            if (cached.deviceId && cached.deviceId !== MY_DEVICE_ID) {
+                localStorage.removeItem(OFFLINE_ACCESS_KEY);
+                return null;
+            }
 
             if (cached.expiryDate) {
                 const expiry = new Date(cached.expiryDate + 'T23:59:59');
@@ -1528,8 +1570,14 @@
 
                     if (cachedRaw && cachedRaw.uid && cachedRaw.status === 'active' && cachedRaw.activated === true) {
                         if (!cachedRaw.expiryDate || new Date(cachedRaw.expiryDate + 'T23:59:59') >= new Date()) {
-                            enterApp();
-                            showToast('📴 Offline Mode — অ্যাপ চালু আছে', 'info', 3000);
+                            if (!cachedRaw.deviceId || cachedRaw.deviceId === MY_DEVICE_ID) {
+                                enterApp();
+                                showToast('📴 Offline Mode — অ্যাপ চালু আছে', 'info', 3000);
+                            } else {
+                                clearOfflineAccess();
+                                document.getElementById('loginScreen').style.display = 'block';
+                                currentScreen = 'login';
+                            }
                         } else {
                             clearOfflineAccess();
                             document.getElementById('loginScreen').style.display = 'block';
@@ -1555,9 +1603,11 @@
 
             if (cachedRaw && cachedRaw.uid && cachedRaw.status === 'active' && cachedRaw.activated === true) {
                 if (!cachedRaw.expiryDate || new Date(cachedRaw.expiryDate + 'T23:59:59') >= new Date()) {
-                    enterApp();
-                    showToast('📴 Internet নেই — Offline Mode চালু', 'info', 3500);
-                    return;
+                    if (!cachedRaw.deviceId || cachedRaw.deviceId === MY_DEVICE_ID) {
+                        enterApp();
+                        showToast('📴 Internet নেই — Offline Mode চালু', 'info', 3500);
+                        return;
+                    }
                 }
             }
 
@@ -1569,7 +1619,7 @@
 
     async function checkFirebaseUserAccess(user) {
         try {
-            const { ref, get } = await import('https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js');
+            const { ref, get, update } = await import('https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js');
             if (user.uid === ADMIN_UID) {
                 saveOfflineAccess(user, { status: 'active', activated: true });
                 enterApp();
@@ -1592,26 +1642,77 @@
             const activated = data.activated === true;
             const expiryDate = String(data.expiryDate || '').trim();
             const expired = expiryDate && new Date(expiryDate + 'T23:59:59') < new Date();
+            const savedDeviceId = String(data.deviceId || '').trim();
+            const deviceName = String(data.deviceName || '').trim();
 
+            // ===== মেয়াদ শেষ =====
             if (expired) {
                 clearOfflineAccess();
-                await import('https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js').then(({ref, update}) =>
-                    update(ref(firebaseDb, 'users/' + user.uid), { status: 'blocked', activated: false })
-                );
+                await update(ref(firebaseDb, 'users/' + user.uid), { status: 'blocked', activated: false });
                 await firebaseAuth.signOut();
                 setLoginError('⏰ আপনার অ্যাকাউন্টের মেয়াদ শেষ হয়েছে। Admin-এর সাথে যোগাযোগ করুন।');
                 return false;
             }
 
+            // ===== Blocked / Inactive =====
             if (status !== 'active' || !activated) {
                 clearOfflineAccess();
                 await firebaseAuth.signOut();
-                setLoginError('🚫 আপনার অ্যাকাউন্টের মেয়াদ শেষ হয়েছ। Payment/Activation সম্পন্ন করুন।');
+                setLoginError('🚫 আপনার অ্যাকাউন্ট Blocked বা মেয়াদ শেষ। Payment/Activation সম্পন্ন করুন।');
                 showToast('🚫 Access Blocked', 'error', 3500);
                 return false;
             }
 
-            saveOfflineAccess(user, data);
+            // ===== 🆔 DEVICE LOCK CHECK =====
+            if (!savedDeviceId) {
+                // প্রথমবার লগইন → এই ডিভাইসটিই bind হয়ে যাবে
+                const deviceLabel = getDeviceLabel();
+                try {
+                    await update(ref(firebaseDb, 'users/' + user.uid), {
+                        deviceId: MY_DEVICE_ID,
+                        deviceName: deviceLabel,
+                        deviceRegisteredAt: new Date().toISOString()
+                    });
+                    showToast('✅ এই ডিভাইসটি আপনার অ্যাকাউন্টে রেজিস্টার্ড হয়েছে', 'success', 3000);
+                } catch (e) {
+                    console.warn('Device register failed:', e);
+                }
+            } else if (savedDeviceId !== MY_DEVICE_ID) {
+                // ভিন্ন ডিভাইস → লগইন ব্লক
+                try {
+                    const notifRef = ref(firebaseDb, 'deviceAlerts/' + user.uid);
+                    await update(notifRef, {
+                        phone: String(data.phone || ''),
+                        uid: user.uid,
+                        attemptedAt: new Date().toISOString(),
+                        attemptedDeviceId: MY_DEVICE_ID,
+                        attemptedDeviceName: getDeviceLabel(),
+                        originalDeviceId: savedDeviceId,
+                        originalDeviceName: deviceName,
+                        attemptCount: (data.deviceAttemptCount || 0) + 1
+                    });
+
+                    await update(ref(firebaseDb, 'users/' + user.uid), {
+                        deviceAttemptCount: (data.deviceAttemptCount || 0) + 1,
+                        lastAttemptAt: new Date().toISOString()
+                    });
+                } catch (e) {
+                    console.warn('Alert save failed:', e);
+                }
+
+                clearOfflineAccess();
+                await firebaseAuth.signOut();
+                setLoginError(
+                    '🚫 এই অ্যাকাউন্ট অন্য একটি ডিভাইসে Active আছে।\n' +
+                    'নতুন ডিভাইসে ব্যবহার করতে Admin-এর সাথে যোগাযোগ করুন।\n' +
+                    '📞 01628255672'
+                );
+                showToast('🚫 অন্য ডিভাইসে Active — Login Block', 'error', 5000);
+                return false;
+            }
+
+            // সব ঠিক → login successful
+            saveOfflineAccess(user, { ...data, deviceId: savedDeviceId || MY_DEVICE_ID });
             enterApp();
             return true;
         } catch (error) {
@@ -1895,6 +1996,10 @@
             const paymentDate = d.paymentDate || '—';
             const expiryDate = d.expiryDate || '—';
             const expiryLabel = expiryDate !== '—' ? expiryDate : 'No expiry';
+            const deviceName = d.deviceName || 'Not registered';
+            const deviceShort = d.deviceId ? String(d.deviceId).slice(0, 8) + '...' : '—';
+            const deviceAttempts = d.deviceAttemptCount || 0;
+
             return `
                 <div style="background:#fff; border:1px solid #ddd; border-radius:12px; padding:12px; margin-bottom:10px;">
                     <div style="font-weight:bold; font-size:17px;">📞 ${phone}</div>
@@ -1905,12 +2010,23 @@
                         <div>Expiry: <b>${expiryLabel}</b></div>
                         <div>Status: <b style="color:${isActive ? '#16803c' : '#b00020'};">${statusText}</b></div>
                     </div>
+
+                    <div style="background:#f8f5ee; border:1px dashed #c9beac; border-radius:9px; padding:8px; margin:8px 0; font-size:12px;">
+                        <div style="font-weight:bold; color:#7b5b00; margin-bottom:3px;">🆔 Device Info</div>
+                        <div>Device: <b>${deviceName}</b></div>
+                        <div>ID: <code style="font-size:10px;">${deviceShort}</code></div>
+                        ${deviceAttempts > 0 ? `<div style="color:#b00020; margin-top:3px;">⚠️ অন্য ডিভাইস থেকে ${deviceAttempts} বার চেষ্টা</div>` : ''}
+                    </div>
+
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:7px;">
                         <button onclick="toggleUserAccess('${uid}','${nextStatus}',${nextActivated})" style="padding:10px; border:0; border-radius:9px; background:${isActive ? '#b00020' : '#16803c'}; color:#fff; font-weight:bold; cursor:pointer;">
                             ${isActive ? '🚫 Block' : '✅ Unblock'}
                         </button>
                         <button onclick="markUserPaid('${uid}')" style="padding:10px; border:0; border-radius:9px; background:#7b5b00; color:#fff; font-weight:bold; cursor:pointer;">
                             💳 Paid
+                        </button>
+                        <button onclick="resetUserDevice('${uid}')" style="grid-column:span 2; padding:10px; border:0; border-radius:9px; background:#1565c0; color:#fff; font-weight:bold; cursor:pointer;">
+                            🔄 Reset Device (নতুন ডিভাইস Allow)
                         </button>
                     </div>
                 </div>`;
@@ -2000,6 +2116,9 @@
                 paymentStatus,
                 paymentDate: paymentDate || '',
                 expiryDate: expiryDate || '',
+                deviceId: '',
+                deviceName: '',
+                deviceAttemptCount: 0,
                 createdAt: new Date().toISOString()
             };
 
@@ -2033,16 +2152,86 @@
         const today = new Date().toISOString().slice(0, 10);
         const expiry = prompt('Expiry Date দিন (YYYY-MM-DD), খালি রাখলে মেয়াদ থাকবে না:', adminUsersCache[uid]?.expiryDate || '');
         if (expiry === null) return;
+
+        const resetDevice = confirm(
+            '🔄 Payment-এর সাথে Device Reset করতে চান?\n\n' +
+            'OK = Device Reset হবে (নতুন ডিভাইস Allow)\n' +
+            'Cancel = আগের ডিভাইসেই থাকবে'
+        );
+
         try {
-            const { ref, update } = await import('https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js');
-            const patch = { status: 'active', activated: true, paymentStatus: 'paid', paymentDate: today, expiryDate: expiry.trim() };
+            const { ref, update, remove } = await import('https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js');
+            const patch = {
+                status: 'active',
+                activated: true,
+                paymentStatus: 'paid',
+                paymentDate: today,
+                expiryDate: expiry.trim()
+            };
+
+            if (resetDevice) {
+                patch.deviceId = '';
+                patch.deviceName = '';
+                patch.deviceAttemptCount = 0;
+                patch.deviceResetAt = new Date().toISOString();
+            }
+
             await update(ref(firebaseDb, 'users/' + uid), patch);
+
+            if (resetDevice) {
+                try { await remove(ref(firebaseDb, 'deviceAlerts/' + uid)); } catch (e) {}
+            }
+
             adminUsersCache[uid] = { ...(adminUsersCache[uid] || {}), ...patch };
             renderAdminUsers();
-            showToast('✅ Payment recorded & User Activated', 'success', 3000);
+            showToast('✅ Payment recorded' + (resetDevice ? ' + Device Reset' : ''), 'success', 3000);
         } catch (error) {
             console.error('Mark paid error:', error);
             showToast('❌ Payment update করা যায়নি', 'error', 3500);
+        }
+    }
+
+    async function resetUserDevice(uid) {
+        if (!isAdminUser()) {
+            showToast('🚫 Admin access denied', 'error', 3000);
+            return;
+        }
+
+        const user = adminUsersCache[uid] || {};
+        const currentDevice = user.deviceName || 'Not registered';
+        const phone = user.phone || uid;
+
+        const confirmed = confirm(
+            `🔄 Device Reset করতে চান?\n\n` +
+            `📞 Phone: ${phone}\n` +
+            `🆔 Current Device: ${currentDevice}\n\n` +
+            `Reset করলে User নতুন ডিভাইস থেকে লগইন করতে পারবে।\n` +
+            `পুরোনো ডিভাইসে আর Login হবে না।`
+        );
+        if (!confirmed) return;
+
+        try {
+            const { ref, update, remove } = await import('https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js');
+            await update(ref(firebaseDb, 'users/' + uid), {
+                deviceId: '',
+                deviceName: '',
+                deviceResetAt: new Date().toISOString(),
+                deviceAttemptCount: 0
+            });
+
+            try { await remove(ref(firebaseDb, 'deviceAlerts/' + uid)); } catch (e) {}
+
+            adminUsersCache[uid] = {
+                ...(adminUsersCache[uid] || {}),
+                deviceId: '',
+                deviceName: '',
+                deviceAttemptCount: 0
+            };
+            renderAdminUsers();
+            showToast('✅ Device Reset সম্পন্ন — User নতুন ডিভাইসে Login করতে পারবে', 'success', 4000);
+        } catch (error) {
+            console.error('Reset device error:', error);
+            showToast('❌ Device Reset করা যায়নি', 'error', 3500);
         }
     }
 
