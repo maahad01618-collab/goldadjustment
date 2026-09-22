@@ -3,8 +3,21 @@
 <head>
 <link rel="manifest" href="manifest.json" />
 <script>
+  // ============================================================
+  // Service Worker Registration — with scope + error handling
+  // ✅ OFFLINE SUPPORT: registers ./sw.js, updates every 30 min
+  // ============================================================
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js');
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js', { scope: './' })
+        .then((reg) => {
+          console.log('[SW] Registered:', reg.scope);
+          setInterval(() => reg.update().catch(() => {}), 30 * 60 * 1000);
+        })
+        .catch((err) => {
+          console.warn('[SW] Registration failed:', err);
+        });
+    });
   }
 </script>
 
@@ -1973,7 +1986,7 @@
 
     // ============================================================
     // 🎁 START FREE TRIAL — User clicks button
-    // ✅ আপডেটেড: আগে LOCAL check, তারপর CLOUD check
+    // ✅ OFFLINE-FIRST: local check আগে, cloud check শুধু online-এ
     // ============================================================
     async function startFreeTrial() {
         const btn = document.getElementById('trialBtn');
@@ -1993,11 +2006,9 @@
             const localTrial = getTrialInfo();
             if (localTrial && localTrial.startAt) {
                 if (isTrialActive()) {
-                    // এখনো ৭ দিন বাকি → সরাসরি অ্যাপে ঢুকে যাবে (cloud check লাগবে না)
                     enterAppWithTrial();
                     return;
                 } else {
-                    // Local-এ মেয়াদ শেষ → cloud check-এর দরকার নেই
                     setLoginError('⏰ এই ডিভাইসে ট্রায়াল মেয়াদ শেষ হয়েছে।\n\nঅনুগ্রহ করে Login করুন বা Payment করুন।');
                     restoreBtn();
                     return;
@@ -2005,14 +2016,16 @@
             }
 
             // ============================================================
-            // ধাপ ২: LOCAL-এ কোনো trial নেই → এখন CLOUD CHECK করো
-            // (এটা তখনই হবে যখন নতুন ডিভাইস বা localStorage clear হয়েছে)
+            // ধাপ ২: LOCAL-এ কোনো trial নেই → CLOUD CHECK (শুধু online-এ)
+            // ✅ OFFLINE: Internet না থাকলে cloud check skip → local trial চালু
             // ============================================================
-            const cloud = await checkCloudTrialBlock();
-            if (cloud.blocked) {
-                setLoginError('🚫 এই ডিভাইসে ইতিমধ্যেই ৭ দিনের ফ্রি ট্রায়াল ব্যবহৃত হয়েছে।\n\nঅনুগ্রহ করে Login করুন বা Payment করুন।');
-                restoreBtn();
-                return;
+            if (firebaseReady && navigator.onLine) {
+                const cloud = await checkCloudTrialBlock();
+                if (cloud.blocked) {
+                    setLoginError('🚫 এই ডিভাইসে ইতিমধ্যেই ৭ দিনের ফ্রি ট্রায়াল ব্যবহৃত হয়েছে।\n\nঅনুগ্রহ করে Login করুন বা Payment করুন।');
+                    restoreBtn();
+                    return;
+                }
             }
 
             // ============================================================
@@ -2385,7 +2398,8 @@
     }
 
     // ============================================================
-    // INITIALIZE FIREBASE
+    // INITIALIZE FIREBASE — ✅ OFFLINE-FIRST
+    // Firebase fail করলেও অ্যাপ চলবে (trial বা cached user)
     // ============================================================
     async function initFirebase() {
         try {
@@ -2397,38 +2411,82 @@
             firebaseAuth = authModule.getAuth(app);
             firebaseDb = dbModule.getDatabase(app);
 
+            // expose for offline auto-reconnect
+            window.firebaseAuth = firebaseAuth;
+            window.firebaseDb = firebaseDb;
+
             await authModule.setPersistence(firebaseAuth, authModule.browserLocalPersistence);
             firebaseReady = true;
 
             authModule.onAuthStateChanged(firebaseAuth, async (user) => {
                 if (user) {
-                    // Only auto-enter if user is already logged in AND login screen is showing
                     if (currentScreen === 'login' && document.getElementById('loginScreen').style.display !== 'none') {
                         await checkFirebaseUserAccess(user);
                     }
                 }
             });
 
-            // Also handle case where user was already logged in before
             if (firebaseAuth.currentUser) {
-                // If user was logged in, we can auto-enter (skip login)
-                // But only if not in trial already
                 if (!isTrialActive()) {
                     await checkFirebaseUserAccess(firebaseAuth.currentUser);
                 }
             } else {
-                // No logged in user → show login screen
                 document.getElementById('loginScreen').style.display = 'block';
                 currentScreen = 'login';
                 showUserLogin();
             }
 
         } catch (e) {
-            console.warn('Firebase init failed:', e);
+            console.warn('[Firebase] init failed (offline?):', e);
             firebaseReady = false;
+
+            // ============================================================
+            // ✅ OFFLINE FALLBACK
+            // Firebase না থাকলেও অ্যাপ চলবে:
+            // 1. Active trial থাকলে → সরাসরি trial app
+            // 2. Cached offline user থাকলে → সরাসরি app
+            // 3. কিছু না থাকলে → login screen
+            // ============================================================
             document.getElementById('loginScreen').style.display = 'block';
             currentScreen = 'login';
             showUserLogin();
+
+            // 1) Active trial?
+            if (isTrialActive()) {
+                setTimeout(() => {
+                    enterAppWithTrial();
+                    showToast('📴 Offline — Trial মোডে চলছে', 'info', 3000);
+                }, 300);
+                return;
+            }
+
+            // 2) Cached offline user?
+            try {
+                const raw = localStorage.getItem(OFFLINE_ACCESS_KEY);
+                if (raw) {
+                    const cached = JSON.parse(raw);
+                    if (cached && cached.uid) {
+                        let valid = true;
+                        if (!cached.isAdmin) {
+                            if (cached.status !== 'active' || cached.activated !== true) valid = false;
+                            if (cached.deviceId && cached.deviceId !== MY_DEVICE_ID) valid = false;
+                            if (cached.expiryDate) {
+                                const expiry = new Date(cached.expiryDate + 'T23:59:59');
+                                if (expiry < new Date()) valid = false;
+                            }
+                        }
+                        if (valid) {
+                            setTimeout(() => {
+                                enterApp();
+                                updateAdminButton();
+                                showToast('📴 Offline Mode — অ্যাপ চালু আছে', 'info', 3000);
+                            }, 300);
+                        }
+                    }
+                }
+            } catch (err) {
+                console.warn('[Offline] cache read failed:', err);
+            }
         }
     }
 
@@ -2735,9 +2793,7 @@
         }, 250);
     }
 
-    // ✅ আপডেটেড exitApp — ট্রায়াল active থাকলে বার্তা স্পষ্ট
     function exitApp() {
-        // If in trial mode, just show login screen
         const t = getTrialInfo();
         if (t && t.startAt && isTrialActive() && (!firebaseAuth || !firebaseAuth.currentUser)) {
             if (confirm('ট্রায়াল মোড থেকে বেরিয়ে Login পেজে যাবেন?\n\nOK = Login পেজ\nCancel = অ্যাপে থাকব\n\n✅ ট্রায়াল এখনো সক্রিয় — আবার "৭ দিন ফ্রি ট্রায়াল" চাপলে সরাসরি ঢুকতে পারবেন।')) {
@@ -3543,13 +3599,21 @@
 </script>
 
 <script>
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').catch(err =>
-            console.warn('Offline SW registration failed:', err)
-        );
-    });
-}
+// ============================================================
+// Offline Detection + Auto-reconnect
+// ============================================================
+(function() {
+  function updateOnlineStatus() {
+    const online = navigator.onLine;
+    console.log('[Network]', online ? 'Online' : 'Offline');
+    if (online && window.firebaseAuth && window.firebaseAuth.currentUser) {
+      try { checkFirebaseUserAccess(window.firebaseAuth.currentUser); } catch (e) {}
+    }
+  }
+  window.addEventListener('online', updateOnlineStatus);
+  window.addEventListener('offline', updateOnlineStatus);
+  updateOnlineStatus();
+})();
 </script>
 </body>
 </html>
