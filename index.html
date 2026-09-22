@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<link rel="manifest" href="manifest.json" />
+<link rel="manifest" href="./manifest.json" />
 <script>
   // ============================================================
   // Service Worker Registration — with scope + error handling
@@ -1761,6 +1761,13 @@
 
 <script>
     // ============================================================
+    // 🔐 ADMIN UID — MUST be defined FIRST (before any function uses it)
+    // ✅ FIXED: এটা এখন সবার আগে define করা হয়েছে, তাই saveOfflineAccess(),
+    //    isAdminUser() — সব ফাংশনে admin detection কাজ করবে।
+    // ============================================================
+    const ADMIN_UID = 'w28KvDcJRGN50fzm4G4spBo5g8S2';
+
+    // ============================================================
     // 🆔 DEVICE IDENTITY — Multi-layer Trial Lock
     // ============================================================
     const DEVICE_ID_KEY = 'goldAdjustmentDeviceId_v1';
@@ -1931,6 +1938,14 @@
             fingerprint: MY_FINGERPRINT,
             lastReminderDate: getTodayKey()
         });
+    }
+
+    // ✅ Clear trial state when user/admin logs in
+    function clearTrialState() {
+        try {
+            localStorage.removeItem(TRIAL_KEY);
+            trialInfo = null;
+        } catch (e) {}
     }
 
     // ============================================================
@@ -2114,6 +2129,12 @@
     function updateTrialBanner() {
         const banner = document.getElementById('trialBanner');
         if (!banner) return;
+
+        // ✅ Admin বা logged-in user এলে banner দেখাবে না
+        if (firebaseAuth && firebaseAuth.currentUser) {
+            banner.classList.remove('show');
+            return;
+        }
 
         const t = getTrialInfo();
         if (!t || !t.startAt) {
@@ -2411,7 +2432,6 @@
             firebaseAuth = authModule.getAuth(app);
             firebaseDb = dbModule.getDatabase(app);
 
-            // expose for offline auto-reconnect
             window.firebaseAuth = firebaseAuth;
             window.firebaseDb = firebaseDb;
 
@@ -2440,13 +2460,6 @@
             console.warn('[Firebase] init failed (offline?):', e);
             firebaseReady = false;
 
-            // ============================================================
-            // ✅ OFFLINE FALLBACK
-            // Firebase না থাকলেও অ্যাপ চলবে:
-            // 1. Active trial থাকলে → সরাসরি trial app
-            // 2. Cached offline user থাকলে → সরাসরি app
-            // 3. কিছু না থাকলে → login screen
-            // ============================================================
             document.getElementById('loginScreen').style.display = 'block';
             currentScreen = 'login';
             showUserLogin();
@@ -2491,7 +2504,7 @@
     }
 
     // ============================================================
-    // ENTER APP (logged-in user)
+    // ENTER APP (logged-in user) — ✅ FIXED: trial state cleared
     // ============================================================
     function enterApp() {
         document.getElementById('loginScreen').style.display = 'none';
@@ -2506,7 +2519,10 @@
             history.replaceState({ screen: 'dashboard', ts: Date.now() }, '');
         } catch (e) {}
 
-        // Hide trial banner (user is logged in)
+        // ✅ FIXED: Login সফল হলে trial state clear করো
+        clearTrialState();
+
+        // ✅ FIXED: Hide trial banner (user/admin is logged in)
         document.getElementById('trialBanner').classList.remove('show');
 
         calculateMain();
@@ -2522,7 +2538,10 @@
     async function checkFirebaseUserAccess(user) {
         try {
             const { ref, get, update } = await import('https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js');
+
+            // ✅ Admin
             if (user.uid === ADMIN_UID) {
+                clearTrialState();
                 saveOfflineAccess(user, { status: 'active', activated: true });
                 enterApp();
                 updateAdminButton();
@@ -2613,6 +2632,9 @@
                 showToast('🚫 অন্য ডিভাইসে Active', 'error', 5000);
                 return false;
             }
+
+            // ✅ FIXED: Login সফল → trial state clear
+            clearTrialState();
 
             saveOfflineAccess(user, { ...data, deviceId: savedDeviceId || MY_DEVICE_ID });
             enterApp();
@@ -2866,7 +2888,6 @@
     // ============================================================
     // ADMIN CONTROL
     // ============================================================
-    const ADMIN_UID = 'w28KvDcJRGN50fzm4G4spBo5g8S2';
     let adminUsersCache = {};
 
     function isAdminUser() {
