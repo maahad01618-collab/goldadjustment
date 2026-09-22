@@ -1930,6 +1930,7 @@
 
     // ============================================================
     // 🎁 START FREE TRIAL — User clicks button
+    // ✅ আপডেটেড: আগে LOCAL check, তারপর CLOUD check
     // ============================================================
     async function startFreeTrial() {
         const btn = document.getElementById('trialBtn');
@@ -1937,35 +1938,43 @@
         btn.innerHTML = '<span class="trial-icon">⏳</span><span>যাচাই করা হচ্ছে...</span>';
         setLoginError('');
 
+        const restoreBtn = () => {
+            btn.disabled = false;
+            btn.innerHTML = '<span class="trial-icon">🎁</span><span>৭ দিন ফ্রি ট্রায়াল শুরু করুন</span><span class="trial-badge">FREE</span>';
+        };
+
         try {
-            // 1. Check if already used (cloud)
-            const cloud = await checkCloudTrialBlock();
-
-            if (cloud.blocked) {
-                // Device already used trial
-                setLoginError('🚫 এই ডিভাইসে ইতিমধ্যেই ৭ দিনের ফ্রি ট্রায়াল ব্যবহৃত হয়েছে।\n\nঅনুগ্রহ করে Login করুন বা Payment করুন।');
-                btn.disabled = false;
-                btn.innerHTML = '<span class="trial-icon">🎁</span><span>৭ দিন ফ্রি ট্রায়াল শুরু করুন</span><span class="trial-badge">FREE</span>';
-                return;
-            }
-
-            // 2. Check local
+            // ============================================================
+            // ধাপ ১: LOCAL CHECK (আগে) — সক্রিয় ট্রায়াল থাকলে সরাসরি ঢুকবে
+            // ============================================================
             const localTrial = getTrialInfo();
             if (localTrial && localTrial.startAt) {
                 if (isTrialActive()) {
-                    // Still active — enter directly
+                    // এখনো ৭ দিন বাকি → সরাসরি অ্যাপে ঢুকে যাবে (cloud check লাগবে না)
                     enterAppWithTrial();
                     return;
                 } else {
-                    // Expired locally — block
+                    // Local-এ মেয়াদ শেষ → cloud check-এর দরকার নেই
                     setLoginError('⏰ এই ডিভাইসে ট্রায়াল মেয়াদ শেষ হয়েছে।\n\nঅনুগ্রহ করে Login করুন বা Payment করুন।');
-                    btn.disabled = false;
-                    btn.innerHTML = '<span class="trial-icon">🎁</span><span>৭ দিন ফ্রি ট্রায়াল শুরু করুন</span><span class="trial-badge">FREE</span>';
+                    restoreBtn();
                     return;
                 }
             }
 
-            // 3. Start fresh trial
+            // ============================================================
+            // ধাপ ২: LOCAL-এ কোনো trial নেই → এখন CLOUD CHECK করো
+            // (এটা তখনই হবে যখন নতুন ডিভাইস বা localStorage clear হয়েছে)
+            // ============================================================
+            const cloud = await checkCloudTrialBlock();
+            if (cloud.blocked) {
+                setLoginError('🚫 এই ডিভাইসে ইতিমধ্যেই ৭ দিনের ফ্রি ট্রায়াল ব্যবহৃত হয়েছে।\n\nঅনুগ্রহ করে Login করুন বা Payment করুন।');
+                restoreBtn();
+                return;
+            }
+
+            // ============================================================
+            // ধাপ ৩: একেবারে নতুন → trial শুরু করো
+            // ============================================================
             startTrialLocal();
             await registerTrialToCloud();
             enterAppWithTrial();
@@ -1974,8 +1983,7 @@
         } catch (e) {
             console.error('Start trial error:', e);
             setLoginError('❌ ট্রায়াল শুরু করা যায়নি। Internet সংযোগ পরীক্ষা করুন।');
-            btn.disabled = false;
-            btn.innerHTML = '<span class="trial-icon">🎁</span><span>৭ দিন ফ্রি ট্রায়াল শুরু করুন</span><span class="trial-badge">FREE</span>';
+            restoreBtn();
         }
     }
 
@@ -2684,11 +2692,12 @@
         }, 250);
     }
 
+    // ✅ আপডেটেড exitApp — ট্রায়াল active থাকলে বার্তা স্পষ্ট
     function exitApp() {
         // If in trial mode, just show login screen
         const t = getTrialInfo();
         if (t && t.startAt && isTrialActive() && (!firebaseAuth || !firebaseAuth.currentUser)) {
-            if (confirm('ট্রায়াল মোড থেকে বেরিয়ে Login পেজে যাবেন?\n\nOK = Login পেজ\nCancel = অ্যাপে থাকব')) {
+            if (confirm('ট্রায়াল মোড থেকে বেরিয়ে Login পেজে যাবেন?\n\nOK = Login পেজ\nCancel = অ্যাপে থাকব\n\n✅ ট্রায়াল এখনো সক্রিয় — আবার "৭ দিন ফ্রি ট্রায়াল" চাপলে সরাসরি ঢুকতে পারবেন।')) {
                 document.getElementById('appContainer').classList.remove('show');
                 document.getElementById('loginScreen').style.display = 'block';
                 currentScreen = 'login';
