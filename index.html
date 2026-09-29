@@ -703,7 +703,7 @@
 
   </div>
 
-  <!-- PROFILE SCREEN (Admin Control fully integrated here) -->
+  <!-- PROFILE SCREEN (Admin Control integrated — visible only for ADMIN) -->
   <div id="profileScreen" style="display:none; padding:14px;">
     <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
       <button class="back-btn" onclick="goBack()">Back</button>
@@ -722,7 +722,7 @@
       <div id="profileDetails" style="font-size:13px; color:#333; line-height:2; border-top:1px dashed rgba(0,0,0,0.1); padding-top:10px;"></div>
     </div>
 
-    <!-- ADMIN CONTROL SECTION (only for admin) -->
+    <!-- ADMIN CONTROL SECTION (only visible for ADMIN) -->
     <div id="adminSection" style="display:none;">
 
       <!-- Create New User -->
@@ -1921,7 +1921,7 @@ function showAbout() {
 }
 
 /* ============================================================
-   PROFILE SCREEN (with integrated Admin Control)
+   PROFILE SCREEN (Admin Control visible only for ADMIN)
    ============================================================ */
 async function openProfile() {
   updateBottomNav('profile');
@@ -1936,21 +1936,24 @@ async function openProfile() {
   const profileTitle = document.getElementById('profileTitle');
   const avatarEl = document.getElementById('profileAvatar');
 
+  // ✅ প্রথমে Profile info লোড হবে (সবার জন্য)
+  await loadProfileInfo();
+
   if (isAdmin) {
+    // 👑 অ্যাডমিন হলে → Admin Control দেখাবে
     profileTitle.textContent = '🛠️ Admin Profile';
     avatarEl.textContent = '👑';
     avatarEl.style.background = 'linear-gradient(145deg,#d4a017,#8a6508)';
     adminSection.style.display = 'block';
-    await loadProfileInfo();
     document.getElementById('adminSearch').value = '';
     await loadPaymentRequests();
     await loadAdminUsers();
   } else {
+    // ❌ সাধারণ ইউজার / ট্রায়াল ইউজার → Admin Control সম্পূর্ণ লুকানো
     profileTitle.textContent = '👤 Profile';
     avatarEl.textContent = '👤';
     avatarEl.style.background = 'linear-gradient(145deg,#5b4fcf,#4a3f9e)';
     adminSection.style.display = 'none';
-    await loadProfileInfo();
   }
 }
 
@@ -2034,6 +2037,7 @@ async function loadProfileInfo() {
    ADMIN: PAYMENT REQUESTS
    ============================================================ */
 async function loadPaymentRequests() {
+  if (!isAdminUser()) return;
   const wrap = document.getElementById('paymentRequestsWrap');
   if (!wrap) return;
   wrap.innerHTML = '<div style="padding:14px; text-align:center; color:#3d3475; font-size:13px;">⏳ লোড হচ্ছে...</div>';
@@ -2167,12 +2171,14 @@ async function rejectPayment(requestId) {
 /* ============================================================
    ADMIN: USERS
    ============================================================ */
+let adminUsersCache = {};
+
 async function loadAdminUsers() {
+  if (!isAdminUser()) return;
   const list = document.getElementById('adminUserList');
   const summary = document.getElementById('adminSummary');
   list.innerHTML = '<div style="padding:20px; text-align:center; color:#3d3475;">⏳ লোড হচ্ছে...</div>';
   try {
-    if (!isAdminUser()) throw new Error('Denied');
     const { ref, get } = await import('https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js');
     const snapshot = await get(ref(firebaseDb, 'users'));
     adminUsersCache = snapshot.exists() ? (snapshot.val() || {}) : {};
@@ -2182,9 +2188,8 @@ async function loadAdminUsers() {
   }
 }
 
-let adminUsersCache = {};
-
 function renderAdminUsers() {
+  if (!isAdminUser()) return;
   const list = document.getElementById('adminUserList');
   const summary = document.getElementById('adminSummary');
   const search = String(document.getElementById('adminSearch').value || '').trim().toLowerCase();
@@ -2239,7 +2244,7 @@ function renderAdminUsers() {
   }).join('');
 }
 
-function filterAdminUsers() { renderAdminUsers(); }
+function filterAdminUsers() { if (isAdminUser()) renderAdminUsers(); }
 
 async function toggleUserAccess(uid, newStatus, newActivated) {
   if (!isAdminUser()) return;
@@ -2254,6 +2259,7 @@ async function toggleUserAccess(uid, newStatus, newActivated) {
 }
 
 function generateActivationCode() {
+  if (!isAdminUser()) return;
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let code = '';
   const array = new Uint32Array(8);
