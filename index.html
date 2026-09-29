@@ -50,86 +50,700 @@
 </script>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI','Noto Sans Bengali',Tahoma,sans-serif}
-html,body{min-height:100%;background:#f7f7fb;color:#191525}
-body{padding:0;display:block;min-height:100vh;background:#f7f7fb}
-button,input,select{font:inherit}
-button{border:0}
+  * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Tahoma, sans-serif; }
 
-/* ===== LOGIN ===== */
-#loginScreen{max-width:430px;width:100%;margin:24px auto;background:#fff;border-radius:26px;padding:32px 22px 20px;box-shadow:0 18px 50px rgba(62,38,110,.16);text-align:center;border:1px solid #eee}
-#loginScreen .logo{font-size:56px;margin-bottom:8px}
-#loginScreen h1{font-size:27px;color:#5f35b5;margin-bottom:4px}
-#loginScreen .sub{font-size:13px;color:#777;margin-bottom:24px}
-#loginScreen input{width:80%;padding:14px;font-size:17px;text-align:center;letter-spacing:1px;border:1.5px solid #d8d0ea;border-radius:12px;outline:none;background:#fff;margin-bottom:12px;font-weight:600;color:#382060}
-#loginScreen input:focus{border-color:#6638bd;box-shadow:0 0 0 3px rgba(102,56,189,.12)}
-#loginScreen .error{color:#d32f2f;font-size:13px;margin-top:8px;min-height:22px;font-weight:600;white-space:pre-line}
-.btn-gold{background:linear-gradient(145deg,#6638bd,#5630a9);color:#fff;border:none;border-radius:12px;padding:14px 20px;font-size:16px;font-weight:700;cursor:pointer;transition:.15s;box-shadow:0 4px 0 #43228b,0 7px 18px rgba(86,48,169,.25)}
-.btn-gold:hover{transform:translateY(-2px);filter:brightness(1.05)}
-.btn-gold:active{transform:translateY(2px);box-shadow:0 1px 0 #43228b}
-.btn-outline{background:#fff;color:#5d35aa;border:1.5px solid #d0c5e8;border-radius:12px;padding:12px 20px;font-size:14px;font-weight:700;cursor:pointer}
-.trial-btn{width:90%;padding:14px;margin:12px auto 8px;border:2px dashed #2e7d32;border-radius:14px;background:#f2fbf3;color:#2e7d32;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
-.trial-btn .trial-icon{font-size:20px}.trial-btn .trial-badge{background:#2e7d32;color:#fff;padding:2px 8px;border-radius:10px;font-size:10px}.trial-note{width:90%;margin:4px auto 10px;font-size:11px;color:#777;text-align:center;line-height:1.5}.login-footer{margin-top:16px;padding-top:12px;border-top:1px solid #eee;font-size:13px;color:#777}.login-footer .number{color:#5f35b5;font-weight:700;font-size:15px}
+  :root{
+    --purple:#5B2D91;
+    --purple-dark:#43206b;
+    --purple-light:#7a4bb5;
+    --bg:#f2f0f7;
+    --card:#ffffff;
+    --text:#2b2b3c;
+    --text-soft:#6b6b80;
+    --gold:#d4a017;
+  }
 
-/* ===== MAIN APP / MOBILE DASHBOARD ===== */
-#appContainer{display:none;width:100%;max-width:430px;min-height:100vh;margin:0 auto;background:#f7f7fb;overflow:hidden;box-shadow:0 0 35px rgba(0,0,0,.08);border:0;border-radius:0;padding:0}
-#appContainer.show{display:block}
-.app-shell{min-height:100vh;position:relative;padding-bottom:92px}
-.app-header{height:188px;background:linear-gradient(180deg,#51299d 0%,#6837c0 100%);color:#fff;padding:42px 24px 20px;position:relative;overflow:hidden}
-.app-header:after{content:'';position:absolute;width:210px;height:210px;right:-100px;top:-105px;border-radius:50%;background:rgba(255,255,255,.07)}
-.brand-row{display:flex;align-items:center;gap:14px;position:relative;z-index:1}
-.brand-logo{width:74px;height:74px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 5px 16px rgba(0,0,0,.18);font-size:39px;border:4px solid rgba(255,255,255,.55)}
-.brand-title{font-size:30px;font-weight:800;line-height:1.05;letter-spacing:.2px}.brand-sub{font-size:17px;color:#e6d9ff;margin-top:8px}
-.share-btn{margin-left:auto;width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.18);color:#fff;font-size:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;z-index:2;box-shadow:inset 0 1px 0 rgba(255,255,255,.15)}
-.dashboard-content{padding:88px 22px 24px;position:relative}
-.hero-price{width:100%;height:154px;border-radius:34px;background:linear-gradient(145deg,#6233b8,#5a2eae);color:#fff;display:flex;align-items:center;gap:22px;padding:0 34px;cursor:pointer;box-shadow:0 12px 24px rgba(91,48,174,.26);transition:.18s;margin-bottom:36px}
-.hero-price:hover{transform:translateY(-2px);box-shadow:0 16px 28px rgba(91,48,174,.3)}
-.hero-price:active{transform:translateY(2px)}
-.hero-icon{width:62px;height:62px;border-radius:50%;background:#fff;color:#6333b7;display:flex;align-items:center;justify-content:center;font-size:38px;flex:0 0 auto}
-.hero-title{font-size:31px;font-weight:800;line-height:1.2}
-.gold-rate-btn{width:100%;border-radius:24px;background:#fff;min-height:146px;box-shadow:0 8px 22px rgba(0,0,0,.08);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;color:#1c1725;font-weight:800;font-size:19px;line-height:1.3;transition:.18s}
-.gold-rate-btn:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.1)}
-.gold-rate-btn .icon{font-size:45px;margin-bottom:8px}
-.dashboard-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:14px 0 22px}
-.dash-btn{background:#fff;border:0;border-radius:28px;min-height:176px;padding:18px 7px 14px;text-align:center;font-weight:800;font-size:17px;line-height:1.35;color:#16131b;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 7px 18px rgba(0,0,0,.08);transition:.18s}
-.dash-btn:hover{transform:translateY(-3px);box-shadow:0 12px 25px rgba(0,0,0,.11)}.dash-btn:active{transform:translateY(2px)}
-.dash-btn .icon{font-size:43px;display:block;margin-bottom:10px;line-height:1}
-.dashboard-footer{display:none}
-.dashboard-bottom-nav{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);width:min(90%,390px);height:78px;border-radius:40px;background:linear-gradient(145deg,#5c31b3,#6538bd);box-shadow:0 10px 25px rgba(82,41,158,.32);display:grid;grid-template-columns:repeat(3,1fr);z-index:50;padding:6px 8px}
-.nav-item{background:transparent;color:#ddd0f4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border-radius:30px;font-size:14px;cursor:pointer;min-width:0}.nav-item .nav-icon{font-size:27px;line-height:1}.nav-item.active{color:#fff}.nav-item:active{background:rgba(255,255,255,.1)}
-#adminNavItem{display:none}
-#aboutScreen{display:none;padding:26px 22px 100px}.about-card{background:#fff;border-radius:26px;padding:24px;box-shadow:0 8px 22px rgba(0,0,0,.08);text-align:center}.about-card h2{color:#5f35b5;margin-bottom:10px}.about-card p{color:#555;line-height:1.8;font-size:14px}.about-logo{font-size:55px;margin-bottom:8px}
+  body {
+    background: var(--bg);
+    min-height: 100vh;
+    color: var(--text);
+    padding-bottom: 90px;
+    -webkit-tap-highlight-color: transparent;
+  }
 
-/* ===== TRIAL ===== */
-#trialBanner{display:none;margin:0 22px 14px;background:#fff8e6;border:1.5px dashed #c78b00;border-radius:14px;padding:10px 12px;font-size:13px;color:#7b5600;text-align:center;font-weight:600;line-height:1.6;box-shadow:0 3px 12px rgba(184,134,11,.12)}
-#trialBanner.show{display:block}#trialBanner .days{color:#2e7d32;font-weight:800;font-size:16px}#trialBanner .warn{color:#d32f2f;font-weight:800}#trialBanner .buy-btn{display:inline-block;margin-top:6px;padding:5px 14px;background:#2e7d32;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer}
+  /* ============ TOP HEADER (PURPLE) ============ */
+  .top-header {
+    background: linear-gradient(160deg, #6a35a8 0%, #5B2D91 55%, #4a2478 100%);
+    padding: 16px 16px 22px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    box-shadow: 0 4px 18px rgba(91,45,145,0.35);
+    position: relative;
+  }
+  .top-header .brand-logo {
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #fff3c4, #d4a017 60%, #a97c0a);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.25), inset 0 -2px 4px rgba(0,0,0,0.2);
+    flex-shrink: 0;
+  }
+  .top-header .brand-text { flex: 1; min-width: 0; }
+  .top-header .brand-text h1 {
+    font-size: 19px; color: #fff;
+    font-weight: 700; line-height: 1.15;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .top-header .brand-text .tagline {
+    font-size: 12.5px; color: rgba(255,255,255,0.82);
+    margin-top: 2px;
+  }
+  .top-header .share-btn {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.18);
+    border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 19px;
+    flex-shrink: 0;
+    transition: background .18s;
+  }
+  .top-header .share-btn:hover { background: rgba(255,255,255,0.3); }
 
-/* ===== ADMIN ===== */
-.admin-style-btn{width:100%;padding:14px;border-radius:14px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;transition:.18s}.admin-style-btn:hover{transform:translateY(-2px)}
-#adminScreen{background:#f7f7fb!important;color:#191525;padding:22px!important;min-height:70vh}.admin-screen-card{background:#fff!important;color:#191525!important;border:1px solid #e8e1f3!important;box-shadow:0 7px 18px rgba(0,0,0,.07)}
+  /* ============ MAIN CONTENT AREA ============ */
+  .content-area {
+    padding: 16px 14px 10px 14px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
 
-/* ===== FEATURES ===== */
-#featureScreen{display:none;padding:24px 20px 100px;background:#f7f7fb;color:#191525;min-height:70vh}#featureScreen.show{display:block}
-.feature-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #e5def0}.back-btn{background:linear-gradient(145deg,#6a3bc2,#4f2997);color:#fff;border:none;border-radius:12px;padding:9px 18px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 0 #39206e}.feature-header .feature-name{font-size:16px;font-weight:800;color:#5f35b5}
-.feature-box{background:#fff;border-radius:20px;padding:16px;border:1px solid #e7e0f0;display:none;box-shadow:0 8px 22px rgba(0,0,0,.07);color:#222}.feature-box.active{display:block}.feature-title{font-weight:800;font-size:17px;color:#5f35b5;margin-bottom:12px;border-bottom:1px solid #eee;padding-bottom:8px}
-.row{display:flex;flex-wrap:wrap;gap:4px 6px;margin-bottom:5px;align-items:center}.row label{font-size:13px;width:58px;color:#666;font-weight:700}.row input{flex:1;min-width:50px;padding:9px 5px;border:1px solid #ddd3ed;border-radius:8px;font-size:14px;background:#fff;text-align:center;box-shadow:inset 0 1px 3px rgba(0,0,0,.04);font-weight:600;color:#222}.row input:focus{outline:none;border-color:#6a3bc2;box-shadow:0 0 0 3px rgba(106,59,194,.1)}
-.karat-row{display:flex;gap:8px;margin-top:6px}.karat-row .field{flex:1;min-width:0}.karat-row label{font-size:12px;display:block;margin-bottom:3px;color:#666;font-weight:700}.karat-row input{width:100%;padding:9px 4px;border:1px solid #ddd3ed;border-radius:8px;font-size:14px;background:#fff;text-align:center;color:#222;font-weight:600}
-.btn{background:linear-gradient(145deg,#6a3bc2,#512a9d);color:#fff;border:none;padding:12px;border-radius:14px;font-size:15px;font-weight:800;width:100%;margin:8px 0 2px;cursor:pointer;box-shadow:0 5px 0 #39206e}.btn-secondary{background:linear-gradient(145deg,#4b8bd4,#2d5e99);box-shadow:0 5px 0 #1c3d63}.result-box{background:#f7f3fd;border-radius:12px;padding:12px;font-size:13px;line-height:1.7;white-space:pre-wrap;margin-top:8px;border:1px solid #e2d8f0;min-height:44px;font-weight:600;color:#4c2d88}.print-btn{background:linear-gradient(145deg,#596a73,#37464d);color:#fff;border:0;padding:10px 14px;border-radius:12px;font-size:13px;font-weight:800;cursor:pointer;margin-top:8px;width:100%}.price-result{background:linear-gradient(145deg,#fff7db,#fffdf5);border:1px solid #d4a017;border-radius:16px;padding:16px;margin-top:10px;text-align:center;box-shadow:0 6px 0 #c29313}.price-result .label{font-size:13px;color:#9a7a1c;margin-bottom:4px;font-weight:700}.price-result .amount{font-size:26px;font-weight:800;color:#8a6508;letter-spacing:1px}.price-result .sub-line{font-size:12px;color:#9a7a1c;margin-top:6px;font-weight:700}
-.chart-table-wrap{overflow-x:auto;border-radius:12px;background:#fff;border:1px solid #e1d8ee}.chart-table{width:100%;border-collapse:collapse;font-size:13px;min-width:320px}.chart-table thead th{background:linear-gradient(145deg,#6a3bc2,#4f2997);color:#fff;padding:10px 6px;text-align:center;font-weight:800;font-size:12px}.chart-table tbody td{padding:8px 6px;text-align:center;border-bottom:1px solid #eee;font-weight:600;color:#333;white-space:nowrap}.chart-table tbody td:first-child{font-weight:800;color:#5f35b5}.chart-table tbody td:nth-child(2){color:#2e7d32;font-weight:800}.chart-note{margin-top:10px;padding:10px 12px;background:#faf6ff;border:1px dashed #b79bdd;border-radius:10px;font-size:12px;color:#65418e;line-height:1.7;font-weight:600}
+  /* ============ BIG HIGHLIGHT BUTTON (দাম/মূল্য হিসাব) ============ */
+  .highlight-btn {
+    width: 100%;
+    background: linear-gradient(145deg, #6a35a8, #532a86);
+    border-radius: 16px;
+    padding: 16px 18px;
+    display: flex; align-items: center; gap: 14px;
+    color: #fff; border: none; cursor: pointer;
+    box-shadow: 0 6px 18px rgba(91,45,145,0.4);
+    margin-bottom: 20px;
+    transition: transform .15s, box-shadow .15s;
+    text-align: left;
+  }
+  .highlight-btn:hover { transform: translateY(-2px); box-shadow: 0 9px 24px rgba(91,45,145,0.5); }
+  .highlight-btn:active { transform: translateY(2px); box-shadow: 0 2px 8px rgba(91,45,145,0.4); }
+  .highlight-btn .hb-icon {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; color: var(--purple);
+    font-weight: 700;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+  .highlight-btn .hb-text {
+    font-size: 19px; font-weight: 700;
+    letter-spacing: .2px;
+  }
 
-/* ===== CALCULATOR ===== */
-.calculator{width:100%;max-width:340px;margin:0 auto;background:linear-gradient(145deg,#2d2d3a,#1a1a24);border-radius:18px;box-shadow:0 12px 30px rgba(0,0,0,.22);overflow:hidden;padding-bottom:8px}.calculator .display-container{background:linear-gradient(145deg,#1e1e28,#2a2a38);padding:18px 15px 8px;display:flex;flex-direction:column;justify-content:flex-end;min-height:110px}.calculator .expression{font-size:13px;color:#aaa;text-align:right;min-height:18px;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.calculator .result{font-size:38px;font-weight:600;color:#d4a017;text-align:right;word-wrap:break-word;word-break:break-all;line-height:1.1}.calculator .memory-row{display:grid;grid-template-columns:repeat(6,1fr);padding:4px 8px 6px;gap:3px}.calculator .memory-btn{background:transparent;border:none;font-size:12px;color:#b0b0c8;padding:8px 0;cursor:pointer;border-radius:6px}.calculator .keypad{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:0 8px 6px}.calculator button{border:1px solid rgba(255,255,255,.08);background:linear-gradient(145deg,#3a3a4a,#2a2a38);color:#e8e8f0;font-size:16px;padding:14px 0;border-radius:10px;cursor:pointer;font-weight:600;box-shadow:0 3px 0 #1a1a24}.calculator .operator{font-size:18px;color:#d4a017}.calculator .equal-btn{background:linear-gradient(145deg,#6a3bc2,#4f2997);color:#fff;font-size:20px;box-shadow:0 3px 0 #39206e}
+  /* ============ FEATURE GRID ============ */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
 
-/* ===== TOAST / MODAL ===== */
-#toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-100px);background:#323232;color:#fff;padding:12px 24px;border-radius:12px;font-size:14px;font-weight:600;z-index:99999;transition:transform .3s ease;box-shadow:0 8px 20px rgba(0,0,0,.25);max-width:90%;text-align:center}#toast.show{transform:translateX(-50%) translateY(0)}#toast.success{background:linear-gradient(145deg,#43a047,#1b5e20)}#toast.error{background:linear-gradient(145deg,#e53935,#b71c1c)}#toast.info{background:linear-gradient(145deg,#6a3bc2,#4f2997)}
-#trialModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:99998;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(6px)}#trialModal.show{display:flex}#trialModal .modal-box{background:#fff;border-radius:20px;padding:24px 20px;max-width:360px;width:100%;text-align:center;box-shadow:0 25px 60px rgba(0,0,0,.3);border:2px solid #6a3bc2}.modal-title{color:#5f35b5!important}.modal-text{color:#555!important}
+  .feature-card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 16px 6px 14px 6px;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+    transition: transform .15s, box-shadow .15s;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: flex-start;
+    min-height: 118px;
+    user-select: none;
+    position: relative;
+  }
+  .feature-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(91,45,145,0.18); }
+  .feature-card:active { transform: translateY(1px) scale(0.98); }
+  .feature-card .fc-icon {
+    font-size: 34px; line-height: 1;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .feature-card .fc-label {
+    font-size: 12.5px; font-weight: 600;
+    color: var(--text);
+    line-height: 1.35;
+    padding: 0 2px;
+  }
 
-/* ===== PRINT ===== */
-@page{size:A5 landscape;margin:0}@media print{body *{visibility:hidden}#printArea,#printArea *{visibility:visible}#printArea{position:absolute;left:0;top:0;width:100%;padding:27.94mm 10mm 10mm;background:#fff;box-sizing:border-box}.print-header{text-align:center;margin-bottom:10px;border-bottom:2px solid #b8860b;padding-bottom:6px}.print-header h2{color:#b8860b;font-size:20px}.print-header .sub{font-size:11px;color:#666;margin-top:3px}.print-content{font-size:14px;line-height:1.9;white-space:pre-wrap;color:#222}.print-footer{margin-top:18px;padding-top:8px;border-top:1px dashed #999;font-size:11px;color:#666;text-align:center}}
+  /* Calculator card (single, full-width-like but small) */
+  .feature-grid .calc-card {
+    background: linear-gradient(145deg, #6a35a8, #532a86);
+    box-shadow: 0 4px 14px rgba(91,45,145,0.4);
+  }
+  .feature-grid .calc-card .fc-label { color: #fff; }
+  .feature-grid .calc-card .fc-icon {
+    background: rgba(255,255,255,0.15);
+    border-radius: 10px;
+    padding: 4px 8px;
+    font-size: 22px;
+  }
 
-@media (min-width:700px){body{background:#ecebf1}#appContainer{max-width:430px;min-height:100vh}.dashboard-bottom-nav{position:fixed}.feature-box{padding:22px}.row input{padding:10px 8px;font-size:15px}}
-@media (min-width:1000px){#appContainer{max-width:430px;min-height:100vh;box-shadow:0 0 40px rgba(0,0,0,.12)}.brand-title{font-size:30px}}
-@media (max-width:380px){.app-header{padding-left:18px;padding-right:18px}.brand-title{font-size:25px}.brand-sub{font-size:15px}.brand-logo{width:64px;height:64px;font-size:32px}.share-btn{width:48px;height:48px}.dashboard-content{padding-left:16px;padding-right:16px}.hero-price{height:132px;border-radius:28px;padding:0 24px;gap:14px}.hero-title{font-size:25px}.dashboard-grid{gap:10px}.dash-btn{min-height:155px;font-size:15px;border-radius:23px}.dash-btn .icon{font-size:37px}}
+  /* ============ BOTTOM NAV BAR ============ */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(160deg, #6a35a8, #532a86);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 6px 12px 6px;
+    border-top-left-radius: 22px;
+    border-top-right-radius: 22px;
+    box-shadow: 0 -6px 24px rgba(91,45,145,0.35);
+    z-index: 5000;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .bottom-nav .nav-item {
+    flex: 1;
+    background: transparent;
+    border: none; cursor: pointer;
+    color: rgba(255,255,255,0.7);
+    display: flex; flex-direction: column;
+    align-items: center; gap: 4px;
+    padding: 4px 0;
+    font-size: 12px; font-weight: 600;
+    transition: color .18s;
+  }
+  .bottom-nav .nav-item .nav-icon { font-size: 21px; line-height: 1; }
+  .bottom-nav .nav-item.active,
+  .bottom-nav .nav-item:hover { color: #fff; }
+  .bottom-nav .nav-item.active .nav-icon { filter: drop-shadow(0 0 6px rgba(255,255,255,0.7)); }
+
+  /* Hide Admin nav item for non-admin by default */
+  .bottom-nav .nav-item.admin-nav { display: none; }
+  .bottom-nav .nav-item.admin-nav.show { display: flex; }
+
+  /* ============ LOGIN SCREEN ============ */
+  #loginScreen {
+    max-width: 400px;
+    width: calc(100% - 24px);
+    margin: 20px auto;
+    background: linear-gradient(160deg, #ffffff 0%, #faf7ff 100%);
+    border-radius: 24px;
+    padding: 32px 22px 20px 22px;
+    box-shadow: 0 18px 50px rgba(91,45,145,0.22), 0 0 0 1px rgba(91,45,145,0.08);
+    text-align: center;
+    border: 1px solid rgba(91,45,145,0.15);
+  }
+  #loginScreen .logo { font-size: 54px; margin-bottom: 8px; }
+  #loginScreen h1 {
+    font-size: 25px; color: var(--purple); margin-bottom: 4px;
+    letter-spacing: 0.4px; font-weight: 800;
+  }
+  #loginScreen .sub { font-size: 13px; color: var(--text-soft); margin-bottom: 22px; }
+
+  #loginScreen input, #loginScreen select {
+    width: 85%; padding: 13px; font-size: 16px; text-align: center;
+    letter-spacing: 1px;
+    border: 1.5px solid rgba(91,45,145,0.25);
+    border-radius: 12px; outline: none;
+    background: #faf8ff;
+    margin-bottom: 12px; font-weight: 600;
+    color: var(--text);
+    transition: all 0.2s;
+  }
+  #loginScreen input::placeholder { color: #a9a4bd; letter-spacing: .5px; font-size: 14px; }
+  #loginScreen input:focus, #loginScreen select:focus {
+    border-color: var(--purple);
+    box-shadow: 0 0 0 3px rgba(91,45,145,0.15);
+    background: #fff;
+  }
+  #loginScreen .error {
+    color: #d32f2f; font-size: 13px; margin-top: 8px;
+    min-height: 22px; font-weight: 600; white-space: pre-line;
+  }
+
+  /* Buttons */
+  .btn-gold {
+    background: linear-gradient(145deg, #6a35a8, #532a86);
+    color: #fff; border: none;
+    border-radius: 12px; padding: 13px 20px;
+    font-size: 15px; font-weight: 700;
+    cursor: pointer; transition: all 0.15s;
+    box-shadow: 0 4px 0 #3a1c5c, 0 6px 18px rgba(91,45,145,0.4);
+    letter-spacing: 0.4px;
+  }
+  .btn-gold:hover { transform: translateY(-2px); filter: brightness(1.08); }
+  .btn-gold:active { transform: translateY(2px); box-shadow: 0 1px 0 #3a1c5c; }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--purple);
+    border: 1.5px solid rgba(91,45,145,0.4);
+    border-radius: 12px; padding: 11px 20px;
+    font-size: 13px; font-weight: 700;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .btn-outline:hover { background: rgba(91,45,145,0.08); }
+
+  /* Trial Button */
+  .trial-btn {
+    width: 88%; padding: 14px; margin: 12px auto 8px auto;
+    border: 2px dashed #2e7d32;
+    border-radius: 14px;
+    background: linear-gradient(145deg, #e8f5e9, #d4edda);
+    color: #1b5e20;
+    font-size: 14px; font-weight: 700;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px;
+    transition: all 0.18s;
+    box-shadow: 0 4px 0 #a5d6a7, 0 6px 16px rgba(46,125,50,0.2);
+  }
+  .trial-btn:hover { transform: translateY(-2px); }
+  .trial-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #a5d6a7; }
+  .trial-btn .trial-icon { font-size: 20px; }
+  .trial-btn .trial-badge {
+    background: #2e7d32; color: #fff;
+    padding: 2px 8px; border-radius: 10px;
+    font-size: 10px; font-weight: 700;
+  }
+  .trial-note {
+    width: 88%; margin: 4px auto 10px auto;
+    font-size: 11.5px; color: var(--text-soft);
+    text-align: center; line-height: 1.5;
+  }
+
+  .login-footer {
+    margin-top: 16px; padding-top: 12px;
+    border-top: 1px solid rgba(91,45,145,0.15);
+    font-size: 13px; color: var(--text-soft); letter-spacing: .5px;
+  }
+  .login-footer .number { color: var(--purple); font-weight: 700; font-size: 15px; }
+
+  /* ============ MAIN APP CONTAINER ============ */
+  #appContainer { display: none; }
+  #appContainer.show { display: block; }
+
+  /* ============ TRIAL BANNER ============ */
+  #trialBanner {
+    display: none;
+    background: linear-gradient(145deg, #fff8e1, #ffecb3);
+    border: 1.5px dashed #d4a017;
+    border-radius: 12px;
+    padding: 10px 12px;
+    margin: 0 auto 14px auto;
+    max-width: 452px;
+    font-size: 13px; color: #7a5a00;
+    text-align: center; font-weight: 600;
+    line-height: 1.6;
+  }
+  #trialBanner.show { display: block; }
+  #trialBanner .days { color: #2e7d32; font-weight: 800; font-size: 16px; }
+  #trialBanner .warn { color: #d32f2f; font-weight: 700; }
+  #trialBanner .buy-btn {
+    display: inline-block; margin-top: 6px; padding: 5px 14px;
+    background: #2e7d32; color: #fff; border: none; border-radius: 8px;
+    font-size: 12px; font-weight: 700; cursor: pointer;
+    box-shadow: 0 3px 0 #1b5e20;
+  }
+
+  /* ============ FEATURE SCREEN ============ */
+  #featureScreen { display: none; }
+  #featureScreen.show { display: block; }
+
+  .feature-header {
+    display: flex; align-items: center; gap: 10px;
+    margin: 0 auto 14px auto;
+    padding: 0 4px 12px 4px;
+    border-bottom: 1px solid rgba(91,45,145,0.15);
+    max-width: 480px;
+  }
+  .back-btn {
+    background: linear-gradient(145deg, #6a35a8, #532a86);
+    color: #fff; border: none;
+    border-radius: 12px; padding: 9px 18px;
+    font-size: 14px; font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #3a1c5c, 0 6px 14px rgba(91,45,145,0.35);
+    transition: all 0.15s;
+  }
+  .back-btn:hover { transform: translateY(-1px); }
+  .back-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #3a1c5c; }
+
+  .feature-header .feature-name {
+    font-size: 16px; font-weight: 800;
+    color: var(--purple);
+  }
+
+  .feature-box {
+    background: var(--card);
+    border-radius: 18px;
+    padding: 18px 16px;
+    border: 1px solid rgba(91,45,145,0.1);
+    display: none;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .feature-box.active { display: block; }
+
+  .feature-title {
+    font-weight: 800; font-size: 17px;
+    color: var(--purple); margin-bottom: 14px;
+    border-bottom: 1px solid rgba(91,45,145,0.1);
+    padding-bottom: 10px;
+  }
+
+  .row {
+    display: flex; flex-wrap: wrap;
+    gap: 4px 6px; margin-bottom: 6px;
+    align-items: center;
+  }
+  .row label {
+    font-size: 13px; width: 52px;
+    color: var(--text-soft); font-weight: 600;
+  }
+  .row input, .row select {
+    flex: 1; min-width: 50px;
+    padding: 9px 6px;
+    border: 1.5px solid rgba(91,45,145,0.2);
+    border-radius: 9px; font-size: 15px;
+    background: #faf8ff;
+    text-align: center;
+    transition: all 0.15s;
+    font-weight: 600; color: var(--text);
+  }
+  .row input:focus, .row select:focus {
+    outline: none; border-color: var(--purple);
+    box-shadow: 0 0 0 3px rgba(91,45,145,0.12);
+    background: #fff;
+  }
+
+  .karat-row { display: flex; gap: 8px; margin-top: 8px; }
+  .karat-row .field { flex: 1; min-width: 0; }
+  .karat-row label {
+    font-size: 12px; display: block; margin-bottom: 4px;
+    color: var(--text-soft); font-weight: 600;
+  }
+  .karat-row input {
+    width: 100%; padding: 10px 4px;
+    border: 1.5px solid rgba(91,45,145,0.2);
+    border-radius: 9px; font-size: 15px;
+    background: #faf8ff;
+    text-align: center; box-sizing: border-box;
+    color: var(--text); font-weight: 600;
+  }
+
+  .btn {
+    background: linear-gradient(145deg, #6a35a8, #532a86);
+    color: #fff; border: none;
+    padding: 13px; border-radius: 12px;
+    font-size: 15px; font-weight: 700;
+    width: 100%; margin: 10px 0 4px 0;
+    cursor: pointer;
+    box-shadow: 0 5px 0 #3a1c5c, 0 7px 18px rgba(91,45,145,0.3);
+    transition: all 0.15s;
+    letter-spacing: 0.4px;
+  }
+  .btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
+  .btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #3a1c5c; }
+
+  .btn-secondary {
+    background: linear-gradient(145deg, #5b8bd0, #2c4a7c);
+    box-shadow: 0 5px 0 #1a2f52, 0 7px 18px rgba(44,74,124,0.3);
+  }
+  .btn-secondary:active { box-shadow: 0 2px 0 #1a2f52; }
+
+  .result-box {
+    background: #f6f3fc;
+    border-radius: 12px; padding: 14px;
+    font-size: 13.5px; line-height: 1.8;
+    white-space: pre-wrap; margin-top: 10px;
+    border: 1px solid rgba(91,45,145,0.15);
+    min-height: 46px;
+    font-weight: 600; color: var(--purple-dark);
+  }
+
+  .print-btn {
+    background: linear-gradient(145deg, #ece7f5, #ddd3ee);
+    color: var(--purple-dark); border: 1px solid rgba(91,45,145,0.25);
+    padding: 11px 14px; border-radius: 12px;
+    font-size: 13px; font-weight: 700;
+    cursor: pointer; margin-top: 10px;
+    width: 100%; letter-spacing: 0.4px;
+    box-shadow: 0 3px 0 #c9bce0;
+    transition: all 0.15s;
+  }
+  .print-btn:hover { transform: translateY(-1px); filter: brightness(1.03); border-color: var(--purple); }
+  .print-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #c9bce0; }
+  .print-btn .p-icon { font-size: 15px; margin-right: 4px; }
+
+  .price-result {
+    background: linear-gradient(145deg, #f8f4ff, #efe7fb);
+    border: 1.5px solid var(--purple-light);
+    border-radius: 16px;
+    padding: 18px; margin-top: 12px;
+    text-align: center;
+    box-shadow: 0 6px 18px rgba(91,45,145,0.12);
+  }
+  .price-result .label { font-size: 13px; color: var(--text-soft); margin-bottom: 4px; font-weight: 600; }
+  .price-result .amount {
+    font-size: 28px; font-weight: 800; color: var(--purple);
+    letter-spacing: 0.5px;
+  }
+  .price-result .sub-line {
+    font-size: 12.5px; color: var(--text-soft);
+    margin-top: 6px; font-weight: 600;
+  }
+
+  .chart-table-wrap {
+    overflow-x: auto; border-radius: 12px;
+    background: #faf8ff;
+    border: 1px solid rgba(91,45,145,0.15);
+  }
+  .chart-table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 320px; }
+  .chart-table thead th {
+    background: linear-gradient(145deg, #6a35a8, #532a86);
+    color: #fff; padding: 10px 6px;
+    text-align: center; font-weight: 700;
+    font-size: 12px;
+    position: sticky; top: 0;
+  }
+  .chart-table tbody td {
+    padding: 8px 6px; text-align: center;
+    border-bottom: 1px solid rgba(91,45,145,0.1);
+    font-weight: 600; color: var(--text);
+    white-space: nowrap;
+  }
+  .chart-table tbody tr:nth-child(even) { background: #f7f4fd; }
+  .chart-table tbody tr:nth-child(odd) { background: #fff; }
+  .chart-table tbody tr:hover { background: #efe7fb; }
+  .chart-table tbody td:first-child { font-weight: 800; color: var(--purple); }
+  .chart-table tbody td:nth-child(2) { color: #2e7d32; font-weight: 700; }
+
+  .chart-note {
+    margin-top: 12px; padding: 12px;
+    background: #f6f3fc;
+    border: 1px dashed rgba(91,45,145,0.4);
+    border-radius: 10px; font-size: 12px;
+    color: var(--purple-dark); line-height: 1.7; font-weight: 600;
+  }
+  .chart-note b { color: var(--purple); }
+
+  /* ============ ADMIN PANEL ============ */
+  #adminScreen {
+    display: none;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 4px 14px 10px 14px;
+  }
+  .admin-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(91,45,145,0.15);
+  }
+  .admin-header .admin-title {
+    font-size: 18px; font-weight: 800;
+    color: var(--purple);
+  }
+
+  /* ============ TOAST ============ */
+  #toast {
+    position: fixed; top: 20px; left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background: #323232; color: white;
+    padding: 12px 24px; border-radius: 12px;
+    font-size: 14px; font-weight: 600;
+    z-index: 99999; transition: transform 0.3s ease;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+    max-width: 90%; text-align: center;
+  }
+  #toast.show { transform: translateX(-50%) translateY(0); }
+  #toast.success { background: linear-gradient(145deg, #43a047, #1b5e20); }
+  #toast.error { background: linear-gradient(145deg, #e53935, #b71c1c); }
+  #toast.info { background: linear-gradient(145deg, #1e88e5, #0d47a1); }
+
+  /* ============ TRIAL MODAL ============ */
+  #trialModal {
+    display: none; position: fixed; inset: 0;
+    background: rgba(20,10,40,0.7);
+    z-index: 99998;
+    align-items: center; justify-content: center;
+    padding: 20px; backdrop-filter: blur(6px);
+  }
+  #trialModal.show { display: flex; }
+  #trialModal .modal-box {
+    background: #fff;
+    border-radius: 20px; padding: 24px 20px;
+    max-width: 360px; width: 100%;
+    text-align: center;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+    border: 2px solid var(--purple-light);
+    animation: popIn 0.35s ease;
+  }
+  @keyframes popIn {
+    from { transform: scale(0.85); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  #trialModal .modal-icon { font-size: 58px; margin-bottom: 8px; }
+  #trialModal .modal-title {
+    font-size: 20px; font-weight: 800;
+    color: var(--purple); margin-bottom: 8px;
+  }
+  #trialModal .modal-text {
+    font-size: 14px; color: var(--text-soft);
+    line-height: 1.8; margin-bottom: 16px; font-weight: 500;
+  }
+  #trialModal .modal-text b { color: #2e7d32; }
+  #trialModal .modal-days {
+    background: #f6f3fc;
+    border: 1px dashed var(--purple-light);
+    border-radius: 10px; padding: 8px;
+    margin-bottom: 14px; font-weight: 700;
+    color: var(--purple); font-size: 14px;
+  }
+  #trialModal .modal-days .num { color: #2e7d32; font-size: 18px; }
+  #trialModal .modal-btn {
+    width: 100%; padding: 13px; border: none;
+    border-radius: 12px; font-size: 15px;
+    font-weight: 700; cursor: pointer;
+    margin-bottom: 8px;
+    transition: all 0.15s;
+  }
+  #trialModal .btn-pay {
+    background: linear-gradient(145deg, #6a35a8, #532a86);
+    color: #fff;
+    box-shadow: 0 4px 0 #3a1c5c, 0 6px 14px rgba(91,45,145,0.35);
+  }
+  #trialModal .btn-later {
+    background: #ece7f5; color: var(--text-soft);
+    box-shadow: 0 4px 0 #d3c9e8;
+  }
+
+  /* ============ CALCULATOR ============ */
+  .calculator {
+    width: 100%; max-width: 340px;
+    margin: 0 auto;
+    background: linear-gradient(145deg, #2d2d3a, #1a1a24);
+    border-radius: 18px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+    overflow: hidden; padding-bottom: 8px;
+    border: 1px solid rgba(91,45,145,0.25);
+  }
+  .calculator .display-container {
+    background: linear-gradient(145deg, #1e1e28, #2a2a38);
+    padding: 18px 15px 8px 15px;
+    display: flex; flex-direction: column;
+    justify-content: flex-end;
+    min-height: 110px;
+    box-shadow: inset 0 3px 8px rgba(0,0,0,0.5);
+    border-bottom: 1px solid rgba(91,45,145,0.25);
+  }
+  .calculator .expression {
+    font-size: 13px; color: #9a9ab0;
+    text-align: right; min-height: 18px;
+    margin-bottom: 4px;
+    white-space: nowrap; overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .calculator .result {
+    font-size: 38px; font-weight: 600;
+    color: #d4a017; text-align: right;
+    word-wrap: break-word; word-break: break-all;
+    line-height: 1.1;
+  }
+  .calculator .memory-row {
+    display: grid; grid-template-columns: repeat(6, 1fr);
+    padding: 4px 8px 6px 8px; gap: 3px;
+  }
+  .calculator .memory-btn {
+    background: transparent; border: none;
+    font-size: 12px; color: #b0b0c8;
+    padding: 8px 0; cursor: pointer;
+    border-radius: 6px; transition: all 0.15s;
+    font-weight: 600;
+  }
+  .calculator .memory-btn:hover { background: rgba(212,160,23,0.15); color: #d4a017; }
+  .calculator .keypad {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 5px; padding: 0 8px 6px 8px;
+  }
+  .calculator button {
+    border: 1px solid rgba(255,255,255,0.08);
+    background: linear-gradient(145deg, #3a3a4a, #2a2a38);
+    color: #e8e8f0; font-size: 16px;
+    padding: 14px 0; border-radius: 10px;
+    cursor: pointer; transition: all 0.1s;
+    outline: none; font-weight: 600;
+    box-shadow: 0 3px 0 #1a1a24, 0 4px 8px rgba(0,0,0,0.3);
+  }
+  .calculator button:hover { filter: brightness(1.15); transform: translateY(-1px); }
+  .calculator button:active { transform: translateY(3px); box-shadow: 0 0 0 #1a1a24; }
+  .calculator .operator { font-size: 18px; color: #d4a017; }
+  .calculator .equal-btn {
+    background: linear-gradient(145deg, #6a35a8, #532a86);
+    color: white; font-size: 20px;
+    box-shadow: 0 3px 0 #3a1c5c, 0 4px 12px rgba(91,45,145,0.4);
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (min-width: 600px) {
+    .content-area { max-width: 520px; padding: 20px 16px; }
+    .feature-grid { gap: 16px; }
+    .feature-card { padding: 20px 8px 16px 8px; min-height: 130px; }
+    .feature-card .fc-icon { font-size: 40px; }
+    .feature-card .fc-label { font-size: 13.5px; }
+    .bottom-nav { max-width: 520px; padding: 12px 10px 14px 10px; }
+    #loginScreen { max-width: 480px; padding: 40px 32px 26px 32px; }
+    #loginScreen h1 { font-size: 28px; }
+    .feature-box { padding: 24px 22px; }
+    .calculator { max-width: 400px; }
+  }
+  @media (min-width: 1000px) {
+    body { background: #ece9f4; }
+    .top-header { max-width: 1000px; margin: 0 auto; border-radius: 0 0 18px 18px; padding: 18px 28px 26px 28px; }
+    .content-area { max-width: 1000px; padding: 28px 32px; }
+    .feature-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .feature-card { min-height: 150px; padding: 26px 10px 20px 10px; }
+    .feature-card .fc-icon { font-size: 48px; }
+    .feature-card .fc-label { font-size: 15px; }
+    .highlight-btn { max-width: 500px; margin-left: auto; margin-right: auto; }
+    .bottom-nav { max-width: 1000px; border-radius: 22px 22px 0 0; padding: 14px 20px 16px 20px; }
+    .bottom-nav .nav-item .nav-icon { font-size: 24px; }
+    .bottom-nav .nav-item { font-size: 13px; }
+  }
+
+  /* Print */
+  @page { size: A5 landscape; margin: 0; }
+  @media print {
+    body * { visibility: hidden; }
+    #printArea, #printArea * { visibility: visible; }
+    #printArea {
+      position: absolute; left: 0; top: 0;
+      width: 100%;
+      padding: 27.94mm 10mm 10mm 10mm;
+      background: #fff; box-sizing: border-box;
+    }
+    .print-header { text-align: center; margin-bottom: 10px; border-bottom: 2px solid #b8860b; padding-bottom: 6px; }
+    .print-header h2 { color: #b8860b; font-size: 20px; }
+    .print-header .sub { font-size: 11px; color: #666; margin-top: 3px; }
+    .print-content { font-size: 14px; line-height: 1.9; white-space: pre-wrap; color: #222; }
+    .print-footer { margin-top: 18px; padding-top: 8px; border-top: 1px dashed #999; font-size: 11px; color: #666; text-align: center; }
+  }
 </style>
 </head>
 <body>
@@ -167,7 +781,7 @@ button{border:0}
   <h1>GoldAdjustment</h1>
   <div class="sub">সুরক্ষিত অ্যাক্সেস</div>
 
-  <div style="display:flex; gap:5px; width:95%; margin:0 auto 14px auto;">
+  <div style="display:flex; gap:5px; width:90%; margin:0 auto 14px auto;">
     <button id="userLoginTab" onclick="showUserLogin()" class="btn-gold" style="flex:1; padding:9px 3px; font-size:12px;">👤 Login</button>
     <button id="adminLoginTab" onclick="showAdminLogin()" class="btn-outline" style="flex:1; padding:9px 3px; font-size:12px;">🛠️ Admin</button>
     <button id="paymentLoginTab" onclick="showPaymentForm()" class="btn-outline" style="flex:1; padding:9px 3px; font-size:12px;">💳 Payment</button>
@@ -184,34 +798,34 @@ button{border:0}
   </div>
 
   <div id="paymentFields" style="display:none;">
-    <div style="background:linear-gradient(145deg, #2a2410, #1a1608); border:2px dashed #d4a017; border-radius:14px; padding:14px; margin-bottom:14px; text-align:left; font-size:13px; color: #d4a017; line-height:1.9;">
-      <div style="font-weight:bold; font-size:15px; margin-bottom:6px;">💳 পেমেন্ট নির্দেশনা</div>
+    <div style="background:#faf7ff; border:2px dashed var(--purple-light); border-radius:14px; padding:14px; margin-bottom:14px; text-align:left; font-size:13px; color: var(--text); line-height:1.9;">
+      <div style="font-weight:800; font-size:15px; margin-bottom:6px; color:var(--purple);">💳 পেমেন্ট নির্দেশনা</div>
       <div>📱 <b>bKash</b> (Personal): <b style="color:#e2136e;">01910148703</b></div>
       <div>📱 <b>Nagad</b> (Personal): <b style="color:#f57c00;">01910148703</b></div>
-      <div style="margin-top:6px; padding-top:6px; border-top:1px dashed #d4a017;">
+      <div style="margin-top:6px; padding-top:6px; border-top:1px dashed rgba(91,45,145,0.3);">
         <b>পদ্ধতি:</b> Send Money করুন → TrxID কপি করুন → নিচের ফর্ম পূরণ করুন
       </div>
-      <div style="margin-top:4px; padding:6px 8px; background:#2e7d32; color:#fff; border-radius:8px; text-align:center; font-weight:bold; font-size:14px;">
+      <div style="margin-top:6px; padding:6px 8px; background:#2e7d32; color:#fff; border-radius:8px; text-align:center; font-weight:700; font-size:14px;">
         🎉 একবার ৳ ৫০০ = Lifetime Access
       </div>
     </div>
 
     <input type="tel" id="payPhone" inputmode="numeric" maxlength="11" placeholder="আপনার ফোন নম্বর (01XXXXXXXXX)">
-    <select id="payMethod" style="width:80%; padding:12px; font-size:15px; text-align:center; border:1.5px solid rgba(184,134,11,0.4); border-radius:12px; outline:none; background:rgba(255,255,255,0.04); margin-bottom:12px; font-weight:bold; color:#e8e8f0;">
-      <option value="bkash" style="background:#1a1a2e;">📱 bKash</option>
-      <option value="nagad" style="background:#1a1a2e;">📱 Nagad</option>
+    <select id="payMethod" style="width:85%; padding:12px; font-size:15px; text-align:center; border:1.5px solid rgba(91,45,145,0.25); border-radius:12px; outline:none; background:#faf8ff; margin-bottom:12px; font-weight:700; color:var(--text);">
+      <option value="bkash">📱 bKash</option>
+      <option value="nagad">📱 Nagad</option>
     </select>
     <input type="text" id="payTrxId" maxlength="20" placeholder="Transaction ID (TrxID)" style="text-transform:uppercase;">
-    <input type="number" id="payAmount" value="500" min="1" readonly placeholder="পরিমাণ (৳)" style="background:rgba(46,125,50,0.2); color:#66bb6a;">
+    <input type="number" id="payAmount" value="500" min="1" readonly placeholder="পরিমাণ (৳)" style="background:#e8f5e9; color:#2e7d32;">
     <input type="text" id="paySenderLast4" maxlength="4" inputmode="numeric" placeholder="যে নম্বর থেকে পাঠিয়েছেন (শেষ ৪ ডিজিট)">
 
-    <div style="font-size:12px; color:#888; margin-top:6px; line-height:1.7;">
+    <div style="font-size:12px; color:var(--text-soft); margin-top:6px; line-height:1.7;">
       ℹ️ Approval সাধারণত <b>৫-৩০ মিনিটের মধ্যে</b> হয়ে যায়।<br>
       Approval হলে Admin আপনাকে Activation Code জানাবে।
     </div>
   </div>
 
-  <button id="activateBtn" onclick="loginWithFirebase()" class="btn-gold" style="width:80%; margin:4px auto 10px auto;">
+  <button id="activateBtn" onclick="loginWithFirebase()" class="btn-gold" style="width:85%; margin:4px auto 10px auto;">
     ✓ অ্যাক্টিভেট / লগইন
   </button>
 
@@ -234,331 +848,338 @@ button{border:0}
 
 <!-- MAIN APP -->
 <div id="appContainer">
-  <div class="title">✨ GoldAdjustment</div>
-
-  <div id="trialBanner"></div>
-
-  <!-- DASHBOARD -->
-<div id="dashboardScreen">
-  <header class="app-header">
-    <div class="brand-row">
-      <div class="brand-logo">🪙</div>
-      <div>
-        <div class="brand-title">Gold Adjustment</div>
-        <div class="brand-sub">সহজ সোনার হিসাব</div>
-      </div>
-      <button class="share-btn" onclick="shareGoldAdjustment()" aria-label="Share">↗</button>
+  <!-- TOP HEADER -->
+  <div class="top-header">
+    <div class="brand-logo">🪙</div>
+    <div class="brand-text">
+      <h1>Gold Adjustment</h1>
+      <div class="tagline">সহজ সোনার হিসাব</div>
     </div>
-  </header>
+    <button class="share-btn" onclick="shareApp()" title="Share">🔗</button>
+  </div>
 
-  <div class="dashboard-content">
+  <div class="content-area">
     <div id="trialBanner"></div>
 
-    <button class="hero-price" onclick="openFeature('price')">
-      <span class="hero-icon">৳</span>
-      <span class="hero-title">দাম/মূল্য হিসাব</span>
-    </button>
+    <!-- DASHBOARD -->
+    <div id="dashboardScreen">
+      <!-- Highlight button -->
+      <button class="highlight-btn" onclick="openFeature('price')">
+        <span class="hb-icon">৳</span>
+        <span class="hb-text">দাম/মূল্য হিসাব</span>
+      </button>
 
-    <button class="gold-rate-btn" onclick="window.open('https://bajushub.com/', '_self')">
-      <span class="icon">📊</span>
-      <span>আজকের<br>সোনার দর</span>
-    </button>
-
-    <div class="dashboard-grid">
-      <button class="dash-btn" onclick="openFeature('main')"><span class="icon">💧</span>জমা হিসাব<br>(পাকা করুন)</button>
-      <button class="dash-btn" onclick="openFeature('pure')"><span class="icon">🎯</span>পাকা থেকে<br>টার্গেট ক্যারেট</button>
-      <button class="dash-btn" onclick="openFeature('any')"><span class="icon">🌀</span>যেকোনো থেকে<br>টার্গেট ক্যারেট</button>
-      <button class="dash-btn" onclick="openFeature('gram')"><span class="icon">⚖️</span>গ্রাম থেকে<br>ভরি</button>
-      <button class="dash-btn" onclick="openFeature('chart')"><span class="icon">📈</span>ক্যারেট খাদ<br>চার্ট</button>
-      <button class="dash-btn" onclick="openFeature('liveRate')"><span class="icon">💰</span>সোনার দর<br>ও তথ্য</button>
+      <div class="feature-grid">
+        <button class="feature-card" onclick="window.open('https://bajushub.com/', '_self')">
+          <span class="fc-icon">📊</span>
+          <span class="fc-label">আজকের সোনার দর</span>
+        </button>
+        <button class="feature-card" onclick="openFeature('main')">
+          <span class="fc-icon">💧</span>
+          <span class="fc-label">জমা হিসাব (পাকা করুন)</span>
+        </button>
+        <button class="feature-card" onclick="openFeature('pure')">
+          <span class="fc-icon">🎯</span>
+          <span class="fc-label">পাকা থেকে টার্গেট ক্যারেট</span>
+        </button>
+        <button class="feature-card" onclick="openFeature('any')">
+          <span class="fc-icon">🌀</span>
+          <span class="fc-label">যেকোনো থেকে টার্গেট ক্যারেট</span>
+        </button>
+        <button class="feature-card" onclick="openFeature('gram')">
+          <span class="fc-icon">⚖️</span>
+          <span class="fc-label">গ্রাম থেকে ভরি</span>
+        </button>
+        <button class="feature-card" onclick="openFeature('chart')">
+          <span class="fc-icon">📈</span>
+          <span class="fc-label">ক্যারেট খাদ চার্ট</span>
+        </button>
+        <button class="feature-card calc-card" onclick="openFeature('calc')">
+          <span class="fc-icon">🔢</span>
+          <span class="fc-label">ক্যালকুলেটর</span>
+        </button>
+      </div>
     </div>
 
-    <button class="dash-btn" style="width:112px;min-height:112px;margin-left:auto;border-radius:28px" onclick="openFeature('calc')" aria-label="Calculator">
-      <span class="icon">🔢</span>
-      <span style="font-size:0">.</span>
-    </button>
-  </div>
+    <!-- ADMIN SCREEN -->
+    <div id="adminScreen">
+      <div class="admin-header">
+        <button class="back-btn" onclick="closeAdminPanel()">Back</button>
+        <span class="admin-title">🛠️ Admin Control</span>
+      </div>
 
-  <nav class="dashboard-bottom-nav" aria-label="App navigation">
-    <button class="nav-item active" onclick="showDashboard(true)"><span class="nav-icon">⌂</span><span>Home</span></button>
-    <button class="nav-item" onclick="showAbout()"><span class="nav-icon">ⓘ</span><span>About</span></button>
-    <button id="adminNavItem" class="nav-item" onclick="openAdminPanel()"><span class="nav-icon">♟</span><span>Admin</span></button>
-  </nav>
-</div>
-
-<!-- ABOUT -->
-<div id="aboutScreen">
-  <div class="about-card">
-    <div class="about-logo">🪙</div>
-    <h2>Gold Adjustment</h2>
-    <p>সহজ সোনার হিসাব ও অ্যাডজাস্টমেন্ট অ্যাপ।</p>
-    <p style="margin-top:8px">দাম/মূল্য হিসাব, পাকা-জমা অ্যাডজাস্টমেন্ট, ক্যারেট টার্গেট, গ্রাম-ভরি রূপান্তর, ক্যারেট-খাদ চার্ট এবং ক্যালকুলেটরসহ আপনার বর্তমান ফিচারগুলো এখান থেকেই ব্যবহার করা যাবে।</p>
-    <p style="margin-top:12px;font-weight:700;color:#5f35b5">Dev: M.A.Ahad</p>
-  </div>
-</div>
-
-<!-- ADMIN CONTROL -->
-  <div id="adminScreen" style="display:none; padding:14px;">
-    <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
-      <button class="back-btn" onclick="closeAdminPanel()">Back</button>
-      <span style="font-size:20px; font-weight:bold; color:#d4a017;">🛠️ Admin Control</span>
-    </div>
-
-    <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(184,134,11,0.3); border-radius:12px; padding:12px; margin-bottom:12px;">
-      <div style="font-weight:bold; margin-bottom:10px; color:#d4a017;">➕ Create New User</div>
-      <div style="display:grid; gap:9px;">
-        <input id="newUserPhone" type="tel" inputmode="numeric" maxlength="11" placeholder="Phone: 01XXXXXXXXX"
-          style="width:100%; box-sizing:border-box; padding:11px; border:1px solid rgba(184,134,11,0.3); border-radius:9px; font-size:15px; background:rgba(255,255,255,0.04); color:#e8e8f0;">
-        <div style="display:flex; gap:8px;">
-          <input id="newUserCode" type="text" maxlength="32" placeholder="Activation Code (min 6)"
-            style="flex:1; min-width:0; box-sizing:border-box; padding:11px; border:1px solid rgba(184,134,11,0.3); border-radius:9px; font-size:15px; background:rgba(255,255,255,0.04); color:#e8e8f0;">
-          <button onclick="generateActivationCode()" style="padding:10px 12px; border:0; border-radius:9px; background:#555; color:#fff; font-weight:bold; cursor:pointer;">Generate</button>
-        </div>
-        <select id="newUserPaymentStatus" style="width:100%; box-sizing:border-box; padding:11px; border:1px solid rgba(184,134,11,0.3); border-radius:9px; font-size:15px; background:rgba(255,255,255,0.04); color:#e8e8f0;">
-          <option value="paid" style="background:#1a1a2e;">Paid</option>
-          <option value="unpaid" style="background:#1a1a2e;">Unpaid / Blocked</option>
-        </select>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-          <div>
-            <label style="display:block; font-size:12px; color:#888; margin-bottom:4px;">Payment Date</label>
-            <input id="newUserPaymentDate" type="date" style="width:100%; box-sizing:border-box; padding:10px; border:1px solid rgba(184,134,11,0.3); border-radius:9px; font-size:14px; background:rgba(255,255,255,0.04); color:#e8e8f0;">
+      <div style="background:#faf8ff; border:1px solid rgba(91,45,145,0.15); border-radius:12px; padding:12px; margin-bottom:12px;">
+        <div style="font-weight:800; margin-bottom:10px; color:var(--purple);">➕ Create New User</div>
+        <div style="display:grid; gap:9px;">
+          <input id="newUserPhone" type="tel" inputmode="numeric" maxlength="11" placeholder="Phone: 01XXXXXXXXX"
+            style="width:100%; box-sizing:border-box; padding:11px; border:1px solid rgba(91,45,145,0.2); border-radius:9px; font-size:15px; background:#fff; color:var(--text);">
+          <div style="display:flex; gap:8px;">
+            <input id="newUserCode" type="text" maxlength="32" placeholder="Activation Code (min 6)"
+              style="flex:1; min-width:0; box-sizing:border-box; padding:11px; border:1px solid rgba(91,45,145,0.2); border-radius:9px; font-size:15px; background:#fff; color:var(--text);">
+            <button onclick="generateActivationCode()" style="padding:10px 12px; border:0; border-radius:9px; background:#555; color:#fff; font-weight:700; cursor:pointer;">Generate</button>
           </div>
-          <div>
-            <label style="display:block; font-size:12px; color:#888; margin-bottom:4px;">Expiry (Lifetime = খালি)</label>
-            <input id="newUserExpiryDate" type="date" style="width:100%; box-sizing:border-box; padding:10px; border:1px solid rgba(184,134,11,0.3); border-radius:9px; font-size:14px; background:rgba(255,255,255,0.04); color:#e8e8f0;">
+          <select id="newUserPaymentStatus" style="width:100%; box-sizing:border-box; padding:11px; border:1px solid rgba(91,45,145,0.2); border-radius:9px; font-size:15px; background:#fff; color:var(--text);">
+            <option value="paid">Paid</option>
+            <option value="unpaid">Unpaid / Blocked</option>
+          </select>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <div>
+              <label style="display:block; font-size:12px; color:var(--text-soft); margin-bottom:4px;">Payment Date</label>
+              <input id="newUserPaymentDate" type="date" style="width:100%; box-sizing:border-box; padding:10px; border:1px solid rgba(91,45,145,0.2); border-radius:9px; font-size:14px; background:#fff; color:var(--text);">
+            </div>
+            <div>
+              <label style="display:block; font-size:12px; color:var(--text-soft); margin-bottom:4px;">Expiry (Lifetime = খালি)</label>
+              <input id="newUserExpiryDate" type="date" style="width:100%; box-sizing:border-box; padding:10px; border:1px solid rgba(91,45,145,0.2); border-radius:9px; font-size:14px; background:#fff; color:var(--text);">
+            </div>
+          </div>
+          <button onclick="createNewUser()" style="width:100%; padding:12px; border:0; border-radius:9px; background:#2e7d32; color:#fff; font-size:16px; font-weight:700; cursor:pointer;">➕ Create User</button>
+          <div id="newUserResult" style="font-size:13px; word-break:break-word; color:var(--purple);"></div>
+        </div>
+      </div>
+
+      <div style="background:#fff8e1; border:1.5px solid #d4a017; border-radius:12px; padding:12px; margin-bottom:12px;">
+        <div id="paymentRequestsWrap">
+          <div style="text-align:center; color:#d4a017; font-size:13px;">⏳ লোড হচ্ছে...</div>
+        </div>
+      </div>
+
+      <div style="background:#faf8ff; border:1px solid rgba(91,45,145,0.15); border-radius:12px; padding:12px; margin-bottom:12px;">
+        <div style="font-weight:800; margin-bottom:8px; color:var(--purple);">User Search</div>
+        <input id="adminSearch" type="text" placeholder="Phone / UID" oninput="filterAdminUsers()"
+          style="width:100%; box-sizing:border-box; padding:11px; border:1px solid rgba(91,45,145,0.2); border-radius:9px; font-size:15px; background:#fff; color:var(--text);">
+      </div>
+
+      <div id="adminSummary" style="font-size:14px; margin-bottom:10px; color:var(--purple); font-weight:700;"></div>
+      <div id="adminUserList"></div>
+    </div>
+
+    <!-- FEATURE SCREEN -->
+    <div id="featureScreen">
+      <div class="feature-header">
+        <button class="back-btn" onclick="goBack()">Back</button>
+        <span class="feature-name" id="currentFeatureName">ফিচার</span>
+      </div>
+
+      <div id="feature-main" class="feature-box">
+        <div class="feature-title">🪙 পাকা/জমা অ্যাডজাস্ট</div>
+        <div style="font-size:13px; color:var(--text-soft); margin-bottom:4px;">মোট ওজন (Total Weight)</div>
+        <div class="row"><label>ভরি</label><input id="tvori" type="number" value="1" step="any" /></div>
+        <div class="row"><label>আনা</label><input id="tana" type="number" value="0" step="any" /></div>
+        <div class="row"><label>রতি</label><input id="troti" type="number" value="0" step="any" /></div>
+        <div class="row"><label>পয়েন্ট</label><input id="tpoint" type="number" value="0" step="any" /></div>
+
+        <div style="font-size:13px; color:var(--text-soft); margin:6px 0 4px 0;">পেইন্ট/জয়েন্ট ওজন (Joint Weight)</div>
+        <div class="row"><label>ভরি</label><input id="jvori" type="number" value="0" step="any" /></div>
+        <div class="row"><label>আনা</label><input id="jana" type="number" value="4" step="any" /></div>
+        <div class="row"><label>রতি</label><input id="jroti" type="number" value="0" step="any" /></div>
+        <div class="row"><label>পয়েন্ট</label><input id="jpoint" type="number" value="0" step="any" /></div>
+
+        <div class="karat-row" style="margin-top:6px;">
+          <div class="field"><label>Body Karat</label><input id="bodyKarat" type="number" value="00.00" step="any" /></div>
+          <div class="field"><label>Joint Karat</label><input id="jointKarat" type="number" value="00.00" step="any" /></div>
+        </div>
+        <button class="btn" onclick="calculateMain()">📊 গণনা করুন</button>
+        <div class="result-box" id="mainResult">ফলাফল দেখাবে...</div>
+        <button class="print-btn" onclick="printResult('main')"><span class="p-icon">🖨️</span> ফলাফল প্রিন্ট করুন</button>
+      </div>
+
+      <div id="feature-pure" class="feature-box">
+        <div class="feature-title">✨ পাকা (২৪K) → টার্গেট ক্যারেট</div>
+        <div class="row"><label>ভরি</label><input id="pVori" type="number" value="0" step="any" /></div>
+        <div class="row"><label>আনা</label><input id="pAna" type="number" value="14" step="any" /></div>
+        <div class="row"><label>রতি</label><input id="pRoti" type="number" value="0" step="any" /></div>
+        <div class="row"><label>পয়েন্ট</label><input id="pPoint" type="number" value="0" step="any" /></div>
+        <div class="row"><label>টার্গেট</label><input id="pureTarget" type="number" value="21" step="any" /></div>
+        <button class="btn btn-secondary" onclick="calculatePureToTarget()">🧪 হিসাব করুন</button>
+        <div class="result-box" id="pureResult">ফলাফল দেখাবে...</div>
+        <button class="print-btn" onclick="printResult('pure')"><span class="p-icon">🖨️</span> ফলাফল প্রিন্ট করুন</button>
+      </div>
+
+      <div id="feature-any" class="feature-box">
+        <div class="feature-title">🔄 যেকোনো ক্যারেট → টার্গেট</div>
+        <div class="row"><label>বর্তমান K</label><input id="currentKarat" type="number" value="00" step="any" /></div>
+        <div class="row"><label>ভরি</label><input id="cVori" type="number" value="1" step="any" /></div>
+        <div class="row"><label>আনা</label><input id="cAna" type="number" value="0" step="any" /></div>
+        <div class="row"><label>রতি</label><input id="cRoti" type="number" value="0" step="any" /></div>
+        <div class="row"><label>পয়েন্ট</label><input id="cPoint" type="number" value="0" step="any" /></div>
+        <div class="row"><label>টার্গেট K</label><input id="targetKaratAny" type="number" value="21" step="any" /></div>
+        <button class="btn btn-secondary" onclick="calculateAnyToTarget()">🔄 হিসাব করুন</button>
+        <div class="result-box" id="anyResult">ফলাফল দেখাবে...</div>
+        <button class="print-btn" onclick="printResult('any')"><span class="p-icon">🖨️</span> ফলাফল প্রিন্ট করুন</button>
+      </div>
+
+      <div id="feature-gram" class="feature-box">
+        <div class="feature-title">⚖️ গ্রাম ↔ ভরি-আনা-রতি-পয়েন্ট</div>
+        <div class="row"><label>গ্রাম</label><input id="gramInput" type="number" value="0.0" step="any" oninput="convertGramToVori()" /></div>
+        <div class="row"><label>ভরি</label><input id="voriOutput" type="text" value="0-0-0-0" oninput="convertVoriToGram()" /></div>
+        <button class="print-btn" onclick="printResult('gram')"><span class="p-icon">🖨️</span> ফলাফল প্রিন্ট করুন</button>
+      </div>
+
+      <div id="feature-price" class="feature-box">
+        <div class="feature-title">💰 দাম / মূল্য হিসাব</div>
+
+        <div style="font-size:13px; color:var(--text-soft); margin-bottom:4px;">প্রতি ভরির দাম (৳)</div>
+        <div class="row"><label>৳</label><input id="pricePerVori" type="number" value="210000" step="any" oninput="calculatePrice()" /></div>
+
+        <div style="font-size:13px; color:var(--text-soft); margin:8px 0 4px 0;">ওজন (Weight)</div>
+        <div class="row"><label>ভরি</label><input id="prVori" type="number" value="0" step="any" oninput="calculatePrice()" /></div>
+        <div class="row"><label>আনা</label><input id="prAna" type="number" value="0" step="any" oninput="calculatePrice()" /></div>
+        <div class="row"><label>রতি</label><input id="prRoti" type="number" value="0" step="any" oninput="calculatePrice()" /></div>
+        <div class="row"><label>পয়েন্ট</label><input id="prPoint" type="number" value="0" step="any" oninput="calculatePrice()" /></div>
+
+        <div style="font-size:13px; color:var(--text-soft); margin:8px 0 4px 0;">মজুরি (Labor / Making Charge)</div>
+        <div class="row"><label>৳</label><input id="laborCost" type="number" value="0" step="any" oninput="calculatePrice()" /></div>
+        <div class="row" style="margin-bottom:6px;">
+          <label style="width:auto; font-size:12px;">টাইপ</label>
+          <select id="laborType" onchange="calculatePrice()" style="flex:1; padding:6px 4px; border:1px solid rgba(91,45,145,0.2); border-radius:8px; font-size:14px; background:#faf8ff; text-align:center; color:var(--text);">
+            <option value="perVori" selected>প্রতি ভরি (৳)</option>
+            <option value="fixed">ফিক্সড (৳)</option>
+          </select>
+        </div>
+
+        <button class="btn" onclick="calculatePrice()">💰 দাম দেখুন</button>
+
+        <div class="price-result">
+          <div class="label">মোট মূল্য</div>
+          <div class="amount" id="priceAmount">৳ 0</div>
+          <div class="sub-line" id="priceSubLine">০ ভরি ০ আনা ০ রতি ০ পয়েন্ট</div>
+          <div class="sub-line" id="laborSubLine" style="border-top:1px dashed rgba(91,45,145,0.3); margin-top:6px; padding-top:6px;"></div>
+        </div>
+        <button class="print-btn" onclick="printResult('price')"><span class="p-icon">🖨️</span> ফলাফল প্রিন্ট করুন</button>
+      </div>
+
+      <div id="feature-chart" class="feature-box">
+        <div class="feature-title">📊 ক্যারেট-খাদ চার্ট (২৪K → ১K)</div>
+        <div class="chart-table-wrap">
+          <table class="chart-table">
+            <thead>
+              <tr>
+                <th>ক্যারেট</th>
+                <th>পিউরিটি</th>
+                <th>জমা (১ ভরিতে)</th>
+                <th>খাদ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>24.00K</td><td>99.99%</td><td>1-0-0-0</td><td>0-0-0-0</td></tr>
+              <tr><td>23.00K</td><td>95.83%</td><td>0-15-2-0</td><td>0-0-4-0</td></tr>
+              <tr><td>22.00K</td><td>91.67%</td><td>0-14-4-0</td><td>0-1-2-0</td></tr>
+              <tr><td>21.00K</td><td>87.50%</td><td>0-14-0-0</td><td>0-2-0-0</td></tr>
+              <tr><td>20.00K</td><td>83.33%</td><td>0-13-2-0</td><td>0-2-4-0</td></tr>
+              <tr><td>19.00K</td><td>79.17%</td><td>0-12-4-0</td><td>0-3-2-0</td></tr>
+              <tr><td>18.00K</td><td>75.00%</td><td>0-12-0-0</td><td>0-4-0-0</td></tr>
+              <tr><td>17.00K</td><td>70.83%</td><td>0-11-2-0</td><td>0-4-4-0</td></tr>
+              <tr><td>16.00K</td><td>66.67%</td><td>0-10-4-0</td><td>0-5-2-0</td></tr>
+              <tr><td>15.00K</td><td>62.50%</td><td>0-10-0-0</td><td>0-6-0-0</td></tr>
+              <tr><td>14.00K</td><td>58.33%</td><td>0-9-2-0</td><td>0-6-4-0</td></tr>
+              <tr><td>13.00K</td><td>54.17%</td><td>0-8-4-0</td><td>0-7-2-0</td></tr>
+              <tr><td>12.00K</td><td>50.00%</td><td>0-8-0-0</td><td>0-8-0-0</td></tr>
+              <tr><td>11.00K</td><td>45.83%</td><td>0-7-2-0</td><td>0-8-4-0</td></tr>
+              <tr><td>10.00K</td><td>41.67%</td><td>0-6-4-0</td><td>0-9-2-0</td></tr>
+              <tr><td>9.00K</td><td>37.50%</td><td>0-6-0-0</td><td>0-10-0-0</td></tr>
+              <tr><td>8.00K</td><td>33.33%</td><td>0-5-2-0</td><td>0-10-4-0</td></tr>
+              <tr><td>7.00K</td><td>29.17%</td><td>0-4-4-0</td><td>0-11-2-0</td></tr>
+              <tr><td>6.00K</td><td>25.00%</td><td>0-4-0-0</td><td>0-12-0-0</td></tr>
+              <tr><td>5.00K</td><td>20.83%</td><td>0-3-2-0</td><td>0-12-4-0</td></tr>
+              <tr><td>4.00K</td><td>16.67%</td><td>0-2-4-0</td><td>0-13-2-0</td></tr>
+              <tr><td>3.00K</td><td>12.50%</td><td>0-2-0-0</td><td>0-14-0-0</td></tr>
+              <tr><td>2.00K</td><td>8.33%</td><td>0-1-2-0</td><td>0-14-4-0</td></tr>
+              <tr><td>1.00K</td><td>4.17%</td><td>0-0-4-0</td><td>0-15-2-0</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="chart-note">
+          <b>📌 ব্যাখ্যা:</b><br>
+          • <b>১ ভরি সোনা</b> = নির্দিষ্ট ক্যারেটে ১ ভরি ওজনের সমতুল্য পাকা সোনার পরিমাণ<br>
+          • <b>খাদ</b> = ঐ ক্যারেটে ১ ভরি করতে যে পরিমাণ খাদ (অ্যালয়) মিশাতে হবে<br>
+          • যেমন: <b>২১K</b> এ ১ ভরি সোনা = ০-১৪-০-০ ভরি পাকা সোনা + ০-২-০-০ ভরি খাদ
+        </div>
+        <button class="print-btn" onclick="printResult('chart')"><span class="p-icon">🖨️</span> চার্ট প্রিন্ট করুন</button>
+      </div>
+
+      <div id="feature-liveRate" class="feature-box">
+        <div class="feature-title">📈 আজকের সোনার দর</div>
+        <div style="font-size:13px; color:var(--text-soft); margin-bottom:10px; text-align:center;">
+          সর্বশেষ সোনার দর দেখতে নিচের লিংকে ক্লিক করুন
+        </div>
+        <a href="https://bajushub.com/" target="_self" style="display:block; text-decoration:none; margin-bottom:10px;">
+          <div class="dash-btn" style="background:linear-gradient(145deg, #1a3d1e, #0f2a15); border: 1px solid #2e7d32; border-radius:14px; padding:18px 12px; text-align:center;">
+            <span class="icon" style="font-size:34px; display:block;">🇧🇩</span>
+            <div style="font-size: 15px; font-weight: 700; color: #66bb6a;">বাজুস দর (Bajushub.com)</div>
+            <div style="font-size: 11px; color: #66bb6a; margin-top: 4px;">আজকের সোনা ও রুপার দাম (৳)</div>
+          </div>
+        </a>
+        <div style="background:#f6f3fc; border: 1px dashed rgba(91,45,145,0.3); border-radius: 10px; padding: 10px; font-size: 12px; color: var(--text-soft); text-align: center; margin-top: 10px;">
+          💡 দর প্রায় প্রতিদিনই পরিবর্তন হয়।
+        </div>
+      </div>
+
+      <div id="feature-calc" class="feature-box" style="background:transparent; border:none; padding:0; box-shadow:none;">
+        <div class="calculator" id="calculatorBox">
+          <div class="display-container">
+            <div class="expression" id="calcExpression"></div>
+            <div class="result" id="calcResult">0</div>
+          </div>
+          <div class="memory-row">
+            <button class="memory-btn" onclick="calcMemoryClear()">MC</button>
+            <button class="memory-btn" onclick="calcMemoryRecall()">MR</button>
+            <button class="memory-btn" onclick="calcMemoryAdd()">M+</button>
+            <button class="memory-btn" onclick="calcMemorySub()">M-</button>
+            <button class="memory-btn" onclick="calcMemoryStore()">MS</button>
+            <button class="memory-btn">M▼</button>
+          </div>
+          <div class="keypad">
+            <button class="operator" onclick="calcInputOperator('%')">%</button>
+            <button onclick="calcClearEntry()">CE</button>
+            <button onclick="calcClearAll()">C</button>
+            <button class="operator" onclick="calcBackspace()">⌫</button>
+            <button class="operator" onclick="calcInputOperator('1/')">1/x</button>
+            <button class="operator" onclick="calcInputOperator('sqr')">x²</button>
+            <button class="operator" onclick="calcInputOperator('sqrt')">²√x</button>
+            <button class="operator" onclick="calcInputOperator('/')">÷</button>
+            <button onclick="calcInputDigit('7')">7</button>
+            <button onclick="calcInputDigit('8')">8</button>
+            <button onclick="calcInputDigit('9')">9</button>
+            <button class="operator" onclick="calcInputOperator('*')">×</button>
+            <button onclick="calcInputDigit('4')">4</button>
+            <button onclick="calcInputDigit('5')">5</button>
+            <button onclick="calcInputDigit('6')">6</button>
+            <button class="operator" onclick="calcInputOperator('-')">−</button>
+            <button onclick="calcInputDigit('1')">1</button>
+            <button onclick="calcInputDigit('2')">2</button>
+            <button onclick="calcInputDigit('3')">3</button>
+            <button class="operator" onclick="calcInputOperator('+')">+</button>
+            <button onclick="calcToggleSign()">+/-</button>
+            <button onclick="calcInputDigit('0')">0</button>
+            <button onclick="calcInputDigit('.')">.</button>
+            <button class="equal-btn" onclick="calcCalculateResult()">=</button>
           </div>
         </div>
-        <button onclick="createNewUser()" style="width:100%; padding:12px; border:0; border-radius:9px; background:#2e7d32; color:#fff; font-size:16px; font-weight:bold; cursor:pointer;">➕ Create User</button>
-        <div id="newUserResult" style="font-size:13px; word-break:break-word; color:#d4a017;"></div>
       </div>
-    </div>
 
-    <div style="background:linear-gradient(145deg, #2a2410, #1a1608); border:1.5px solid #d4a017; border-radius:12px; padding:12px; margin-bottom:12px;">
-      <div id="paymentRequestsWrap">
-        <div style="text-align:center; color:#d4a017; font-size:13px;">⏳ লোড হচ্ছে...</div>
-      </div>
     </div>
-
-    <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(184,134,11,0.3); border-radius:12px; padding:12px; margin-bottom:12px;">
-      <div style="font-weight:bold; margin-bottom:8px; color:#d4a017;">User Search</div>
-      <input id="adminSearch" type="text" placeholder="Phone / UID" oninput="filterAdminUsers()"
-        style="width:100%; box-sizing:border-box; padding:11px; border:1px solid rgba(184,134,11,0.3); border-radius:9px; font-size:15px; background:rgba(255,255,255,0.04); color:#e8e8f0;">
-    </div>
-
-    <div id="adminSummary" style="font-size:14px; margin-bottom:10px; color:#d4a017;"></div>
-    <div id="adminUserList"></div>
   </div>
 
-  <!-- FEATURE SCREEN -->
-  <div id="featureScreen">
-    <div class="feature-header">
-      <button class="back-btn" onclick="goBack()">Back</button>
-      <span class="feature-name" id="currentFeatureName">ফিচার</span>
-    </div>
-
-    <div id="feature-main" class="feature-box">
-      <div class="feature-title">🪙 পাকা/জমা অ্যাডজাস্ট</div>
-      <div style="font-size:13px; color:#888; margin-bottom:4px;">মোট ওজন (Total Weight)</div>
-      <div class="row"><label>ভরি</label><input id="tvori" type="number" value="1" step="any" /></div>
-      <div class="row"><label>আনা</label><input id="tana" type="number" value="0" step="any" /></div>
-      <div class="row"><label>রতি</label><input id="troti" type="number" value="0" step="any" /></div>
-      <div class="row"><label>পয়েন্ট</label><input id="tpoint" type="number" value="0" step="any" /></div>
-
-      <div style="font-size:13px; color:#888; margin:6px 0 4px 0;">পেইন্ট/জয়েন্ট ওজন (Joint Weight)</div>
-      <div class="row"><label>ভরি</label><input id="jvori" type="number" value="0" step="any" /></div>
-      <div class="row"><label>আনা</label><input id="jana" type="number" value="4" step="any" /></div>
-      <div class="row"><label>রতি</label><input id="jroti" type="number" value="0" step="any" /></div>
-      <div class="row"><label>পয়েন্ট</label><input id="jpoint" type="number" value="0" step="any" /></div>
-
-      <div class="karat-row" style="margin-top:6px;">
-        <div class="field"><label>Body Karat</label><input id="bodyKarat" type="number" value="00.00" step="any" /></div>
-        <div class="field"><label>Joint Karat</label><input id="jointKarat" type="number" value="00.00" step="any" /></div>
-      </div>
-      <button class="btn" onclick="calculateMain()">📊 গণনা করুন</button>
-      <div class="result-box" id="mainResult">ফলাফল দেখাবে...</div>
-      <button class="print-btn" onclick="printResult('main')"><span class="p-icon">🖨️</span> ফলাফল প্রিন্ট করুন</button>
-    </div>
-
-    <div id="feature-pure" class="feature-box">
-      <div class="feature-title">✨ পাকা (২৪K) → টার্গেট ক্যারেট</div>
-      <div class="row"><label>ভরি</label><input id="pVori" type="number" value="0" step="any" /></div>
-      <div class="row"><label>আনা</label><input id="pAna" type="number" value="14" step="any" /></div>
-      <div class="row"><label>রতি</label><input id="pRoti" type="number" value="0" step="any" /></div>
-      <div class="row"><label>পয়েন্ট</label><input id="pPoint" type="number" value="0" step="any" /></div>
-      <div class="row"><label>টার্গেট</label><input id="pureTarget" type="number" value="21" step="any" /></div>
-      <button class="btn btn-secondary" onclick="calculatePureToTarget()">🧪 হিসাব করুন</button>
-      <div class="result-box" id="pureResult">ফলাফল দেখাবে...</div>
-      <button class="print-btn" onclick="printResult('pure')"><span class="p-icon">🖨️</span> ফলাফল প্রিন্ট করুন</button>
-    </div>
-
-    <div id="feature-any" class="feature-box">
-      <div class="feature-title">🔄 যেকোনো ক্যারেট → টার্গেট</div>
-      <div class="row"><label>বর্তমান K</label><input id="currentKarat" type="number" value="00" step="any" /></div>
-      <div class="row"><label>ভরি</label><input id="cVori" type="number" value="1" step="any" /></div>
-      <div class="row"><label>আনা</label><input id="cAna" type="number" value="0" step="any" /></div>
-      <div class="row"><label>রতি</label><input id="cRoti" type="number" value="0" step="any" /></div>
-      <div class="row"><label>পয়েন্ট</label><input id="cPoint" type="number" value="0" step="any" /></div>
-      <div class="row"><label>টার্গেট K</label><input id="targetKaratAny" type="number" value="21" step="any" /></div>
-      <button class="btn btn-secondary" onclick="calculateAnyToTarget()">🔄 হিসাব করুন</button>
-      <div class="result-box" id="anyResult">ফলাফল দেখাবে...</div>
-      <button class="print-btn" onclick="printResult('any')"><span class="p-icon">🖨️</span> ফলাফল প্রিন্ট করুন</button>
-    </div>
-
-    <div id="feature-gram" class="feature-box">
-      <div class="feature-title">⚖️ গ্রাম ↔ ভরি-আনা-রতি-পয়েন্ট</div>
-      <div class="row"><label>গ্রাম</label><input id="gramInput" type="number" value="0.0" step="any" oninput="convertGramToVori()" /></div>
-      <div class="row"><label>ভরি</label><input id="voriOutput" type="text" value="0-0-0-0" oninput="convertVoriToGram()" /></div>
-      <button class="print-btn" onclick="printResult('gram')"><span class="p-icon">🖨️</span> ফলাফল প্রিন্ট করুন</button>
-    </div>
-
-    <div id="feature-price" class="feature-box">
-      <div class="feature-title">💰 দাম / মূল্য হিসাব</div>
-
-      <div style="font-size:13px; color:#888; margin-bottom:4px;">প্রতি ভরির দাম (৳)</div>
-      <div class="row"><label>৳</label><input id="pricePerVori" type="number" value="210000" step="any" oninput="calculatePrice()" /></div>
-
-      <div style="font-size:13px; color:#888; margin:8px 0 4px 0;">ওজন (Weight)</div>
-      <div class="row"><label>ভরি</label><input id="prVori" type="number" value="0" step="any" oninput="calculatePrice()" /></div>
-      <div class="row"><label>আনা</label><input id="prAna" type="number" value="0" step="any" oninput="calculatePrice()" /></div>
-      <div class="row"><label>রতি</label><input id="prRoti" type="number" value="0" step="any" oninput="calculatePrice()" /></div>
-      <div class="row"><label>পয়েন্ট</label><input id="prPoint" type="number" value="0" step="any" oninput="calculatePrice()" /></div>
-
-      <div style="font-size:13px; color:#888; margin:8px 0 4px 0;">মজুরি (Labor / Making Charge)</div>
-      <div class="row"><label>৳</label><input id="laborCost" type="number" value="0" step="any" oninput="calculatePrice()" /></div>
-      <div class="row" style="margin-bottom:6px;">
-        <label style="width:auto; font-size:12px;">টাইপ</label>
-        <select id="laborType" onchange="calculatePrice()" style="flex:1; padding:6px 4px; border:1px solid rgba(184,134,11,0.3); border-radius:8px; font-size:14px; background:rgba(255,255,255,0.04); text-align:center; color:#e8e8f0;">
-          <option value="perVori" selected style="background:#1a1a2e;">প্রতি ভরি (৳)</option>
-          <option value="fixed" style="background:#1a1a2e;">ফিক্সড (৳)</option>
-        </select>
-      </div>
-
-      <button class="btn" onclick="calculatePrice()">💰 দাম দেখুন</button>
-
-      <div class="price-result">
-        <div class="label">মোট মূল্য</div>
-        <div class="amount" id="priceAmount">৳ 0</div>
-        <div class="sub-line" id="priceSubLine">০ ভরি ০ আনা ০ রতি ০ পয়েন্ট</div>
-        <div class="sub-line" id="laborSubLine" style="border-top:1px dashed #d4a017; margin-top:6px; padding-top:6px;"></div>
-      </div>
-      <button class="print-btn" onclick="printResult('price')"><span class="p-icon">🖨️</span> ফলাফল প্রিন্ট করুন</button>
-    </div>
-
-    <div id="feature-chart" class="feature-box">
-      <div class="feature-title">📊 ক্যারেট-খাদ চার্ট (২৪K → ১K)</div>
-      <div class="chart-table-wrap">
-        <table class="chart-table">
-          <thead>
-            <tr>
-              <th>ক্যারেট</th>
-              <th>পিউরিটি</th>
-              <th>জমা (১ ভরিতে)</th>
-              <th>খাদ</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>24.00K</td><td>99.99%</td><td>1-0-0-0</td><td>0-0-0-0</td></tr>
-            <tr><td>23.00K</td><td>95.83%</td><td>0-15-2-0</td><td>0-0-4-0</td></tr>
-            <tr><td>22.00K</td><td>91.67%</td><td>0-14-4-0</td><td>0-1-2-0</td></tr>
-            <tr><td>21.00K</td><td>87.50%</td><td>0-14-0-0</td><td>0-2-0-0</td></tr>
-            <tr><td>20.00K</td><td>83.33%</td><td>0-13-2-0</td><td>0-2-4-0</td></tr>
-            <tr><td>19.00K</td><td>79.17%</td><td>0-12-4-0</td><td>0-3-2-0</td></tr>
-            <tr><td>18.00K</td><td>75.00%</td><td>0-12-0-0</td><td>0-4-0-0</td></tr>
-            <tr><td>17.00K</td><td>70.83%</td><td>0-11-2-0</td><td>0-4-4-0</td></tr>
-            <tr><td>16.00K</td><td>66.67%</td><td>0-10-4-0</td><td>0-5-2-0</td></tr>
-            <tr><td>15.00K</td><td>62.50%</td><td>0-10-0-0</td><td>0-6-0-0</td></tr>
-            <tr><td>14.00K</td><td>58.33%</td><td>0-9-2-0</td><td>0-6-4-0</td></tr>
-            <tr><td>13.00K</td><td>54.17%</td><td>0-8-4-0</td><td>0-7-2-0</td></tr>
-            <tr><td>12.00K</td><td>50.00%</td><td>0-8-0-0</td><td>0-8-0-0</td></tr>
-            <tr><td>11.00K</td><td>45.83%</td><td>0-7-2-0</td><td>0-8-4-0</td></tr>
-            <tr><td>10.00K</td><td>41.67%</td><td>0-6-4-0</td><td>0-9-2-0</td></tr>
-            <tr><td>9.00K</td><td>37.50%</td><td>0-6-0-0</td><td>0-10-0-0</td></tr>
-            <tr><td>8.00K</td><td>33.33%</td><td>0-5-2-0</td><td>0-10-4-0</td></tr>
-            <tr><td>7.00K</td><td>29.17%</td><td>0-4-4-0</td><td>0-11-2-0</td></tr>
-            <tr><td>6.00K</td><td>25.00%</td><td>0-4-0-0</td><td>0-12-0-0</td></tr>
-            <tr><td>5.00K</td><td>20.83%</td><td>0-3-2-0</td><td>0-12-4-0</td></tr>
-            <tr><td>4.00K</td><td>16.67%</td><td>0-2-4-0</td><td>0-13-2-0</td></tr>
-            <tr><td>3.00K</td><td>12.50%</td><td>0-2-0-0</td><td>0-14-0-0</td></tr>
-            <tr><td>2.00K</td><td>8.33%</td><td>0-1-2-0</td><td>0-14-4-0</td></tr>
-            <tr><td>1.00K</td><td>4.17%</td><td>0-0-4-0</td><td>0-15-2-0</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="chart-note">
-        <b>📌 ব্যাখ্যা:</b><br>
-        • <b>১ ভরি সোনা</b> = নির্দিষ্ট ক্যারেটে ১ ভরি ওজনের সমতুল্য পাকা সোনার পরিমাণ<br>
-        • <b>খাদ</b> = ঐ ক্যারেটে ১ ভরি করতে যে পরিমাণ খাদ (অ্যালয়) মিশাতে হবে<br>
-        • যেমন: <b>২১K</b> এ ১ ভরি সোনা = ০-১৪-০-০ ভরি পাকা সোনা + ০-২-০-০ ভরি খাদ
-      </div>
-      <button class="print-btn" onclick="printResult('chart')"><span class="p-icon">🖨️</span> চার্ট প্রিন্ট করুন</button>
-    </div>
-
-    <div id="feature-liveRate" class="feature-box">
-      <div class="feature-title">📈 আজকের সোনার দর</div>
-      <div style="font-size:13px; color:#888; margin-bottom:10px; text-align:center;">
-        সর্বশেষ সোনার দর দেখতে নিচের লিংকে ক্লিক করুন
-      </div>
-      <a href="https://bajushub.com/" target="_self" style="display:block; text-decoration:none; margin-bottom:10px;">
-        <div class="dash-btn" style="background:linear-gradient(145deg, #1a3d1e, #0f2a15); border: 1px solid #2e7d32;">
-          <span class="icon">🇧🇩</span>
-          <div style="font-size: 15px; font-weight: bold; color: #66bb6a;">বাজুস দর (Bajushub.com)</div>
-          <div style="font-size: 11px; color: #66bb6a; margin-top: 4px;">আজকের সোনা ও রুপার দাম (৳)</div>
-        </div>
-      </a>
-      <div style="background:rgba(0,0,0,0.3); border: 1px dashed rgba(184,134,11,0.3); border-radius: 10px; padding: 10px; font-size: 12px; color: #888; text-align: center; margin-top: 10px;">
-        💡 দর প্রায় প্রতিদিনই পরিবর্তন হয়।
-      </div>
-    </div>
-
-    <div id="feature-calc" class="feature-box" style="background:transparent; border:none; padding:0; box-shadow:none;">
-      <div class="calculator" id="calculatorBox">
-        <div class="display-container">
-          <div class="expression" id="calcExpression"></div>
-          <div class="result" id="calcResult">0</div>
-        </div>
-        <div class="memory-row">
-          <button class="memory-btn" onclick="calcMemoryClear()">MC</button>
-          <button class="memory-btn" onclick="calcMemoryRecall()">MR</button>
-          <button class="memory-btn" onclick="calcMemoryAdd()">M+</button>
-          <button class="memory-btn" onclick="calcMemorySub()">M-</button>
-          <button class="memory-btn" onclick="calcMemoryStore()">MS</button>
-          <button class="memory-btn">M▼</button>
-        </div>
-        <div class="keypad">
-          <button class="operator" onclick="calcInputOperator('%')">%</button>
-          <button onclick="calcClearEntry()">CE</button>
-          <button onclick="calcClearAll()">C</button>
-          <button class="operator" onclick="calcBackspace()">⌫</button>
-          <button class="operator" onclick="calcInputOperator('1/')">1/x</button>
-          <button class="operator" onclick="calcInputOperator('sqr')">x²</button>
-          <button class="operator" onclick="calcInputOperator('sqrt')">²√x</button>
-          <button class="operator" onclick="calcInputOperator('/')">÷</button>
-          <button onclick="calcInputDigit('7')">7</button>
-          <button onclick="calcInputDigit('8')">8</button>
-          <button onclick="calcInputDigit('9')">9</button>
-          <button class="operator" onclick="calcInputOperator('*')">×</button>
-          <button onclick="calcInputDigit('4')">4</button>
-          <button onclick="calcInputDigit('5')">5</button>
-          <button onclick="calcInputDigit('6')">6</button>
-          <button class="operator" onclick="calcInputOperator('-')">−</button>
-          <button onclick="calcInputDigit('1')">1</button>
-          <button onclick="calcInputDigit('2')">2</button>
-          <button onclick="calcInputDigit('3')">3</button>
-          <button class="operator" onclick="calcInputOperator('+')">+</button>
-          <button onclick="calcToggleSign()">+/-</button>
-          <button onclick="calcInputDigit('0')">0</button>
-          <button onclick="calcInputDigit('.')">.</button>
-          <button class="equal-btn" onclick="calcCalculateResult()">=</button>
-        </div>
-      </div>
-    </div>
-
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav" id="bottomNav">
+    <button class="nav-item active" id="navHome" onclick="goHome()">
+      <span class="nav-icon">🏠</span>
+      <span>Home</span>
+    </button>
+    <button class="nav-item" id="navAbout" onclick="showAbout()">
+      <span class="nav-icon">ℹ️</span>
+      <span>About</span>
+    </button>
+    <button class="nav-item admin-nav" id="navAdmin" onclick="openAdminPanel()">
+      <span class="nav-icon">👤</span>
+      <span>Admin</span>
+    </button>
   </div>
 </div>
 
 <script>
 /* ============================================================
-   🔐 ADMIN UID — defined FIRST
+   🔐 ADMIN UID
    ============================================================ */
 const ADMIN_UID = 'w28KvDcJRGN50fzm4G4spBo5g8S2';
 
@@ -806,12 +1427,11 @@ async function startFreeTrial() {
 function enterAppWithTrial() {
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('appContainer').classList.add('show');
-  document.getElementById('adminNavItem').style.display = 'none';
-  document.getElementById('aboutScreen').style.display = 'none';
   document.getElementById('adminScreen').style.display = 'none';
   document.getElementById('featureScreen').classList.remove('show');
   document.getElementById('dashboardScreen').style.display = 'block';
   currentScreen = 'dashboard';
+  updateAdminNavVisibility();
   try { history.replaceState({ screen: 'dashboard', ts: Date.now() }, ''); } catch (e) {}
   updateTrialBanner();
   setTimeout(() => { if (shouldShowDailyReminder()) showTrialModal(); }, 800);
@@ -837,7 +1457,7 @@ function showTrialModal() {
   } else {
     icon.textContent = '⏰';
     title.textContent = '🚫 ট্রায়াল শেষ!';
-    days.innerHTML = `<span style="color:#ff6b6b;">৭ দিনের ফ্রি ট্রায়াল শেষ হয়েছে</span>`;
+    days.innerHTML = `<span style="color:#d32f2f;">৭ দিনের ফ্রি ট্রায়াল শেষ হয়েছে</span>`;
     text.innerHTML = `চালু রাখতে <b>৳ ৫০০</b> পেমেন্ট করুন।<br>একবার পেমেন্ট = <b>Lifetime Access</b>`;
   }
   modal.classList.add('show');
@@ -1192,6 +1812,7 @@ function enterApp() {
   document.getElementById('dashboardScreen').style.display = 'block';
   setLoginError('');
   currentScreen = 'dashboard';
+  updateAdminNavVisibility();
   try { history.replaceState({ screen: 'dashboard', ts: Date.now() }, ''); } catch (e) {}
   clearTrialState();
   document.getElementById('trialBanner').classList.remove('show');
@@ -1424,7 +2045,7 @@ async function submitPaymentRequest() {
     setLoginError('');
     showToast('✅ পেমেন্ট রিকোয়েস্ট জমা হয়েছে!', 'success', 4000);
     document.getElementById('loginError').innerHTML =
-      '<div style="color:#66bb6a; padding:10px; background:rgba(46,125,50,0.15); border-radius:10px; font-weight:600; line-height:1.8; font-size:13px; border:1px solid rgba(46,125,50,0.4);">' +
+      '<div style="color:#2e7d32; padding:10px; background:#e8f5e9; border-radius:10px; font-weight:600; line-height:1.8; font-size:13px; border:1px solid #a5d6a7;">' +
       '✅ রিকোয়েস্ট জমা হয়েছে!<br>Admin Approval দিলে আপনার Activation Code জানানো হবে।<br>⏱ ৫-৩০ মিনিট লাগে।<br>📞 01910148703</div>';
   } catch (error) {
     setLoginError('❌ পেমেন্ট জমা ব্যর্থ: ' + (error.message || 'Unknown error'));
@@ -1435,7 +2056,38 @@ async function submitPaymentRequest() {
 }
 
 /* ============================================================
-   EXIT
+   NAVIGATION HELPERS
+   ============================================================ */
+function updateAdminNavVisibility() {
+  const adminNav = document.getElementById('navAdmin');
+  if (!adminNav) return;
+  if (isAdminUser()) {
+    adminNav.classList.add('show');
+  } else {
+    adminNav.classList.remove('show');
+  }
+}
+
+function goHome() {
+  // Hide admin/feature screens, show dashboard
+  document.getElementById('adminScreen').style.display = 'none';
+  document.getElementById('featureScreen').classList.remove('show');
+  document.getElementById('dashboardScreen').style.display = 'block';
+  currentScreen = 'dashboard';
+  updateAdminNavVisibility();
+  updateTrialBanner();
+  try { history.replaceState({ screen: 'dashboard', ts: Date.now() }, ''); } catch (e) {}
+  // update active nav
+  document.querySelectorAll('.bottom-nav .nav-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('navHome').classList.add('active');
+}
+
+function showAbout() {
+  alert('GoldAdjustment\n\nDev: M.A.Ahad\n📞 01910148703\n\nসোনার হিসাব ও অ্যাডজাস্টমেন্ট অ্যাপ।');
+}
+
+/* ============================================================
+   EXIT (kept for compatibility, not used in nav)
    ============================================================ */
 function closeAppPWA() {
   try { window.close(); } catch (e) {}
@@ -1446,7 +2098,7 @@ function closeAppPWA() {
   setTimeout(() => {
     try {
       document.documentElement.innerHTML =
-        '<head><title></title></head><body style="background:#0f0f1a;margin:0;"></body>';
+        '<head><title></title></head><body style="background:#f2f0f7;margin:0;"></body>';
     } catch (e) {}
   }, 250);
 }
@@ -1489,22 +2141,13 @@ window.addEventListener('offline', () => {
 window.addEventListener('popstate', function () {
   if (popstateLock) return;
   if (currentScreen === 'feature') {
-    showDashboard(false);
-    currentScreen = 'dashboard';
+    goHome();
     try { history.pushState({ screen: 'dashboard', ts: Date.now() }, ''); } catch (e) {}
     return;
   }
   if (currentScreen === 'admin') {
     document.getElementById('adminScreen').style.display = 'none';
-    showDashboard(false);
-    currentScreen = 'dashboard';
-    try { history.pushState({ screen: 'dashboard', ts: Date.now() }, ''); } catch (e) {}
-    return;
-  }
-  if (currentScreen === 'about') {
-    document.getElementById('aboutScreen').style.display = 'none';
-    showDashboard(false);
-    currentScreen = 'dashboard';
+    goHome();
     try { history.pushState({ screen: 'dashboard', ts: Date.now() }, ''); } catch (e) {}
     return;
   }
@@ -1530,26 +2173,27 @@ function isAdminUser() {
   return !!(firebaseAuth && firebaseAuth.currentUser && firebaseAuth.currentUser.uid === ADMIN_UID);
 }
 function updateAdminButton() {
-  const nav = document.getElementById('adminNavItem');
-  if (nav) nav.style.display = isAdminUser() ? 'flex' : 'none';
+  updateAdminNavVisibility();
 }
 async function openAdminPanel() {
   if (!isAdminUser()) { showToast('🚫 Admin access denied', 'error', 3000); return; }
   currentScreen = 'admin';
   document.getElementById('dashboardScreen').style.display = 'none';
-  document.getElementById('featureScreen').style.display = 'none';
+  document.getElementById('featureScreen').classList.remove('show');
   document.getElementById('adminScreen').style.display = 'block';
   document.getElementById('adminSearch').value = '';
+  // active nav
+  document.querySelectorAll('.bottom-nav .nav-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('navAdmin').classList.add('active');
   pushHistoryState('admin');
   await loadPaymentRequests();
   await loadAdminUsers();
 }
 function closeAdminPanel() {
   document.getElementById('adminScreen').style.display = 'none';
-  showDashboard(false);
-  currentScreen = 'dashboard';
-  try { history.replaceState({ screen: 'dashboard', ts: Date.now() }, ''); } catch (e) {}
+  goHome();
 }
+
 async function loadPaymentRequests() {
   const wrap = document.getElementById('paymentRequestsWrap');
   if (!wrap) return;
@@ -1565,32 +2209,33 @@ async function loadPaymentRequests() {
       wrap.innerHTML = '<div style="padding:14px; text-align:center; color:#d4a017; font-size:13px;">📭 Pending নেই।</div>';
       return;
     }
-    wrap.innerHTML = '<div style="font-weight:bold; margin-bottom:10px; color:#d4a017; font-size:15px;">💳 Pending (' + pending.length + ')</div>' +
+    wrap.innerHTML = '<div style="font-weight:800; margin-bottom:10px; color:#d4a017; font-size:15px;">💳 Pending (' + pending.length + ')</div>' +
       pending.map(([id, r]) => `
-        <div style="background:rgba(0,0,0,0.3); border:1px solid #d4a017; border-radius:10px; padding:11px; margin-bottom:9px; font-size:13px;">
+        <div style="background:#fff; border:1px solid #d4a017; border-radius:10px; padding:11px; margin-bottom:9px; font-size:13px;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-            <div style="font-weight:bold; font-size:15px; color:#d4a017;">📞 ${r.phone || '—'}</div>
-            <div style="background:#2e7d32; color:#fff; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:bold;">৳${r.amount || 0} ♾️</div>
+            <div style="font-weight:800; font-size:15px; color:#d4a017;">📞 ${r.phone || '—'}</div>
+            <div style="background:#2e7d32; color:#fff; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:700;">৳${r.amount || 0} ♾️</div>
           </div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:4px; margin-bottom:6px; font-size:12px; color:#e8e8f0;">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:4px; margin-bottom:6px; font-size:12px; color:#333;">
             <div>Method: <b>${(r.method || '').toUpperCase()}</b></div>
             <div>Sender: <b>...${r.senderLast4 || '—'}</b></div>
-            <div style="grid-column:span 2;">TrxID: <b style="color:#64b5f6;">${r.trxId || '—'}</b></div>
+            <div style="grid-column:span 2;">TrxID: <b style="color:#1565c0;">${r.trxId || '—'}</b></div>
           </div>
-          <div style="font-size:11px; color:#888; margin-bottom:6px;">
+          <div style="font-size:11px; color:#777; margin-bottom:6px;">
             🕐 ${new Date(r.submittedAt).toLocaleString('bn-BD')}<br>
             📱 ${r.deviceName || 'Unknown'}
           </div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
-            <button onclick="approvePayment('${id}','${r.phone}','${r.amount}')" style="padding:10px; border:0; border-radius:8px; background:#2e7d32; color:#fff; font-weight:bold; cursor:pointer; font-size:12px;">✅ Approve</button>
-            <button onclick="rejectPayment('${id}')" style="padding:10px; border:0; border-radius:8px; background:#b00020; color:#fff; font-weight:bold; cursor:pointer; font-size:12px;">❌ Reject</button>
+            <button onclick="approvePayment('${id}','${r.phone}','${r.amount}')" style="padding:10px; border:0; border-radius:8px; background:#2e7d32; color:#fff; font-weight:700; cursor:pointer; font-size:12px;">✅ Approve</button>
+            <button onclick="rejectPayment('${id}')" style="padding:10px; border:0; border-radius:8px; background:#b00020; color:#fff; font-weight:700; cursor:pointer; font-size:12px;">❌ Reject</button>
           </div>
         </div>
       `).join('');
   } catch (e) {
-    wrap.innerHTML = '<div style="color:#ff6b6b; font-size:13px; padding:10px;">❌ লোড ব্যর্থ</div>';
+    wrap.innerHTML = '<div style="color:#d32f2f; font-size:13px; padding:10px;">❌ লোড ব্যর্থ</div>';
   }
 }
+
 async function approvePayment(requestId, phone, amount) {
   if (!isAdminUser()) { showToast('🚫 Admin', 'error', 3000); return; }
   const code = prompt(`✅ Approve? (♾️ Lifetime)\n\n📞 ${phone}\n💰 ৳${amount}\n\nCode (৬+, খালি=auto):`, '');
@@ -1666,6 +2311,7 @@ async function approvePayment(requestId, phone, amount) {
     showToast('❌ Approve ব্যর্থ: ' + (e.message || ''), 'error', 5000);
   }
 }
+
 async function rejectPayment(requestId) {
   if (!isAdminUser()) return;
   if (!confirm('Reject?')) return;
@@ -1678,10 +2324,11 @@ async function rejectPayment(requestId) {
     loadPaymentRequests();
   } catch (e) { showToast('❌ ব্যর্থ', 'error', 3000); }
 }
+
 async function loadAdminUsers() {
   const list = document.getElementById('adminUserList');
   const summary = document.getElementById('adminSummary');
-  list.innerHTML = '<div style="padding:20px; text-align:center; color:#d4a017;">⏳ লোড হচ্ছে...</div>';
+  list.innerHTML = '<div style="padding:20px; text-align:center; color:#6a35a8;">⏳ লোড হচ্ছে...</div>';
   try {
     if (!isAdminUser()) throw new Error('Denied');
     const { ref, get } = await import('https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js');
@@ -1689,9 +2336,10 @@ async function loadAdminUsers() {
     adminUsersCache = snapshot.exists() ? (snapshot.val() || {}) : {};
     renderAdminUsers();
   } catch (error) {
-    list.innerHTML = '<div style="padding:16px; color:#ff6b6b; background:rgba(176,0,32,0.15); border-radius:10px;">❌ লোড ব্যর্থ</div>';
+    list.innerHTML = '<div style="padding:16px; color:#b00020; background:#fce4ec; border-radius:10px;">❌ লোড ব্যর্থ</div>';
   }
 }
+
 function renderAdminUsers() {
   const list = document.getElementById('adminUserList');
   const summary = document.getElementById('adminSummary');
@@ -1722,31 +2370,32 @@ function renderAdminUsers() {
     const deviceShort = d.deviceId ? String(d.deviceId).slice(0, 8) + '...' : '—';
     const deviceAttempts = d.deviceAttemptCount || 0;
     return `
-      <div style="background:rgba(0,0,0,0.3); border:1px solid rgba(184,134,11,0.3); border-radius:12px; padding:12px; margin-bottom:10px;">
-        <div style="font-weight:bold; font-size:17px; color:#d4a017;">📞 ${phone}</div>
+      <div style="background:#fff; border:1px solid rgba(91,45,145,0.15); border-radius:12px; padding:12px; margin-bottom:10px;">
+        <div style="font-weight:800; font-size:17px; color:var(--purple);">📞 ${phone}</div>
         <div style="font-size:11px; color:#888; word-break:break-all; margin:5px 0;">UID: ${uid}</div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; font-size:13px; margin:8px 0; color:#e8e8f0;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; font-size:13px; margin:8px 0; color:var(--text);">
           <div>Payment: <b>${paymentStatus.toUpperCase()}</b></div>
-          <div>Status: <b style="color:${isActive ? '#66bb6a' : '#ff6b6b'};">${isActive ? 'ACTIVE' : 'BLOCKED'}</b></div>
-          <div style="grid-column:span 2;">Expiry: <b style="color:${isLifetime ? '#66bb6a' : '#ff6b6b'};">${expiryLabel}</b></div>
+          <div>Status: <b style="color:${isActive ? '#2e7d32' : '#d32f2f'};">${isActive ? 'ACTIVE' : 'BLOCKED'}</b></div>
+          <div style="grid-column:span 2;">Expiry: <b style="color:${isLifetime ? '#2e7d32' : '#d32f2f'};">${expiryLabel}</b></div>
         </div>
-        <div style="background:rgba(184,134,11,0.1); border:1px dashed rgba(184,134,11,0.4); border-radius:9px; padding:8px; margin:8px 0; font-size:12px; color:#e8e8f0;">
-          <div style="font-weight:bold; color:#d4a017; margin-bottom:3px;">🆔 Device</div>
+        <div style="background:#f6f3fc; border:1px dashed rgba(91,45,145,0.3); border-radius:9px; padding:8px; margin:8px 0; font-size:12px; color:var(--text);">
+          <div style="font-weight:700; color:var(--purple); margin-bottom:3px;">🆔 Device</div>
           <div>${deviceName}</div>
           <div>ID: <code style="font-size:10px;">${deviceShort}</code></div>
-          ${deviceAttempts > 0 ? `<div style="color:#ff6b6b; margin-top:3px;">⚠️ ${deviceAttempts} বার অন্য ডিভাইস</div>` : ''}
+          ${deviceAttempts > 0 ? `<div style="color:#d32f2f; margin-top:3px;">⚠️ ${deviceAttempts} বার অন্য ডিভাইস</div>` : ''}
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:7px;">
-          <button onclick="toggleUserAccess('${uid}','${nextStatus}',${nextActivated})" style="padding:10px; border:0; border-radius:9px; background:${isActive ? '#b00020' : '#2e7d32'}; color:#fff; font-weight:bold; cursor:pointer;">
+          <button onclick="toggleUserAccess('${uid}','${nextStatus}',${nextActivated})" style="padding:10px; border:0; border-radius:9px; background:${isActive ? '#b00020' : '#2e7d32'}; color:#fff; font-weight:700; cursor:pointer;">
             ${isActive ? '🚫 Block' : '✅ Unblock'}
           </button>
-          <button onclick="markUserPaid('${uid}')" style="padding:10px; border:0; border-radius:9px; background:#7a5a00; color:#fff; font-weight:bold; cursor:pointer;">💳 Paid</button>
-          <button onclick="resetUserDevice('${uid}')" style="grid-column:span 2; padding:10px; border:0; border-radius:9px; background:#1565c0; color:#fff; font-weight:bold; cursor:pointer;">🔄 Reset Device</button>
+          <button onclick="markUserPaid('${uid}')" style="padding:10px; border:0; border-radius:9px; background:#7a5a00; color:#fff; font-weight:700; cursor:pointer;">💳 Paid</button>
+          <button onclick="resetUserDevice('${uid}')" style="grid-column:span 2; padding:10px; border:0; border-radius:9px; background:#1565c0; color:#fff; font-weight:700; cursor:pointer;">🔄 Reset Device</button>
         </div>
       </div>`;
   }).join('');
 }
 function filterAdminUsers() { renderAdminUsers(); }
+
 async function toggleUserAccess(uid, newStatus, newActivated) {
   if (!isAdminUser()) return;
   if (!confirm(`${newStatus === 'active' ? 'Unblock' : 'Block'}?`)) return;
@@ -1758,6 +2407,7 @@ async function toggleUserAccess(uid, newStatus, newActivated) {
     showToast(newStatus === 'active' ? '✅ Activated' : '🚫 Blocked', 'success', 2500);
   } catch (e) { showToast('❌ ব্যর্থ', 'error', 3000); }
 }
+
 function generateActivationCode() {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let code = '';
@@ -1766,6 +2416,7 @@ function generateActivationCode() {
   for (let i = 0; i < array.length; i++) code += chars[array[i] % chars.length];
   document.getElementById('newUserCode').value = code;
 }
+
 async function createNewUser() {
   if (!isAdminUser()) return;
   const phone = normalizePhone(document.getElementById('newUserPhone').value);
@@ -1774,9 +2425,9 @@ async function createNewUser() {
   const paymentDate = document.getElementById('newUserPaymentDate').value;
   const expiryDate = document.getElementById('newUserExpiryDate').value;
   const result = document.getElementById('newUserResult');
-  if (!/^01[3-9][0-9]{8}$/.test(phone)) { result.innerHTML = '<span style="color:#ff6b6b;">❌ সঠিক নম্বর দিন।</span>'; return; }
-  if (code.length < 6) { result.innerHTML = '<span style="color:#ff6b6b;">❌ Code ৬+ অক্ষর।</span>'; return; }
-  if (expiryDate && paymentDate && expiryDate < paymentDate) { result.innerHTML = '<span style="color:#ff6b6b;">❌ Expiry < Payment।</span>'; return; }
+  if (!/^01[3-9][0-9]{8}$/.test(phone)) { result.innerHTML = '<span style="color:#d32f2f;">❌ সঠিক নম্বর দিন।</span>'; return; }
+  if (code.length < 6) { result.innerHTML = '<span style="color:#d32f2f;">❌ Code ৬+ অক্ষর।</span>'; return; }
+  if (expiryDate && paymentDate && expiryDate < paymentDate) { result.innerHTML = '<span style="color:#d32f2f;">❌ Expiry < Payment।</span>'; return; }
   result.innerHTML = '<span style="color:#888;">⏳ তৈরি হচ্ছে...</span>';
   try {
     const appModule = await import('https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js');
@@ -1802,7 +2453,7 @@ async function createNewUser() {
     if (appModule.deleteApp) await appModule.deleteApp(creatorApp);
     adminUsersCache[uid] = record;
     renderAdminUsers();
-    result.innerHTML = `<div style="padding:10px; background:rgba(46,125,50,0.15); border:1px solid rgba(46,125,50,0.4); border-radius:9px; color:#66bb6a;">
+    result.innerHTML = `<div style="padding:10px; background:#e8f5e9; border:1px solid #a5d6a7; border-radius:9px; color:#2e7d32;">
       ✅ তৈরি<br>📞 ${phone}<br>🔑 ${code}<br>♾️ ${expiryDate || 'Lifetime'}
     </div>`;
     document.getElementById('newUserPhone').value = '';
@@ -1810,9 +2461,10 @@ async function createNewUser() {
   } catch (error) {
     let msg = error.message || 'Unknown';
     if (error.code === 'auth/email-already-in-use') msg = 'এই নম্বর আগে থেকেই আছে।';
-    result.innerHTML = '<span style="color:#ff6b6b;">❌ ' + msg + '</span>';
+    result.innerHTML = '<span style="color:#d32f2f;">❌ ' + msg + '</span>';
   }
 }
+
 async function markUserPaid(uid) {
   if (!isAdminUser()) return;
   const today = new Date().toISOString().slice(0, 10);
@@ -1838,6 +2490,7 @@ async function markUserPaid(uid) {
     showToast('✅ Updated', 'success', 2500);
   } catch (e) { showToast('❌ ব্যর্থ', 'error', 3000); }
 }
+
 async function resetUserDevice(uid) {
   if (!isAdminUser()) return;
   const user = adminUsersCache[uid] || {};
@@ -1857,33 +2510,7 @@ async function resetUserDevice(uid) {
 }
 
 /* ============================================================
-   MODERN DASHBOARD HELPERS
-   ============================================================ */
-async function shareGoldAdjustment() {
-  const shareData = {
-    title: 'Gold Adjustment',
-    text: 'সহজ সোনার হিসাব — Gold Adjustment',
-    url: window.location.href
-  };
-  try {
-    if (navigator.share) await navigator.share(shareData);
-    else {
-      await navigator.clipboard.writeText(window.location.href);
-      showToast('🔗 লিংক কপি হয়েছে', 'success', 2200);
-    }
-  } catch (e) {}
-}
-function showAbout() {
-  currentScreen = 'about';
-  document.getElementById('dashboardScreen').style.display = 'none';
-  document.getElementById('featureScreen').classList.remove('show');
-  document.getElementById('adminScreen').style.display = 'none';
-  document.getElementById('aboutScreen').style.display = 'block';
-  pushHistoryState('about');
-}
-
-/* ============================================================
-   NAVIGATION
+   NAVIGATION (FEATURES)
    ============================================================ */
 const featureNames = {
   main: '🪙 পাকা/জমা অ্যাডজাস্ট',
@@ -1895,21 +2522,24 @@ const featureNames = {
   liveRate: '📈 সোনার দর',
   calc: '🧮 ক্যালকুলেটর'
 };
+
 function showDashboard(pushState = true) {
   currentScreen = 'dashboard';
   document.getElementById('dashboardScreen').style.display = 'block';
   document.getElementById('featureScreen').classList.remove('show');
   document.getElementById('adminScreen').style.display = 'none';
-  document.getElementById('aboutScreen').style.display = 'none';
-  updateAdminButton();
+  updateAdminNavVisibility();
   updateTrialBanner();
   if (pushState) pushHistoryState('dashboard');
+  // nav active
+  document.querySelectorAll('.bottom-nav .nav-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('navHome').classList.add('active');
 }
+
 function openFeature(id) {
   currentScreen = 'feature';
   document.getElementById('dashboardScreen').style.display = 'none';
   document.getElementById('adminScreen').style.display = 'none';
-  document.getElementById('aboutScreen').style.display = 'none';
   document.getElementById('featureScreen').classList.add('show');
   document.querySelectorAll('.feature-box').forEach(f => f.classList.remove('active'));
   document.getElementById('feature-' + id).classList.add('active');
@@ -1921,11 +2551,14 @@ function openFeature(id) {
   if (id === 'price') calculatePrice();
   if (id === 'calc') calcClearAll();
   pushHistoryState('feature');
+  // nav active none? keep Home active
+  document.querySelectorAll('.bottom-nav .nav-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('navHome').classList.add('active');
 }
+
 function goBack() {
-  if (currentScreen === 'feature' || currentScreen === 'admin' || currentScreen === 'about') {
+  if (currentScreen === 'feature' || currentScreen === 'admin') {
     document.getElementById('adminScreen').style.display = 'none';
-    document.getElementById('aboutScreen').style.display = 'none';
     showDashboard(false);
     currentScreen = 'dashboard';
     try { history.replaceState({ screen: 'dashboard', ts: Date.now() }, ''); } catch (e) {}
@@ -2086,6 +2719,25 @@ function toVoriAnaRoti(points) {
   const a = Math.floor(rem / 60); rem = rem % 60;
   const r = Math.floor(rem / 10); const p = Math.round(rem % 10);
   return `${v}-${a}-${r}-${p}`;
+}
+
+/* ============================================================
+   SHARE
+   ============================================================ */
+function shareApp() {
+  if (navigator.share) {
+    navigator.share({
+      title: 'GoldAdjustment',
+      text: 'সোনার হিসাব ও অ্যাডজাস্টমেন্ট অ্যাপ',
+      url: window.location.href
+    }).catch(() => {});
+  } else {
+    // fallback
+    const url = window.location.href;
+    navigator.clipboard?.writeText(url).then(() => showToast('🔗 লিংক কপি হয়েছে', 'success', 2000)).catch(() => {
+      prompt('লিংক কপি করুন:', url);
+    });
+  }
 }
 
 /* ============================================================
